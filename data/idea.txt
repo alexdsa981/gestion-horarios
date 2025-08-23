@@ -1,0 +1,13 @@
+https://javascript.daypilot.org/demo/lite/calendar/height.html
+PANEL IZQUIERDO:
+-seleccionable dia.
+-seleccionable colaborador.
+-seleccionable horas.
+-seleccionable sede.
+-opcion para repetir lo mismo en otros dias.
+
+PANEL IZQUIERDO:
+
+-calendario que muestre 1 solo dia (en el header muestra fecha, nombre de dia de la semana nombre de cada una de las sedes).
+-al añadir un colaborador que aparezca automaticamente
+-que el colaborador se mueva segun las caracteristicas seleccionadas en el panel izquiero.

@@ -1,0 +1,10 @@
+https://javascript.daypilot.org/demo/lite/calendar/height.html
+https://doc.daypilot.org/calendar/height
+
+https://api.daypilot.org/daypilot-navigator-onbeforecellrender
+
+https://api.daypilot.org/daypilot-date-methods
+
+https://doc.daypilot.org/calendar/navigator
+
+https://doc.daypilot.org/navigator/cell-customization
