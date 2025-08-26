@@ -2,6 +2,6 @@ package com.ipor.horariostua.logs;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LogGlobalRepository extends JpaRepository<LogGlobal, Long> {
+public interface LogHorariosRepository extends JpaRepository<LogHorarios, Long> {
 
 }

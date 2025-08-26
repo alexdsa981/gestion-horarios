@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.model;
+package com.ipor.horariostua.colaborador;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.websocket;
+package com.ipor.horariostua.config.websocket;
 
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;

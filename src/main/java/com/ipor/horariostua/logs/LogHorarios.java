@@ -1,5 +1,7 @@
-package com.ipor.horariostua.core.model;
+package com.ipor.horariostua.logs;
 
+import com.ipor.horariostua.core.model.BloqueHorario;
+import com.ipor.horariostua.core.model.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

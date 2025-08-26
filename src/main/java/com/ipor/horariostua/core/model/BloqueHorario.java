@@ -1,12 +1,12 @@
 package com.ipor.horariostua.core.model;
 
+import com.ipor.horariostua.colaborador.Colaborador;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter

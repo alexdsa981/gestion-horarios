@@ -1,4 +1,4 @@
-package com.ipor.horariostua.usuario;
+package com.ipor.horariostua.core.repository;
 
 import com.ipor.horariostua.core.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
