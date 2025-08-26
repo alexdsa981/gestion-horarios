@@ -1,6 +1,7 @@
 package com.ipor.horariostua.core.model;
 
 import com.ipor.horariostua.colaborador.Colaborador;
+import com.ipor.horariostua.sede.Sede;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,11 +1,9 @@
-package com.ipor.horariostua.core.model;
+package com.ipor.horariostua.sede;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -17,5 +15,7 @@ public class Sede {
     private Long id;
     @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false)
+    private Boolean isActive;
 
 }

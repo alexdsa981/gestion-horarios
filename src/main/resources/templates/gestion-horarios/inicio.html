@@ -38,14 +38,9 @@
       <div id="left-panel" class="p-3 bg-light border rounded mt-3" style="position: sticky; top: 20px; height: fit-content">
         <div id="nav"></div>
         <div class="mb-2">
-          <label for="colaborador" class="form-label">Colaborador</label>
-          <select id="colaborador" class="form-select">
-            <option value="1" data-color="#d6eaff">Dra. Milagros Rodriguez</option>
-            <option value="2" data-color="#fff9d6">Dr. Percy Torres</option>
-            <option value="3" data-color="#d6ffd6">Dr. Trejo</option>
-            <option value="4" data-color="#e6d6ff">Dr. Soto</option>
-            <option value="5" data-color="#d6fff9">Dr. Roger Calle</option>
-            <option value="6" data-color="#f5ffd6">Dra. Elizabeth Hurtado</option>
+          <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
+          <select id="left-panel-colaborador-select" class="form-select">
+
           </select>
         </div>
 
@@ -61,10 +56,9 @@
         </div>
 
         <div class="mb-3">
-          <label for="sede" class="form-label">Sede</label>
-          <select id="sede" class="form-select">
-            <option value="A">San Isidro</option>
-            <option value="B">Jesús María</option>
+          <label for="left-panel-sedes-select" class="form-label">Sede</label>
+          <select id="left-panel-sedes-select" class="form-select">
+
           </select>
         </div>
 
@@ -145,7 +139,11 @@
     <script src="/js/registro-horarios/navigator.js"></script>
     <script src="/js/registro-horarios/calendar.js"></script>
     <script src="/js/registro-horarios/seleccionado.js"></script>
-    <script src="/js/registro-horarios/left-panel/agregar.js"></script>
+
+  <script src="/js/registro-horarios/datos/colaboradores.js"></script>
+  <script src="/js/registro-horarios/datos/sedes.js"></script>
+
+  <script src="/js/registro-horarios/left-panel/agregar.js"></script>
     <script src="/js/registro-horarios/right-panel/eliminar.js"></script>
     <script src="/js/registro-horarios/right-panel/editar.js"></script>
     <script src="/js/registro-horarios/right-panel/modal-repetir.js"></script>

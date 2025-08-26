@@ -1,5 +1,6 @@
-package com.ipor.horariostua.colaborador;
+package com.ipor.horariostua.sede;
 
+import com.ipor.horariostua.colaborador.ColaboradorService;
 import com.ipor.horariostua.colaborador.dto.ColaboradorSeleccionableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/app/colaboradores")
-public class ColaboradorController {
+@RequestMapping("/app/sedes")
+public class SedeController {
     @Autowired
-    ColaboradorService colaboradorService;
+    SedeService sedeService;
 
     @GetMapping("/select")
-    public ResponseEntity<List<ColaboradorSeleccionableDTO>> getColaboradoresSeleccionables() {
-        List<ColaboradorSeleccionableDTO> colaboradores = colaboradorService.getSelectColaboradores();
-        return ResponseEntity.ok(colaboradores);
+    public ResponseEntity<List<Sede>> getColaboradoresSeleccionables() {
+        List<Sede> sedes = sedeService.getSelectSedes();
+        return ResponseEntity.ok(sedes);
     }
 
 }
