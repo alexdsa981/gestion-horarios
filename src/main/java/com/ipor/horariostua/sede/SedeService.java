@@ -5,6 +5,7 @@ import com.ipor.horariostua.colaborador.ColaboradorRepository;
 import com.ipor.horariostua.colaborador.dto.ColaboradorSeleccionableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,11 @@ public class SedeService {
     @Autowired
     SedeRepository sedeRepository;
 
+    public Model getModelSedesActivas(Model model) {
+        List<Sede> sedes = sedeRepository.findByIsActiveTrue();
+        model.addAttribute("listaSedesActivas", sedes);
+        return model;
+    }
     public List<Sede> getSelectSedes(){
         return sedeRepository.findByIsActiveTrue();
     }

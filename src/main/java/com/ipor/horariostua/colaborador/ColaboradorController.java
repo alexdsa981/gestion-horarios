@@ -15,10 +15,4 @@ public class ColaboradorController {
     @Autowired
     ColaboradorService colaboradorService;
 
-    @GetMapping("/select")
-    public ResponseEntity<List<ColaboradorSeleccionableDTO>> getColaboradoresSeleccionables() {
-        List<ColaboradorSeleccionableDTO> colaboradores = colaboradorService.getSelectColaboradores();
-        return ResponseEntity.ok(colaboradores);
-    }
-
 }

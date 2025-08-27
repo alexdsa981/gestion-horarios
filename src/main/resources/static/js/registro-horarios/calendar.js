@@ -1,3 +1,8 @@
+const columnas = listaSedesActivas.map(sede => ({
+    name: sede.nombre,
+    id: sede.id
+}));
+
 const calendar = new DayPilot.Calendar("calendar", {
   businessBeginsHour: 7,
   businessEndsHour: 20,
@@ -8,10 +13,7 @@ const calendar = new DayPilot.Calendar("calendar", {
   cellDuration: 30,
   cellHeight: 24,
   snapToGrid: true,
-  columns: [
-    { name: "San Isidro", id: "A" },
-    { name: "Jesús María", id: "B" },
-  ],
+  columns: columnas,
 
   onBeforeCellRender: function (args) {
     const hour = args.cell.start.getHours();

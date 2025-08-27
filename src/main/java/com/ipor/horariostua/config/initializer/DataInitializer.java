@@ -57,10 +57,13 @@ public class DataInitializer implements CommandLineRunner {
             Colaborador prueba3 = new Colaborador();
 
             prueba1.setNombreCompleto("PruebaP1 PruebaM1 PruebaN1");
+            prueba1.setEventoColor("#C0C0C0");
             prueba1.setIsActive(Boolean.TRUE);
             prueba2.setNombreCompleto("PruebaP2 PruebaM2 PruebaN2");
+            prueba2.setEventoColor("#FFD700");
             prueba2.setIsActive(Boolean.TRUE);
             prueba3.setNombreCompleto("PruebaP3 PruebaM3 PruebaN3");
+            prueba3.setEventoColor("#00CED1");
             prueba3.setIsActive(Boolean.TRUE);
 
             colaboradorRepository.save(prueba1);

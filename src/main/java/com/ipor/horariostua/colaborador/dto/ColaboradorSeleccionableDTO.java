@@ -10,4 +10,5 @@ import lombok.Setter;
 public class ColaboradorSeleccionableDTO {
     private Long id;
     private String nombreCompleto;
+    private String color;
 }

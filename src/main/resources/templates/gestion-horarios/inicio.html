@@ -1,151 +1,190 @@
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
     <title>Horarios Colaboradores</title>
-    <link rel="stylesheet" href="/css/styles.css" />
-    <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/imports/bootstrap-icons/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="/imports/sweetalert2.min.css" />
-    <link rel="stylesheet" href="/imports/flatpickr/flatpickr.min.css" />
-  </head>
-  <body>
-  <header class="mb-2">
+    <link rel="stylesheet" href="/css/styles.css"/>
+    <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/imports/bootstrap-icons/font/bootstrap-icons.css"/>
+    <link rel="stylesheet" href="/imports/sweetalert2.min.css"/>
+    <link rel="stylesheet" href="/imports/flatpickr/flatpickr.min.css"/>
+</head>
+<body>
+<header class="mb-2">
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
-      <a class="navbar-brand ms-3 logo-outline" href="/inicio" style="margin-right: 10px; display: flex; align-items: center">
-        <img class="" style="width: 27px; margin-right: 5px" src="images/IPOR.png" alt="logo" />
-        <span>HorariosIPOR</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link" href="#"><i class="bi bi-house-door me-1"></i>Home</a>
-          <a class="nav-item nav-link active" href="#"><i class="bi bi-calendar-event me-1"></i>Horarios</a>
-          <a class="nav-item nav-link" href="#"><i class="bi bi-people me-1"></i>Sedes y Personal</a>
-          <a class="nav-item nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
+        <a class="navbar-brand ms-3 logo-outline" href="/inicio"
+           style="margin-right: 10px; display: flex; align-items: center">
+            <img class="" style="width: 27px; margin-right: 5px" src="images/IPOR.png" alt="logo"/>
+            <span>HorariosIPOR</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#"><i class="bi bi-house-door me-1"></i>Home</a>
+                <a class="nav-item nav-link active" href="#"><i class="bi bi-calendar-event me-1"></i>Horarios</a>
+                <a class="nav-item nav-link" href="#"><i class="bi bi-people me-1"></i>Sedes y Personal</a>
+                <a class="nav-item nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
+            </div>
+            <div class="ms-auto me-3">
+                <button class="btn btn-outline-light" id="logout-btn"><i class="bi bi-box-arrow-right me-1"></i>Cerrar
+                    sesión
+                </button>
+            </div>
         </div>
-        <div class="ms-auto me-3">
-          <button class="btn btn-outline-light" id="logout-btn"><i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión</button>
-        </div>
-      </div>
     </nav>
-  </header>
+</header>
 
-  <main>
+<main>
+    <script th:inline="javascript">
+        let listaSedesActivas = /*[[${listaSedesActivas}]]*/ [];
+    </script>
     <div class="container" style="display: flex">
-      <div id="left-panel" class="p-3 bg-light border rounded mt-3" style="position: sticky; top: 20px; height: fit-content">
-        <div id="nav"></div>
-        <div class="mb-2">
-          <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
-          <select id="left-panel-colaborador-select" class="form-select">
+        <div id="left-panel" class="p-3 bg-light border rounded mt-3"
+             style="position: sticky; top: 20px; height: fit-content">
+            <div id="nav"></div>
+            <div class="mb-2">
+                <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
+                <select id="left-panel-colaborador-select" class="form-select">
+                    <option
+                            th:each="colaborador : ${listaSelectColaboradoresActivos}"
+                            th:value="${colaborador.id}"
+                            th:text="${colaborador.nombreCompleto}"
+                            th:attr="data-color=${colaborador.color}">
+                    </option>
+                </select>
+            </div>
 
-          </select>
+            <div class="mb-2 row">
+                <div class="col-12 mb-2">
+                    <label class="form-label">Hora inicio</label>
+                    <div class="d-flex">
+                        <select id="horaInicioHora" class="form-control me-2"></select>
+                        <select id="horaInicioMinuto" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Hora fin</label>
+                    <div class="d-flex">
+                        <select id="horaFinHora" class="form-control me-2"></select>
+                        <select id="horaFinMinuto" class="form-control"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="left-panel-sedes-select" class="form-label">Sede</label>
+                <select id="left-panel-sedes-select" class="form-select">
+                    <option th:each="sede : ${listaSedesActivas}" th:value="${sede.id}"
+                            th:text="${sede.nombre}"></option>
+                </select>
+            </div>
+
+            <button id="btn-agregar-bloque" class="btn btn-primary w-100">Agregar al calendario</button>
         </div>
 
-        <div class="mb-2 row">
-          <div class="col-6">
-            <label for="horaInicio" class="form-label">Hora inicio</label>
-            <input type="time" id="horaInicio" class="form-control" value="08:00" />
-          </div>
-          <div class="col-6">
-            <label for="horaFin" class="form-label">Hora fin</label>
-            <input type="time" id="horaFin" class="form-control" value="10:00" />
-          </div>
+        <div class="mt-3 ms-3 me-3">
+            <div id="calendar"></div>
         </div>
 
-        <div class="mb-3">
-          <label for="left-panel-sedes-select" class="form-label">Sede</label>
-          <select id="left-panel-sedes-select" class="form-select">
+        <div id="right-panel" class="p-3 bg-light border rounded m-3"
+             style="display: none; min-width: 300px; position: sticky; top: 20px; height: fit-content">
+            <button type="button" id="edit-cancel" class="btn-close position-absolute" style="top: 10px; right: 10px"
+                    aria-label="Cerrar"></button>
 
-          </select>
+            <form id="edit-form">
+                <div class="mb-2">
+                    <label for="edit-colaborador" class="form-label">Colaborador</label>
+                    <select id="edit-colaborador" class="form-select">
+                        <option
+                                th:each="colaborador : ${listaSelectColaboradoresActivos}"
+                                th:value="${colaborador.id}"
+                                th:text="${colaborador.nombreCompleto}"
+                                th:attr="data-color=${colaborador.color}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-2 row">
+                    <div class="col-12 mb-2">
+                        <label class="form-label">Hora inicio (editar)</label>
+                        <div class="d-flex">
+                            <select id="edit-horaInicioHora" class="form-control me-2"></select>
+                            <select id="edit-horaInicioMinuto" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Hora fin (editar)</label>
+                        <div class="d-flex">
+                            <select id="edit-horaFinHora" class="form-control me-2"></select>
+                            <select id="edit-horaFinMinuto" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="edit-sede" class="form-label">Sede</label>
+                    <select id="edit-sede" class="form-select">
+                        <option th:each="sede : ${listaSedesActivas}" th:value="${sede.id}"
+                                th:text="${sede.nombre}"></option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Guardar
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalRepetir">
+                        <i class="bi bi-calendar-plus me-1"></i>
+                        Repetir
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <button id="agregar" class="btn btn-primary w-100">Agregar al calendario</button>
-      </div>
-
-      <div class="mt-3 ms-3 me-3">
-        <div id="calendar"></div>
-      </div>
-
-      <div id="right-panel" class="p-3 bg-light border rounded m-3" style="display: none; min-width: 300px; position: sticky; top: 20px; height: fit-content">
-        <button type="button" id="edit-cancel" class="btn-close position-absolute" style="top: 10px; right: 10px" aria-label="Cerrar"></button>
-
-        <form id="edit-form">
-          <div class="mb-2">
-            <label for="edit-colaborador" class="form-label">Colaborador</label>
-            <select id="edit-colaborador" class="form-select">
-              <option value="1" data-color="#d6eaff">Dra. Milagros Rodriguez</option>
-              <option value="2" data-color="#fff9d6">Dr. Percy Torres</option>
-              <option value="3" data-color="#d6ffd6">Dr. Trejo</option>
-              <option value="4" data-color="#e6d6ff">Dr. Soto</option>
-              <option value="5" data-color="#d6fff9">Dr. Roger Calle</option>
-              <option value="6" data-color="#f5ffd6">Dra. Elizabeth Hurtado</option>
-            </select>
-          </div>
-          <div class="mb-2">
-            <label for="edit-horaInicio" class="form-label">Hora inicio</label>
-            <input type="time" id="edit-horaInicio" class="form-control" />
-          </div>
-          <div class="mb-2">
-            <label for="edit-horaFin" class="form-label">Hora fin</label>
-            <input type="time" id="edit-horaFin" class="form-control" />
-          </div>
-          <div class="mb-3">
-            <label for="edit-sede" class="form-label">Sede</label>
-            <select id="edit-sede" class="form-select">
-              <option value="A">San Isidro</option>
-              <option value="B">Jesús María</option>
-            </select>
-          </div>
-          <button type="submit" class="btn btn-success w-100 mb-2">Guardar Cambios</button>
-
-          <div class="d-flex justify-content-center gap-2">
-            <button type="button" class="btn btn-outline-danger" id="btnEditEliminar"><i class="bi bi-trash"></i> Eliminar</button>
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalRepetir"><i class="bi bi-calendar-plus me-1"></i> Repetir</button>
-          </div>
-        </form>
-      </div>
     </div>
-  </main>
+</main>
 
-  <div class="modal fade" id="modalRepetir" tabindex="-1" aria-labelledby="modalRepetirLabel" aria-hidden="true">
+<div class="modal fade" id="modalRepetir" tabindex="-1" aria-labelledby="modalRepetirLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalRepetirLabel">Selecciona las fechas</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRepetirLabel">Selecciona las fechas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div style="min-height: 300px" class="d-flex justify-content-center align-items-center">
+                    <input type="text" id="multi-date-picker" class="form-control text-center" style="max-width: 250px"
+                           readonly placeholder="Selecciona fechas..."/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnRepetirFechas">Aceptar</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <div style="min-height: 300px" class="d-flex justify-content-center align-items-center">
-            <input type="text" id="multi-date-picker" class="form-control text-center" style="max-width: 250px" readonly placeholder="Selecciona fechas..." />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="btnRepetirFechas">Aceptar</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-    <script src="/imports/daypilot/daypilot-all.min.js"></script>
-    <script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/imports/sweetalert2.all.min.js"></script>
-    <script src="/imports/flatpickr/flatpickr.js"></script>
-    <script src="/imports/flatpickr/es.js"></script>
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/imports/sweetalert2.all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
 
-    <script src="/js/registro-horarios/navigator.js"></script>
-    <script src="/js/registro-horarios/calendar.js"></script>
-    <script src="/js/registro-horarios/seleccionado.js"></script>
+<script src="/js/registro-horarios/navigator.js"></script>
+<script src="/js/registro-horarios/calendar.js"></script>
+<script src="/js/registro-horarios/seleccionado.js"></script>
 
-  <script src="/js/registro-horarios/datos/colaboradores.js"></script>
-  <script src="/js/registro-horarios/datos/sedes.js"></script>
+<script src="/js/registro-horarios/datos/colaboradores.js"></script>
+<script src="/js/registro-horarios/datos/sedes.js"></script>
+<script src="/js/registro-horarios/datos/horas.js"></script>
 
-  <script src="/js/registro-horarios/left-panel/agregar.js"></script>
-    <script src="/js/registro-horarios/right-panel/eliminar.js"></script>
-    <script src="/js/registro-horarios/right-panel/editar.js"></script>
-    <script src="/js/registro-horarios/right-panel/modal-repetir.js"></script>
-  </body>
+<script src="/js/registro-horarios/left-panel/agregar.js"></script>
+<script src="/js/registro-horarios/right-panel/eliminar.js"></script>
+<script src="/js/registro-horarios/right-panel/editar.js"></script>
+<script src="/js/registro-horarios/right-panel/modal-repetir.js"></script>
+</body>
 </html>

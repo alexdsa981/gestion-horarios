@@ -1,9 +1,8 @@
-document.getElementById("agregar").addEventListener("click", () => {
-  const colab = document.getElementById("colaborador");
-  const inicio = document.getElementById("horaInicio").value;
-  const fin = document.getElementById("horaFin").value;
-  const sede = document.getElementById("sede").value;
-
+document.getElementById("btn-agregar-bloque").addEventListener("click", () => {
+  const colab = document.getElementById("left-panel-colaborador-select");
+   const inicio = document.getElementById("horaInicioHora").value + ":" + document.getElementById("horaInicioMinuto").value;
+   const fin = document.getElementById("horaFinHora").value + ":" + document.getElementById("horaFinMinuto").value;
+  const sede = Number(document.getElementById("left-panel-sedes-select").value);
   const fecha = calendar.startDate.toString("yyyy-MM-dd");
 
   const startDate = new Date(`${fecha}T${inicio}:00`);

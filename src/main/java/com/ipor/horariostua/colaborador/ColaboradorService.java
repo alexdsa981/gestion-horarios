@@ -1,8 +1,10 @@
 package com.ipor.horariostua.colaborador;
 
 import com.ipor.horariostua.colaborador.dto.ColaboradorSeleccionableDTO;
+import com.ipor.horariostua.sede.Sede;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +14,19 @@ public class ColaboradorService {
     @Autowired
     ColaboradorRepository colaboradorRepository;
 
-    public List<ColaboradorSeleccionableDTO> getSelectColaboradores(){
+    public Model getModelSelectColaboradoresActivos(Model model) {
         List<ColaboradorSeleccionableDTO> listaDTO = new ArrayList<>();
-        for (Colaborador colaborador : colaboradorRepository.findByIsActiveTrue()){
+        for (Colaborador colaborador : colaboradorRepository.findByIsActiveTrue()) {
             ColaboradorSeleccionableDTO dto = new ColaboradorSeleccionableDTO();
             dto.setId(colaborador.getId());
             dto.setNombreCompleto(colaborador.getNombreCompleto());
+            dto.setColor(colaborador.getEventoColor());
             listaDTO.add(dto);
         }
-        return listaDTO;
+        model.addAttribute("listaSelectColaboradoresActivos", listaDTO);
+        return model;
     }
+
+
+
 }
