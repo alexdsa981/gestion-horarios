@@ -13,10 +13,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("btnRepetirFechas").addEventListener("click", function () {
     const fechas = fp.selectedDates.map((date) => fp.formatDate(date, "Y-m-d"));
-    const colab = document.getElementById("colaborador");
-    const inicio = document.getElementById("horaInicio").value;
-    const fin = document.getElementById("horaFin").value;
-    const sede = document.getElementById("sede").value;
+    const colab = document.getElementById("edit-colaborador");
+
+    const inicioHora = document.getElementById("edit-horaInicioHora").value;
+    const inicioMinuto = document.getElementById("edit-horaInicioMinuto").value;
+    const finHora = document.getElementById("edit-horaFinHora").value;
+    const finMinuto = document.getElementById("edit-horaFinMinuto").value;
+
+    const inicio = `${inicioHora}:${inicioMinuto}`;
+    const fin = `${finHora}:${finMinuto}`;
+
+    const sede = Number(document.getElementById("edit-sede").value);
+
     const color = colab.options[colab.selectedIndex].dataset.color;
     const doctor = colab.options[colab.selectedIndex].text;
 
@@ -60,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
       creados++;
       logs.push(`ID: ${id} | Fecha: ${fecha} | ${inicio} - ${fin}`);
     });
+
     if (creados > 0) {
       Swal.fire({
         icon: "success",
