@@ -1,6 +1,7 @@
-package com.ipor.horariostua.core.model;
+package com.ipor.horariostua.usuario.caracteristicas.rol;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ipor.horariostua.core.model.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

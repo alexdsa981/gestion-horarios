@@ -3,10 +3,10 @@ package com.ipor.horariostua.config.initializer;
 
 import com.ipor.horariostua.colaborador.Colaborador;
 import com.ipor.horariostua.colaborador.ColaboradorRepository;
-import com.ipor.horariostua.core.model.RolUsuario;
+import com.ipor.horariostua.usuario.caracteristicas.rol.RolUsuario;
 import com.ipor.horariostua.sede.Sede;
 import com.ipor.horariostua.core.model.Usuario;
-import com.ipor.horariostua.core.repository.RolUsuarioRepository;
+import com.ipor.horariostua.usuario.caracteristicas.rol.RolUsuarioRepository;
 import com.ipor.horariostua.sede.SedeRepository;
 import com.ipor.horariostua.core.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

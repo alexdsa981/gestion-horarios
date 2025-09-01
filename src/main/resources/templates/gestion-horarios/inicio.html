@@ -41,7 +41,7 @@
     <script th:inline="javascript">
         let listaSedesActivas = /*[[${listaSedesActivas}]]*/ [];
     </script>
-    <div class="container" style="display: flex">
+    <div class="container-fluid" style="display: flex">
         <div id="left-panel" class="p-3 bg-light border rounded mt-3"
              style="position: sticky; top: 20px; height: fit-content">
             <div id="nav"></div>
@@ -51,7 +51,7 @@
                     <option
                             th:each="colaborador : ${listaSelectColaboradoresActivos}"
                             th:value="${colaborador.id}"
-                            th:text="${colaborador.nombreCompleto}"
+                            th:text="${colaborador.apellidoP + ' ' + colaborador.nombre}"
                             th:attr="data-color=${colaborador.color}">
                     </option>
                 </select>
@@ -101,7 +101,7 @@
                         <option
                                 th:each="colaborador : ${listaSelectColaboradoresActivos}"
                                 th:value="${colaborador.id}"
-                                th:text="${colaborador.nombreCompleto}"
+                                th:text="${colaborador.apellidoP + ' ' + colaborador.nombre}"
                                 th:attr="data-color=${colaborador.color}">
                         </option>
                     </select>

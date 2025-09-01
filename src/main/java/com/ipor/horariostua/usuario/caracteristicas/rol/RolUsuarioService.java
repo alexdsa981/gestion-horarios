@@ -1,7 +1,5 @@
-package com.ipor.horariostua.usuario.rol;
+package com.ipor.horariostua.usuario.caracteristicas.rol;
 
-import com.ipor.horariostua.core.model.RolUsuario;
-import com.ipor.horariostua.core.repository.RolUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -14,17 +14,17 @@ public class ColaboradorService {
     @Autowired
     ColaboradorRepository colaboradorRepository;
 
-    public Model getModelSelectColaboradoresActivos(Model model) {
+    public void getModelSelectColaboradoresActivos(Model model) {
         List<ColaboradorSeleccionableDTO> listaDTO = new ArrayList<>();
         for (Colaborador colaborador : colaboradorRepository.findByIsActiveTrue()) {
             ColaboradorSeleccionableDTO dto = new ColaboradorSeleccionableDTO();
             dto.setId(colaborador.getId());
-            dto.setNombreCompleto(colaborador.getNombreCompleto());
+            dto.setNombre(colaborador.getNombre());
+            dto.setApellidoP(colaborador.getApellidoP());
             dto.setColor(colaborador.getEventoColor());
             listaDTO.add(dto);
         }
         model.addAttribute("listaSelectColaboradoresActivos", listaDTO);
-        return model;
     }
 
 

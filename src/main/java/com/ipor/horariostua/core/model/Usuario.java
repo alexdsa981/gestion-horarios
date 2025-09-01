@@ -1,6 +1,8 @@
 package com.ipor.horariostua.core.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ipor.horariostua.usuario.caracteristicas.area.AreaUsuario;
+import com.ipor.horariostua.usuario.caracteristicas.rol.RolUsuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +32,15 @@ public class Usuario {
     @Column(nullable = false, columnDefinition = "BIT DEFAULT 0")
     private Boolean changedPass;
 
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_rol_usuario", nullable = false)
     private RolUsuario rolUsuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_area_usuario")
+    private AreaUsuario areaUsuario;
 
 
 //    //en SERVICE SE USA PARA ENCRIPTAR DIRECTAMENTE

@@ -9,6 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ColaboradorSeleccionableDTO {
     private Long id;
-    private String nombreCompleto;
+    private String apellidoP;
+    private String nombre;
     private String color;
 }
