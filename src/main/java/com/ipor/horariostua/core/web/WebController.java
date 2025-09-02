@@ -1,8 +1,8 @@
 package com.ipor.horariostua.core.web;
 
 
-import com.ipor.horariostua.colaborador.ColaboradorService;
-import com.ipor.horariostua.sede.SedeService;
+import com.ipor.horariostua.bloquehorario.colaborador.ColaboradorService;
+import com.ipor.horariostua.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,6 +1,6 @@
 package com.ipor.horariostua.logs;
 
-import com.ipor.horariostua.core.model.Usuario;
+import com.ipor.horariostua.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
