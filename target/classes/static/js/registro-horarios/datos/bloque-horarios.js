@@ -15,6 +15,7 @@ async function cargarBloquesHorariosEnCalendario(calendar) {
         text: b.nombreColaborador,
         backColor: b.color,
         idColaborador: b.idColaborador,
+        grupoAnidado: b.grupoAnidado,
       });
     });
 

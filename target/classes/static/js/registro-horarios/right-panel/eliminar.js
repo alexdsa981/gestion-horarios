@@ -7,7 +7,6 @@ calendar.onEventRightClick = function(args) {
     cancelButtonText: "Cancelar"
   }).then((result) => {
     if (result.isConfirmed) {
-      // Llamada al backend para eliminar
       fetch(`/app/bloque-horarios/eliminar/${args.e.id()}`, {
         method: "DELETE"
       })
@@ -21,6 +20,8 @@ calendar.onEventRightClick = function(args) {
           timer: 1200,
           showConfirmButton: false
         });
+        document.getElementById("right-panel").style.display = "none";
+
       })
       .catch(error => {
         Swal.fire({

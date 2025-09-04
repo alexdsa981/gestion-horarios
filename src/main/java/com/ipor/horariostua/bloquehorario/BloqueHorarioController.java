@@ -4,6 +4,7 @@ import com.ipor.horariostua.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.bloquehorario.dto.Recibido_BH_DTO;
 import com.ipor.horariostua.bloquehorario.dto.Mostrar_BH_DTO;
+import com.ipor.horariostua.bloquehorario.dto.Repetir_BH_DTO;
 import com.ipor.horariostua.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -41,45 +44,40 @@ public class BloqueHorarioController {
 
     @PostMapping("/agregar")
     public ResponseEntity<Mostrar_BH_DTO> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
-        // Imprime el DTO completo
-        System.out.println("DTO recibido: " + dto);
-
-        // Si quieres ver cada campo explícitamente:
-        System.out.println("fecha: " + dto.getFecha());
-        System.out.println("horaInicio: " + dto.getHoraInicio());
-        System.out.println("horaFin: " + dto.getHoraFin());
-        System.out.println("idColaborador: " + dto.getIdColaborador());
-        System.out.println("idSede: " + dto.getIdSede());
-        System.out.println("idAgrupacion: " + dto.getIdAgrupacion());
-
-        BloqueHorario bloqueHorario = new BloqueHorario();
-        bloqueHorario.setHorarioLaboral(horarioLaboralService.getUltimoHorarioLaboral());
-        bloqueHorario.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
-        bloqueHorario.setFecha(dto.getFecha());
-        bloqueHorario.setHoraInicio(dto.getHoraInicio());
-        bloqueHorario.setHoraFin(dto.getHoraFin());
-        bloqueHorario.setAgrupacion(agrupacionService.getAgrupacionPorId(1L)); // O usa dto.getIdAgrupacion() si corresponde
-        bloqueHorario.setSede(sedeService.getSedePorId(dto.getIdSede()));
-        bloqueHorario.setGrupoAnidado(null);
-
-        BloqueHorario guardado = bloqueHorarioService.save(bloqueHorario);
-
+        BloqueHorario guardado = bloqueHorarioService.agregar(dto);
         Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
         return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
     }
 
+
+
+
+    @PostMapping("/repetir")
+    public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
+        System.out.println("DTO recibido: " + dto);
+        if (dto.getFechas() != null) {
+            dto.getFechas().forEach(fecha -> System.out.println("Fecha: " + fecha));
+        }
+        try {
+            List<BloqueHorario> listaRepeticion = bloqueHorarioService.repetir(dto);
+            List<Mostrar_BH_DTO> listaMostrar = new ArrayList<>();
+            for (BloqueHorario repetido : listaRepeticion){
+                Mostrar_BH_DTO mostrarDTO = new Mostrar_BH_DTO(repetido);
+                listaMostrar.add(mostrarDTO);
+                System.out.println("Bloque creado: " + mostrarDTO);
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(listaMostrar);
+        } catch (Exception e) {
+            System.out.println("Error al registrar repetición: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
     @PutMapping("/editar/{id}")
     public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario( @RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
-        System.out.println("DTO recibido para edición: " + dto);
-
-        System.out.println("fecha: " + dto.getFecha());
-        System.out.println("horaInicio: " + dto.getHoraInicio());
-        System.out.println("horaFin: " + dto.getHoraFin());
-        System.out.println("idColaborador: " + dto.getIdColaborador());
-        System.out.println("idSede: " + dto.getIdSede());
-
         BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
-
         Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
         return ResponseEntity.ok(mostrarDto);
     }
@@ -88,6 +86,12 @@ public class BloqueHorarioController {
     public ResponseEntity<Void> eliminarBloqueHorario(@PathVariable Long id) {
         bloqueHorarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/fechas-repeticion/{id}")
+    public ResponseEntity<List<LocalDate>> listarBloquesHorarios(@PathVariable Long id) {
+        List<LocalDate> listaFechas = bloqueHorarioService.listarFechasRepeticion(id);
+        return ResponseEntity.ok(listaFechas);
     }
 
 }

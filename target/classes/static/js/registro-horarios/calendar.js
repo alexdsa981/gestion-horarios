@@ -68,6 +68,7 @@ calendar.onEventResized = function (args) {
     args.e.data.resource = data.idSede;
     args.e.data.backColor = data.color;
     args.e.data.idColaborador = data.idColaborador;
+    args.e.data.grupoAnidado = data.grupoAnidado;
     calendar.events.update(args.e);
 
     Swal.fire({
@@ -89,6 +90,7 @@ calendar.onEventResized = function (args) {
       text: args.e.data.text,
       backColor: args.e.data.backColor,
       idColaborador: args.e.data.idColaborador,
+      grupoAnidado: args.e.data.grupoAnidado,
     });
 
     Swal.fire({
@@ -135,6 +137,7 @@ calendar.onEventMoved = function (args) {
       text: lastEventState.text,
       backColor: lastEventState.backColor,
       idColaborador: args.e.data.idColaborador,
+      grupoAnidado: args.e.data.grupoAnidado,
     });
     Swal.fire({
       icon: "warning",
@@ -179,6 +182,7 @@ calendar.onEventMoved = function (args) {
     args.e.data.resource = data.idSede;
     args.e.data.backColor = data.color;
     args.e.data.idColaborador = data.idColaborador;
+    args.e.data.grupoAnidado = data.grupoAnidado;
     calendar.events.update(args.e);
 
     Swal.fire({
@@ -200,6 +204,7 @@ calendar.onEventMoved = function (args) {
       text: lastEventState.text,
       backColor: lastEventState.backColor,
       idColaborador: lastEventState.idColaborador,
+      grupoAnidado: lastEventState.grupoAnidado,
     });
 
     Swal.fire({
