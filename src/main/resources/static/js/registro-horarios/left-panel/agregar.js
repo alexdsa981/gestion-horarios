@@ -68,7 +68,8 @@ document.getElementById("btn-agregar-bloque").addEventListener("click", () => {
       id: bloqueCreado.id,
       resource: bloqueCreado.idSede,
       text: bloqueCreado.nombreColaborador,
-      backColor: bloqueCreado.color
+      backColor: bloqueCreado.color,
+      idColaborador: bloqueCread.idColaborador
     });
 
     Swal.fire({

@@ -20,10 +20,8 @@ const calendar = new DayPilot.Calendar("calendar", {
     const isWorkingHour = hour >= this.businessBeginsHour && hour < this.businessEndsHour;
 
     if (args.cell.start.dayOfWeek() === 6 && isWorkingHour) {
-      // Sábado: solo horas dentro de horario laboral
       args.cell.properties.business = true;
     } else if (args.cell.start.dayOfWeek() !== 0 && isWorkingHour) {
-      // Lunes a viernes: horario laboral normal
       args.cell.properties.business = true;
     } else {
       args.cell.properties.business = false;
@@ -31,11 +29,79 @@ const calendar = new DayPilot.Calendar("calendar", {
     }
   },
 
-  onEventResized: (args) => {
-    document.getElementById("right-panel").style.display = "none";
-    console.log("Colaborador reprogramado", args);
-  },
 });
+calendar.onEventResized = function (args) {
+  document.getElementById("right-panel").style.display = "none";
+
+  // --- Construye DTO para el backend ---
+  const id = args.e.data.id;
+  const idColaborador = args.e.data.idColaborador;
+  const idSede = args.e.data.resource;
+  const fecha = args.newStart.toString("yyyy-MM-dd");
+  const horaInicio = args.newStart.toString("HH:mm");
+  const horaFin = args.newEnd.toString("HH:mm");
+
+  const dto = {
+    idColaborador: Number(idColaborador),
+    idSede: Number(idSede),
+    fecha: fecha,
+    horaInicio: horaInicio,
+    horaFin: horaFin
+  };
+
+  console.log("Enviando DTO al backend (resize):", dto);
+
+  fetch(`/app/bloque-horarios/editar/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dto)
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Error al guardar cambio de tamaño en el servidor");
+    return response.json();
+  })
+  .then(data => {
+    // Solo actualiza si el backend responde bien
+    args.e.data.text = data.nombreColaborador;
+    args.e.data.start = `${data.fecha}T${data.horaInicio}`;
+    args.e.data.end = `${data.fecha}T${data.horaFin}`;
+    args.e.data.resource = data.idSede;
+    args.e.data.backColor = data.color;
+    args.e.data.idColaborador = data.idColaborador;
+    calendar.events.update(args.e);
+
+    Swal.fire({
+      icon: "success",
+      title: "Horario ajustado",
+      timer: 1000,
+      showConfirmButton: false
+    });
+  })
+  .catch(error => {
+    console.error("ERROR EN EL CATCH (resize):", error);
+
+    // Opcional: revertir visualmente el cambio si hubo error
+    calendar.events.update({
+      id: args.e.data.id,
+      start: args.e.data.start,
+      end: args.e.data.end,
+      resource: args.e.data.resource,
+      text: args.e.data.text,
+      backColor: args.e.data.backColor,
+      idColaborador: args.e.data.idColaborador,
+    });
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message
+    });
+  });
+};
+
+
+
+
 
 let lastEventState = {};
 
@@ -68,6 +134,7 @@ calendar.onEventMoved = function (args) {
       resource: lastEventState.resource,
       text: lastEventState.text,
       backColor: lastEventState.backColor,
+      idColaborador: args.e.data.idColaborador,
     });
     Swal.fire({
       icon: "warning",
@@ -76,7 +143,72 @@ calendar.onEventMoved = function (args) {
     });
     return;
   }
-  console.log("Colaborador movido", args);
+
+  // Nuevo flujo para persistir el cambio en backend
+  const id = args.e.data.id;
+  const idColaborador = args.e.data.idColaborador;
+  const idSede = args.e.data.resource;
+  const fecha = args.newStart.toString("yyyy-MM-dd");
+  const horaInicio = args.newStart.toString("HH:mm");
+  const horaFin = args.newEnd.toString("HH:mm");
+
+  const dto = {
+    idColaborador: Number(idColaborador),
+    idSede: Number(idSede),
+    fecha: fecha,
+    horaInicio: horaInicio,
+    horaFin: horaFin
+  };
+
+  console.log("Enviando DTO al mover:", dto);
+
+  fetch(`/app/bloque-horarios/editar/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dto)
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Error al guardar movimiento en el servidor");
+    return response.json();
+  })
+  .then(data => {
+    // Solo actualiza visualmente si el backend responde OK
+    args.e.data.text = data.nombreColaborador;
+    args.e.data.start = `${data.fecha}T${data.horaInicio}`;
+    args.e.data.end = `${data.fecha}T${data.horaFin}`;
+    args.e.data.resource = data.idSede;
+    args.e.data.backColor = data.color;
+    args.e.data.idColaborador = data.idColaborador;
+    calendar.events.update(args.e);
+
+    Swal.fire({
+      icon: "success",
+      title: "Horario actualizado",
+      timer: 1000,
+      showConfirmButton: false
+    });
+  })
+  .catch(error => {
+    console.error("ERROR EN EL CATCH (mover):", error);
+
+    // Revertir visualmente el movimiento si hay error
+    calendar.events.update({
+      id: lastEventState.id,
+      start: lastEventState.start,
+      end: lastEventState.end,
+      resource: lastEventState.resource,
+      text: lastEventState.text,
+      backColor: lastEventState.backColor,
+      idColaborador: lastEventState.idColaborador,
+    });
+
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: error.message
+    });
+  });
 };
 
 calendar.init();
+cargarBloquesHorariosEnCalendario(calendar);

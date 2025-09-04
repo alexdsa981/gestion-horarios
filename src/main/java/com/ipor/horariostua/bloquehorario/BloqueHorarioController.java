@@ -1,21 +1,16 @@
 package com.ipor.horariostua.bloquehorario;
 
-import com.ipor.horariostua.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.bloquehorario.colaborador.ColaboradorService;
-import com.ipor.horariostua.bloquehorario.dto.Agrega_BH_DTO;
+import com.ipor.horariostua.bloquehorario.dto.Recibido_BH_DTO;
 import com.ipor.horariostua.bloquehorario.dto.Mostrar_BH_DTO;
-import com.ipor.horariostua.bloquehorario.horariolaboral.HorarioLaboralRepository;
 import com.ipor.horariostua.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,8 +30,17 @@ public class BloqueHorarioController {
     AgrupacionService agrupacionService;
 
 
+    @GetMapping("/listar-todo")
+    public ResponseEntity<List<Mostrar_BH_DTO>> listarBloquesHorarios() {
+        List<BloqueHorario> bloques = bloqueHorarioService.listarTodo();
+        List<Mostrar_BH_DTO> dtos = bloques.stream()
+                .map(Mostrar_BH_DTO::new)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
     @PostMapping("/agregar")
-    public ResponseEntity<Mostrar_BH_DTO> registraBloqueHorario(@RequestBody Agrega_BH_DTO dto) {
+    public ResponseEntity<Mostrar_BH_DTO> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
         // Imprime el DTO completo
         System.out.println("DTO recibido: " + dto);
 
@@ -62,6 +66,28 @@ public class BloqueHorarioController {
 
         Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
         return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
+    }
+
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario( @RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
+        System.out.println("DTO recibido para edición: " + dto);
+
+        System.out.println("fecha: " + dto.getFecha());
+        System.out.println("horaInicio: " + dto.getHoraInicio());
+        System.out.println("horaFin: " + dto.getHoraFin());
+        System.out.println("idColaborador: " + dto.getIdColaborador());
+        System.out.println("idSede: " + dto.getIdSede());
+
+        BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
+
+        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
+        return ResponseEntity.ok(mostrarDto);
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<Void> eliminarBloqueHorario(@PathVariable Long id) {
+        bloqueHorarioService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
