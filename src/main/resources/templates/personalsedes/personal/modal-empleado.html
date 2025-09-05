@@ -1,0 +1,42 @@
+<div th:fragment="modalEmpleado" xmlns:th="http://www.thymeleaf.org">
+    <!-- Modal Buscar Empleado -->
+    <div class="modal fade" id="modalBuscarEmpleado" tabindex="-1" aria-labelledby="modalBuscarEmpleadoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title" id="modalBuscarEmpleadoLabel">
+                        <i class="bi bi-search"></i> Buscar y Agregar Personal
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+
+                    <!-- Buscador -->
+                    <div class="mb-3">
+                        <label for="buscadorEmpleado" class="form-label">
+                            <i class="bi bi-search"></i> Buscar Personal
+                        </label>
+                        <input type="text" id="buscadorEmpleado" class="form-control" placeholder="Ingrese al menos 2 letras" autocomplete="off">
+                    </div>
+
+                    <!-- Tabla de empleados encontrados -->
+                    <div class="table-responsive shadow-sm rounded overflow-hidden">
+                        <table class="table table-bordered table-hover align-middle mb-0">
+                            <thead class="table-light text-center">
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre Completo</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tablaEmpleadosBody">
+                            <!-- Filas generadas por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

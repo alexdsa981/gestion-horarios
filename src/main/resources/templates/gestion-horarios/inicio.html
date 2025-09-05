@@ -1,40 +1,31 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Horarios Colaboradores</title>
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/imports/bootstrap-icons/font/bootstrap-icons.css"/>
-    <link rel="stylesheet" href="/imports/sweetalert2.min.css"/>
-    <link rel="stylesheet" href="/imports/flatpickr/flatpickr.min.css"/>
-</head>
+<header th:replace="~{common/imports :: headImports}"></header>
 <body>
-<header th:replace="common/header :: header"></header>
-
+<header th:replace="~{common/header :: header}"></header>
 <main>
     <script th:inline="javascript">
         let listaSedesActivas = /*[[${listaSedesActivas}]]*/ [];
     </script>
     <div class="container-fluid" style="display: flex">
-        <div th:replace="gestion-horarios/left-panel :: left-panel-add"></div>
-
+        <div th:replace="~{gestion-horarios/left-panel :: left-panel-add}"></div>
 
         <div class="mt-3 ms-3 me-3">
             <div id="calendar"></div>
         </div>
 
-        <div th:replace="gestion-horarios/right-panel :: right-panel-edit"></div>
+        <div th:replace="~{gestion-horarios/right-panel :: right-panel-edit}"></div>
 
     </div>
 </main>
-<div th:replace="gestion-horarios/modal-repetir :: modal-repetir"></div>
+<div th:replace="~{gestion-horarios/modal-repetir :: modal-repetir}"></div>
 
 
+
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
 
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
-<script src="/imports/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/imports/sweetalert2.all.min.js"></script>
 <script src="/imports/flatpickr/flatpickr.js"></script>
 <script src="/imports/flatpickr/es.js"></script>
 

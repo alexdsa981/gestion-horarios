@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{common/imports :: headImports}"></header>
+<body>
+<header th:replace="~{common/header :: header}"></header>
+
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+</body>
+
+</html>

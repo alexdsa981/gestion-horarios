@@ -1,8 +1,8 @@
 package com.ipor.horariostua.core.web;
 
 
-import com.ipor.horariostua.bloquehorario.colaborador.ColaboradorService;
-import com.ipor.horariostua.bloquehorario.sede.SedeService;
+import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
+import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +18,23 @@ public class WebController {
 
 
     @GetMapping("/registro-horarios")
-    public String redirigePaginaInicio(Model model) {
+    public String redirigePaginaRegistro(Model model) {
         colaboradorService.getModelSelectColaboradoresActivos(model);
         sedeService.getModelSedesActivas(model);
-        model.addAttribute("Titulo", "Gestión Horarios | Principal");
+        model.addAttribute("Titulo", "IPOR - Horarios | Registro");
         return "gestion-horarios/inicio";
+    }
+
+    @GetMapping("/personal")
+    public String redirigePaginaPersonal(Model model) {
+        model.addAttribute("Titulo", "IPOR - Horarios | Mi Personal");
+        return "personalsedes/personal/personal";
+    }
+
+    @GetMapping("/sedes")
+    public String redirigePaginaSedes(Model model) {
+        model.addAttribute("Titulo", "IPOR - Horarios | Sedes");
+        return "personalsedes/sedes/sedes";
     }
 
 

@@ -14,7 +14,7 @@
                 <option
                         th:each="colaborador : ${listaSelectColaboradoresActivos}"
                         th:value="${colaborador.id}"
-                        th:text="${colaborador.apellidoP + ' ' + colaborador.nombre}"
+                        th:text="${colaborador.nombreCompleto}"
                         th:attr="data-color=${colaborador.color}">
                 </option>
             </select>
