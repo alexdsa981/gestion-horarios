@@ -10,7 +10,7 @@ async function cargarColaboradores() {
 
         colaboradores.forEach((colaborador, index) => {
             const estadoHTML = colaborador.isActive
-                ? `<span class="badge bg-success estado-toggle" data-id="${colaborador.idPersona}" style="cursor:pointer;">Activo</span>`
+                ? `<span class="badge bg-success estado-toggle" data-id="${colaborador.id}" style="cursor:pointer;">Activo</span>`
                 : `<span class="badge bg-secondary">Inactivo</span>`;
 
             const fila = `
@@ -39,7 +39,7 @@ async function cargarColaboradores() {
 
                 if (result.isConfirmed) {
                     try {
-                        const res = await fetch(`/app/personal/colaborador/desactivar/${id}`, {
+                        const res = await fetch(`/app/colaboradores/desactivar/${id}`, {
                             method: 'POST'
                         });
 

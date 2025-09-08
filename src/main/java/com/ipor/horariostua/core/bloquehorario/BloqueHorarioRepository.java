@@ -10,4 +10,6 @@ public interface BloqueHorarioRepository extends JpaRepository<BloqueHorario, Lo
     Integer findMaxGrupoAnidado();
 
     List<BloqueHorario> findByGrupoAnidado(Integer grupoAnidado);
+
+    List<BloqueHorario> findByAgrupacionId(Long id);
 }

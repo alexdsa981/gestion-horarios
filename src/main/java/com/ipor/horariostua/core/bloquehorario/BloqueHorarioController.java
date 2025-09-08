@@ -1,6 +1,8 @@
 package com.ipor.horariostua.core.bloquehorario;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.dto.Recibido_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.dto.Mostrar_BH_DTO;
@@ -22,39 +24,39 @@ import java.util.List;
 public class BloqueHorarioController {
 
     @Autowired
-    BloqueHorarioService bloqueHorarioService;
+    private BloqueHorarioService bloqueHorarioService;
     @Autowired
-    HorarioLaboralService horarioLaboralService;
+    private HorarioLaboralService horarioLaboralService;
     @Autowired
-    ColaboradorService colaboradorService;
+    private ColaboradorService colaboradorService;
     @Autowired
-    SedeService sedeService;
+    private SedeService sedeService;
     @Autowired
-    AgrupacionService agrupacionService;
+    private AgrupacionService agrupacionService;
+    @Autowired
+    private DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
 
-
-    @GetMapping("/listar-todo")
-    public ResponseEntity<List<Mostrar_BH_DTO>> listarBloquesHorarios() {
-        List<BloqueHorario> bloques = bloqueHorarioService.listarTodo();
-        List<Mostrar_BH_DTO> dtos = bloques.stream()
-                .map(Mostrar_BH_DTO::new)
-                .toList();
-        return ResponseEntity.ok(dtos);
+    @GetMapping("/listar-agrupacion/{idAgrupacion}")
+    public ResponseEntity<List<BloqueHorario>> listarBloquesAgrupacion(@PathVariable Long idAgrupacion) {
+        List<BloqueHorario> listaHorarios = bloqueHorarioService.listarPorAgrupacionId(idAgrupacion);
+        return ResponseEntity.ok(listaHorarios);
     }
 
     @PostMapping("/agregar")
     public ResponseEntity<Mostrar_BH_DTO> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
         BloqueHorario guardado = bloqueHorarioService.agregar(dto);
-        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
+        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
+        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
         return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
     }
-
-
-
 
     @PostMapping("/repetir")
     public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
         System.out.println("DTO recibido: " + dto);
+        BloqueHorario bloqueRepetir = bloqueHorarioService.getPorId(dto.getId());
+        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(bloqueRepetir.getColaborador().getId(), bloqueRepetir.getAgrupacion().getId());
+
+
         if (dto.getFechas() != null) {
             dto.getFechas().forEach(fecha -> System.out.println("Fecha: " + fecha));
         }
@@ -62,7 +64,7 @@ public class BloqueHorarioController {
             List<BloqueHorario> listaRepeticion = bloqueHorarioService.repetir(dto);
             List<Mostrar_BH_DTO> listaMostrar = new ArrayList<>();
             for (BloqueHorario repetido : listaRepeticion){
-                Mostrar_BH_DTO mostrarDTO = new Mostrar_BH_DTO(repetido);
+                Mostrar_BH_DTO mostrarDTO = new Mostrar_BH_DTO(repetido, detalle);
                 listaMostrar.add(mostrarDTO);
                 System.out.println("Bloque creado: " + mostrarDTO);
             }
@@ -78,7 +80,8 @@ public class BloqueHorarioController {
     @PutMapping("/editar/{id}")
     public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario( @RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
         BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
-        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado);
+        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(guardado.getColaborador().getId(), guardado.getAgrupacion().getId());
+        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
         return ResponseEntity.ok(mostrarDto);
     }
 

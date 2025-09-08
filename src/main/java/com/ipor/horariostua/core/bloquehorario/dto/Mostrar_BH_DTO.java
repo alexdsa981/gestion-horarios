@@ -2,6 +2,7 @@ package com.ipor.horariostua.core.bloquehorario.dto;
 
 import com.ipor.horariostua.core.bloquehorario.BloqueHorario;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.colaborador.Colaborador;
 import com.ipor.horariostua.core.bloquehorario.sede.Sede;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class Mostrar_BH_DTO {
 
     private String color;
 
-    public Mostrar_BH_DTO(BloqueHorario entity) {
+    public Mostrar_BH_DTO(BloqueHorario entity, DetalleColaboradorAgrupacion detalle) {
         this.id = entity.getId();
         this.horaInicio = entity.getHoraInicio();
         this.horaFin = entity.getHoraFin();
@@ -44,7 +45,8 @@ public class Mostrar_BH_DTO {
         if (colab != null) {
             this.idColaborador = colab.getId();
             this.nombreColaborador = colab.getNombreCompleto();
-            this.color = colab.getEventoColor();
+
+            this.color = detalle.getEventoColor();
         }
 
         Sede sede = entity.getSede();

@@ -1,6 +1,8 @@
 package com.ipor.horariostua.core.bloquehorario;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.dto.Recibido_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.dto.Repetir_BH_DTO;
@@ -25,7 +27,16 @@ public class BloqueHorarioService {
     HorarioLaboralService horarioLaboralService;
     @Autowired
     SedeService sedeService;
+    @Autowired
+    DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
 
+    public BloqueHorario getPorId(Long id){
+        return bloqueHorarioRepository.findById(id).get();
+    }
+
+    public List<BloqueHorario> listarPorAgrupacionId(Long idAgrupacion){
+        return bloqueHorarioRepository.findByAgrupacionId(idAgrupacion);
+    }
 
     public BloqueHorario agregar(Recibido_BH_DTO dto){
         BloqueHorario bloqueHorario = new BloqueHorario();
@@ -98,10 +109,6 @@ public class BloqueHorarioService {
             }
         }
         return bloquesResultantes;
-    }
-
-    public List<BloqueHorario> listarTodo(){
-        return bloqueHorarioRepository.findAll();
     }
 
     public List<LocalDate> listarFechasRepeticion(Long id){

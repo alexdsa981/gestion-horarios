@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface ColaboradorRepository extends JpaRepository<Colaborador, Long> {
     List<Colaborador> findByIsActiveTrue();
-
 }

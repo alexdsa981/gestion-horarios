@@ -90,6 +90,11 @@ public class DataInitializer implements CommandLineRunner {
         if (agrupacionRepository.count() == 0) {
             List<Agrupacion> agrupaciones = new ArrayList<>();
 
+            Agrupacion agrupacion0 = new Agrupacion();
+            agrupacion0.setNombre("Todo");
+            agrupaciones.add(agrupacion0);
+
+
             Agrupacion agrupacion1 = new Agrupacion();
             agrupacion1.setNombre("Rol de Enfermería");
             agrupaciones.add(agrupacion1);

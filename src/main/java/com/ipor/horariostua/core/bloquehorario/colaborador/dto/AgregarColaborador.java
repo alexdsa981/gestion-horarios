@@ -20,4 +20,5 @@ public class AgregarColaborador {
     private String especialidadNombre;
     private String estadoEmpleado;
 
+    private Long idAgrupacion;
 }

@@ -24,6 +24,5 @@ public class Colaborador {
     private String especialidad;
     private String servicio;
 
-    private String eventoColor;
 
 }

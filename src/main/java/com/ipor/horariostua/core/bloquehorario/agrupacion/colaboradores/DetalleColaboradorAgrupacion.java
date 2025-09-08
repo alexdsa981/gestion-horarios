@@ -1,5 +1,6 @@
-package com.ipor.horariostua.core.usuario.colaboradores;
+package com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores;
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.colaborador.Colaborador;
 import com.ipor.horariostua.core.usuario.Usuario;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class DetalleColaborador {
+public class DetalleColaboradorAgrupacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +22,9 @@ public class DetalleColaborador {
     private Colaborador colaborador;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "id_agrupacion", nullable = false)
+    private Agrupacion agrupacion;
+
+    private String eventoColor;
+
 }

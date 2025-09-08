@@ -1,0 +1,59 @@
+<div th:fragment="modalEditarUsuario" xmlns:th="http://www.thymeleaf.org">
+
+
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Encabezado del modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Cuerpo del modal con el formulario -->
+                <div class="modal-body">
+                    <!-- Quitar th:action y usar una acción estática -->
+                    <form id="editUserForm" method="post">
+                        <div class="mb-3">
+                            <label for="usernameEdit" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="usernameEdit" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="passwordEdit" class="form-label">Contraseña Nueva</label>
+                            <input type="text" placeholder="Completar campo si desea cambiar contraseña"
+                                   class="form-control" id="passwordEdit" name="password" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="nombreEdit" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreEdit" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+
+
+                            <div class="mb-3">
+                                <label for="rolEdit" class="form-label">Asignar Rol</label>
+                                <select class="form-select" id="rolEdit" name="rol" required>
+                                    <option selected disabled value="">Selecciona Rol</option>
+                                    <option th:each="rol : ${Lista_Roles}" th:value="${rol.id}"
+                                            th:text="${rol.nombre}"></option>
+                                </select>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

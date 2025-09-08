@@ -37,5 +37,11 @@ public class WebController {
         return "personalsedes/sedes/sedes";
     }
 
+    @GetMapping("/usuarios")
+    public String redirigePaginaUsuarios(Model model) {
+        model.addAttribute("Titulo", "IPOR - Horarios | Usuarios");
+        return "usuarios/usuarios";
+    }
+
 
 }
