@@ -1,13 +1,17 @@
 package com.ipor.horariostua.core.bloquehorario.colaborador;
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaboradorDTO;
+import com.ipor.horariostua.core.bloquehorario.colaborador.dto.ListarColaboradoresDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -17,12 +21,19 @@ public class ColaboradorController {
     ColaboradorService colaboradorService;
     @Autowired
     DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+    @Autowired
+    AgrupacionService agrupacionService;
 
     @GetMapping("/agrupacion/{idAgrupacion}")
     @ResponseBody
-    public ResponseEntity<List<Colaborador>> listarColaboradoresArea(@PathVariable Long idAgrupacion) {
-        List<Colaborador> colaboradores = colaboradorService.getListarPorAgrupacionId(idAgrupacion);
-        return ResponseEntity.ok(colaboradores);
+    public ResponseEntity<List<ListarColaboradoresDTO>> listarColaboradoresArea(@PathVariable Long idAgrupacion) {
+        List<Colaborador> listaColaboradores = colaboradorService.getListarPorAgrupacionId(idAgrupacion);
+        List<ListarColaboradoresDTO> listaDTO = new ArrayList<>();
+        for (Colaborador colaborador : listaColaboradores){
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(colaborador.getId(), agrupacionService.getAgrupacionPorId(idAgrupacion).getId());
+            listaDTO.add(new ListarColaboradoresDTO(colaborador, detalle));
+        }
+        return ResponseEntity.ok(listaDTO);
     }
 
     @PostMapping("/guardar")
@@ -32,10 +43,10 @@ public class ColaboradorController {
         return ResponseEntity.ok("Colaborador guardado exitosamente");
     }
 
-    @PostMapping("/desactivar/{id}")
+    @PostMapping("/desactivar/{idAgrupacion}/{idColaborador}")
     @ResponseBody
-    public ResponseEntity<String> desactivarColaborador(@PathVariable Long id) {
-        boolean resultado = colaboradorService.cambiarEstado(id, false);
+    public ResponseEntity<String> desactivarColaborador(@PathVariable Long idAgrupacion ,@PathVariable Long idColaborador) {
+        boolean resultado = colaboradorService.cambiarEstado(idAgrupacion ,idColaborador, false);
         if (resultado) {
             return ResponseEntity.ok("Colaborador desactivado exitosamente");
         } else {

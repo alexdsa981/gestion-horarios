@@ -33,7 +33,6 @@ public class ColaboradorService {
         colaborador.setColegioProfesional(agregarColaboradorDTO.getTipoColegio());
         colaborador.setNumeroColegiatura(agregarColaboradorDTO.getCmp());
         colaborador.setEspecialidad(agregarColaboradorDTO.getEspecialidadNombre());
-        colaborador.setIsActive(Boolean.TRUE);
         colaboradorRepository.save(colaborador);
         return colaborador;
     }
@@ -65,12 +64,13 @@ public class ColaboradorService {
         model.addAttribute("listaSelectColaboradoresActivosPorAgrupacion", listaDTO);
     }
 
-    public boolean cambiarEstado(Long id, Boolean estado) {
-        Optional<Colaborador> optionalColaborador = colaboradorRepository.findById(id);
+    public boolean cambiarEstado(Long idAgrupacion ,Long idColaborador, Boolean estado) {
+        Optional<Colaborador> optionalColaborador = colaboradorRepository.findById(idColaborador);
         if (optionalColaborador.isPresent()) {
             Colaborador colaborador = optionalColaborador.get();
-            colaborador.setIsActive(estado);
-            colaboradorRepository.save(colaborador);
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(colaborador.getId(), idAgrupacion);
+            detalle.setIsActive(estado);
+            detalleColaboradorAgrupacionService.save(detalle);
             return true;
         }
         return false;

@@ -48,7 +48,8 @@ buscador.addEventListener('input', async function () {
                     cmp: empleado.cmp,
                     idEspecialidad: empleado.idEspecialidad,
                     especialidadNombre: empleado.especialidadNombre,
-                    estadoEmpleado: empleado.estadoEmpleado
+                    estadoEmpleado: empleado.estadoEmpleado,
+                    idAgrupacion: agrupacionGlobalId
                 };
 
                 try {

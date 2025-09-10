@@ -47,6 +47,7 @@ public class LoginService {
 
     public ResponseEntity<Void> logearUsuarioAlSistema(String username, String password, HttpServletResponse response) throws IOException {
         try {
+            username = username.toUpperCase();
             System.out.println("Iniciando login para usuario: " + username);
 
             // 1. Verificar si el usuario existe localmente

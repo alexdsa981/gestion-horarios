@@ -1,11 +1,10 @@
 package com.ipor.horariostua.core.bloquehorario;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
-import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
-import com.ipor.horariostua.core.bloquehorario.dto.Recibido_BH_DTO;
-import com.ipor.horariostua.core.bloquehorario.dto.Repetir_BH_DTO;
+import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Recibido_BH_DTO;
+import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Repetir_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class BloqueHorarioService {
         bloqueHorario.setHoraInicio(dto.getHoraInicio());
         bloqueHorario.setHoraFin(dto.getHoraFin());
 
-        bloqueHorario.setAgrupacion(agrupacionService.getAgrupacionPorId(1L)); // O usa dto.getIdAgrupacion() si corresponde
+        bloqueHorario.setAgrupacion(agrupacionService.getAgrupacionPorId(dto.getIdAgrupacion()));
 
         bloqueHorario.setSede(sedeService.getSedePorId(dto.getIdSede()));
         bloqueHorario.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);

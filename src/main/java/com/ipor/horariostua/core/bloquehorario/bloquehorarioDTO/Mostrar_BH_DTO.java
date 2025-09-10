@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.bloquehorario.dto;
+package com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO;
 
 import com.ipor.horariostua.core.bloquehorario.BloqueHorario;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;

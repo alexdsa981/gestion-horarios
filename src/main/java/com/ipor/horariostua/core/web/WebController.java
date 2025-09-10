@@ -71,8 +71,6 @@ public class WebController {
     public String redirigePaginaRegistro(Model model) {
         Usuario usuario = usuarioService.getUsuarioLogeado();
         Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
-        System.out.println("[Controlador] agrupacionSeleccionadaId al entrar: " + agrupacionSeleccionadaId);
-
         colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
         sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
 

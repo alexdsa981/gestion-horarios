@@ -25,6 +25,8 @@ public class DetalleColaboradorAgrupacion {
     @JoinColumn(name = "id_agrupacion", nullable = false)
     private Agrupacion agrupacion;
 
+    private Boolean isActive;
+
     private String eventoColor;
 
 }

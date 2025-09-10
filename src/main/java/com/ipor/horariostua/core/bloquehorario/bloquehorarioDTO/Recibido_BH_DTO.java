@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.bloquehorario.dto;
+package com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

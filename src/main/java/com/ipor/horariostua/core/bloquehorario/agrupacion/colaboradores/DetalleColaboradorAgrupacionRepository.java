@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DetalleColaboradorAgrupacionRepository extends JpaRepository<DetalleColaboradorAgrupacion, Long> {
+
     Optional<DetalleColaboradorAgrupacion> findByColaboradorIdAndAgrupacionId(Long idColaborador, Long idAgrupacion);
-    List<DetalleColaboradorAgrupacion> findByAgrupacionId(Long idAgrupacion);
+
+    List<DetalleColaboradorAgrupacion> findByAgrupacionIdAndIsActiveTrue(Long idAgrupacion);
 }

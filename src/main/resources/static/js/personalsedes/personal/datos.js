@@ -17,6 +17,9 @@ async function cargarColaboradores() {
                 <tr>
                     <td class="text-center">${index + 1}</td>
                     <td>${colaborador.nombreCompleto}</td>
+                    <td>
+                      <input type="color" name="color" value="${colaborador.color}">
+                    </td>
                     <td class="text-center">${estadoHTML}</td>
                 </tr>
             `;
@@ -26,7 +29,7 @@ async function cargarColaboradores() {
         // Agregar eventos a spans activos
         cuerpoTabla.querySelectorAll('.estado-toggle').forEach(span => {
             span.addEventListener('click', async function () {
-                const id = this.getAttribute('data-id');
+                const idColaborador = this.getAttribute('data-id');
 
                 const result = await Swal.fire({
                     title: '¿Desactivar colaborador?',
@@ -39,7 +42,7 @@ async function cargarColaboradores() {
 
                 if (result.isConfirmed) {
                     try {
-                        const res = await fetch(`/app/colaboradores/desactivar/${id}`, {
+                        const res = await fetch("/app/colaboradores/desactivar/"+agrupacionGlobalId+"/"+idColaborador, {
                             method: 'POST'
                         });
 

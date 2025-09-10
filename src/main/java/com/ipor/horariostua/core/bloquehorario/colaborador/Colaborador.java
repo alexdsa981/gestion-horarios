@@ -15,8 +15,6 @@ import lombok.Setter;
 public class Colaborador {
     @Id
     private Long id;
-
-    private Boolean isActive;
     private String nombreCompleto;
     private String numeroDocumento;
     private String colegioProfesional;

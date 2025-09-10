@@ -17,6 +17,9 @@ public class DetalleColaboradorAgrupacionService {
     @Autowired
     AgrupacionService agrupacionService;
 
+    public void save(DetalleColaboradorAgrupacion detalle){
+        detalleColaboradorRepository.save(detalle);
+    }
     public void agrupar(Colaborador colaborador, Long idAgrupacion){
         DetalleColaboradorAgrupacion detalleAgrupacion;
         if (detalleColaboradorRepository.findByColaboradorIdAndAgrupacionId(colaborador.getId(), idAgrupacion).isPresent()){
@@ -27,31 +30,33 @@ public class DetalleColaboradorAgrupacionService {
         Agrupacion agrupacion = agrupacionService.getAgrupacionPorId(idAgrupacion);
         detalleAgrupacion.setColaborador(colaborador);
         detalleAgrupacion.setAgrupacion(agrupacion);
-        detalleAgrupacion.setEventoColor(getRandomColorHex());
+        detalleAgrupacion.setIsActive(true);
+        detalleAgrupacion.setEventoColor(getRandomPastelColorHex());
         detalleColaboradorRepository.save(detalleAgrupacion);
     }
 
     public List<DetalleColaboradorAgrupacion> listarDetallePorIdAgrupacion(Long idAgrupacion){
-        return detalleColaboradorRepository.findByAgrupacionId(idAgrupacion);
+        return detalleColaboradorRepository.findByAgrupacionIdAndIsActiveTrue(idAgrupacion);
     }
 
     public DetalleColaboradorAgrupacion getDetallePorColaboradorYAgrupacion(Long idColaborador, Long idAgrupacion) {
+        System.out.println("idcolaborador: " + idColaborador + " idagrupacion: " + idAgrupacion);
         Optional<DetalleColaboradorAgrupacion> detalle = detalleColaboradorRepository.findByColaboradorIdAndAgrupacionId(idColaborador, idAgrupacion);
         return detalle.orElse(null);
     }
 
 
-    public String getRandomColorHex() {
+    public String getRandomPastelColorHex() {
         Random rand = new Random();
-        int r, g, b;
-        do {
-            r = rand.nextInt(256);
-            g = rand.nextInt(256);
-            b = rand.nextInt(256);
-            // Evitar colores oscuros cerca del negro (todos menores a 40)
-        } while (r < 40 && g < 40 && b < 40);
+        int r = rand.nextInt(256);
+        int g = rand.nextInt(256);
+        int b = rand.nextInt(256);
 
-        // Formato hexadecimal
+        // Mezclamos con blanco (media entre color y 255)
+        r = (r + 255) / 2;
+        g = (g + 255) / 2;
+        b = (b + 255) / 2;
+
         return String.format("#%02X%02X%02X", r, g, b);
     }
 }
