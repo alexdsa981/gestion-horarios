@@ -1,4 +1,4 @@
-const columnas = listaSedesActivas.map(sede => ({
+const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
     name: sede.nombre,
     id: sede.id
 }));

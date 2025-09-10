@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.usuario.caracteristicas.sedes;
+package com.ipor.horariostua.core.bloquehorario.agrupacion.sedes;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.sede.Sede;
@@ -12,6 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class DetalleSedeAgrupacion {
+
+    public DetalleSedeAgrupacion(Sede sede, Agrupacion agrupacion) {
+        this.sede = sede;
+        this.agrupacion = agrupacion;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

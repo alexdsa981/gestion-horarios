@@ -3,10 +3,13 @@ package com.ipor.horariostua.config.initializer;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionRepository;
-import com.ipor.horariostua.core.bloquehorario.colaborador.Colaborador;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorRepository;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboral;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralRepository;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuario;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioRepository;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import com.ipor.horariostua.core.bloquehorario.sede.Sede;
 import com.ipor.horariostua.core.usuario.Usuario;
@@ -20,7 +23,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -41,13 +46,33 @@ public class DataInitializer implements CommandLineRunner {
     AgrupacionRepository agrupacionRepository;
     @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
+    @Autowired
+    DetalleGruposUsuarioRepository detalleGruposUsuarioRepository;
+    @Autowired
+    DetalleSedeAgrupacionRepository detalleSedeAgrupacionRepository;
+
 
     @Override
     public void run(String... args) {
 
+
+        if (agrupacionRepository.count() == 0) {
+            List<String> nombres = Arrays.asList(
+                    "Rol de Enfermería", "Rol de Farmacia", "Imágenes", "Tecnólogos",
+                    "Radioterapia", "Psicologia", "Nutrición", "Oncologos",
+                    "Dr. Rodriguez", "Dr. Ponce"
+            );
+
+            List<Agrupacion> agrupaciones = nombres.stream()
+                    .map(Agrupacion::new)
+                    .collect(Collectors.toList());
+
+            agrupacionRepository.saveAll(agrupaciones);
+        }
+
+
         if (rolUsuarioRepository.count() == 0) {
             rolUsuarioRepository.save(new RolUsuario("General"));
-            rolUsuarioRepository.save(new RolUsuario("Supervisor"));
             rolUsuarioRepository.save(new RolUsuario("Admin"));
         }
 
@@ -62,7 +87,20 @@ public class DataInitializer implements CommandLineRunner {
             admin.setIsActive(true);
             admin.setChangedPass(false);
             admin.setIsSpringUser(false);
+            admin.setAgrupacionSeleccionada(agrupacionRepository.findById(1L).get());
             usuarioRepository.save(admin);
+
+            DetalleGruposUsuario detalleGruposUsuario1 = new DetalleGruposUsuario();
+            detalleGruposUsuario1.setUsuario(usuarioRepository.findById(1L).get());
+            detalleGruposUsuario1.setAgrupacion(agrupacionRepository.findById(1L).get());
+
+            DetalleGruposUsuario detalleGruposUsuario2 = new DetalleGruposUsuario();
+            detalleGruposUsuario2.setUsuario(usuarioRepository.findById(1L).get());
+            detalleGruposUsuario2.setAgrupacion(agrupacionRepository.findById(2L).get());
+
+            detalleGruposUsuarioRepository.save(detalleGruposUsuario1);
+            detalleGruposUsuarioRepository.save(detalleGruposUsuario2);
+
         }
 
         if (horarioLaboralRepository.count() == 0){
@@ -76,67 +114,25 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (sedeRepository.count() == 0) {
-            Sede sede1 = new Sede();
-            sede1.setNombre("San Isidro");
-            sede1.setIsActive(Boolean.TRUE);
-            Sede sede2 = new Sede();
-            sede2.setNombre("Jesús María");
-            sede2.setIsActive(Boolean.TRUE);
+            List<String> nombres = Arrays.asList(
+                    "San Isidro - Clinica", "San Isidro - Administrativo", "Jesús María", "Vesalio"
+            );
 
-            sedeRepository.save(sede1);
-            sedeRepository.save(sede2);
+            List<Sede> sedes = nombres.stream()
+                    .map(Sede::new)
+                    .collect(Collectors.toList());
+            sedeRepository.saveAll(sedes);
+
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(1L).get()));
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(2L).get(), agrupacionRepository.findById(1L).get()));
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(3L).get(), agrupacionRepository.findById(1L).get()));
+
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(2L).get()));
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(2L).get(), agrupacionRepository.findById(3L).get()));
+            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(3L).get()));
         }
 
-        if (agrupacionRepository.count() == 0) {
-            List<Agrupacion> agrupaciones = new ArrayList<>();
 
-            Agrupacion agrupacion0 = new Agrupacion();
-            agrupacion0.setNombre("Todo");
-            agrupaciones.add(agrupacion0);
-
-
-            Agrupacion agrupacion1 = new Agrupacion();
-            agrupacion1.setNombre("Rol de Enfermería");
-            agrupaciones.add(agrupacion1);
-
-            Agrupacion agrupacion2 = new Agrupacion();
-            agrupacion2.setNombre("Rol de Farmacia");
-            agrupaciones.add(agrupacion2);
-
-            Agrupacion agrupacion3 = new Agrupacion();
-            agrupacion3.setNombre("Imágenes");
-            agrupaciones.add(agrupacion3);
-
-            Agrupacion agrupacion4 = new Agrupacion();
-            agrupacion4.setNombre("Tecnólogos");
-            agrupaciones.add(agrupacion4);
-
-            Agrupacion agrupacion5 = new Agrupacion();
-            agrupacion5.setNombre("Radioterapia");
-            agrupaciones.add(agrupacion5);
-
-            Agrupacion agrupacion6 = new Agrupacion();
-            agrupacion6.setNombre("Psicologia");
-            agrupaciones.add(agrupacion6);
-
-            Agrupacion agrupacion7 = new Agrupacion();
-            agrupacion7.setNombre("Nutrición");
-            agrupaciones.add(agrupacion7);
-
-            Agrupacion agrupacion8 = new Agrupacion();
-            agrupacion8.setNombre("Oncologos");
-            agrupaciones.add(agrupacion8);
-
-            Agrupacion agrupacion9 = new Agrupacion();
-            agrupacion9.setNombre("Dr. Rodriguez");
-            agrupaciones.add(agrupacion9);
-
-            Agrupacion agrupacion10 = new Agrupacion();
-            agrupacion10.setNombre("Dr. Ponce");
-            agrupaciones.add(agrupacion10);
-
-            agrupacionRepository.saveAll(agrupaciones);
-        }
 
     }
 }

@@ -22,9 +22,17 @@
                 <a class="nav-item nav-link" href="/personal"><i class="bi bi-people me-1"></i>Sedes y Personal</a>
                 <a class="nav-item nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
             </div>
-            <div class="ms-auto me-3">
-                <button class="btn btn-outline-light" id="logout-btn"><i class="bi bi-box-arrow-right me-1"></i>Cerrar
-                    sesión
+            <div class="ms-auto d-flex align-items-center me-3">
+                <select class="form-select me-3 agrupacion-select" id="agrupacion-select">
+                    <option th:each="agrupacion : ${listaGruposUsuario}"
+                            th:value="${agrupacion.id}"
+                            th:text="${agrupacion.nombre}"
+                            th:selected="${agrupacion.id} == ${agrupacionSeleccionadaId}">
+                    </option>
+                </select>
+                <!-- Botón de cierre de sesión -->
+                <button class="btn btn-outline-light" id="logout-btn">
+                    <i class="bi bi-box-arrow-right me-1"></i>Cerrar sesión
                 </button>
             </div>
         </div>

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AgregarColaborador {
+public class AgregarColaboradorDTO {
     //datos de api
     private Long empleado;
     private String nombreCompleto;

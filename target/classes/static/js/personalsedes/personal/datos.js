@@ -2,7 +2,7 @@ async function cargarColaboradores() {
     const cuerpoTabla = document.getElementById('tablaColaboradoresBody');
 
     try {
-        const response = await fetch('/app/colaboradores/listar');
+        const response = await fetch("/app/colaboradores/agrupacion/" + agrupacionGlobalId);
         if (!response.ok) throw new Error('Error al obtener colaboradores');
 
         const colaboradores = await response.json();

@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.usuario.caracteristicas.agrupaciones;
+package com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.usuario.Usuario;

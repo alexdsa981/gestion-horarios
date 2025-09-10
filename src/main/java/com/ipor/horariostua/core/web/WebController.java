@@ -1,12 +1,25 @@
 package com.ipor.horariostua.core.web;
 
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
+import com.ipor.horariostua.core.usuario.Usuario;
+import com.ipor.horariostua.core.usuario.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class WebController {
@@ -15,16 +28,58 @@ public class WebController {
     SedeService sedeService;
     @Autowired
     ColaboradorService colaboradorService;
+    @Autowired
+    DetalleGruposUsuarioService detalleGruposUsuarioService;
+    @Autowired
+    UsuarioService usuarioService;
+    @Autowired
+    AgrupacionService agrupacionService;
 
+    //redirige / a /login
+    @GetMapping("/")
+    public String redirectToInicio() {
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String redirigePaginaLogin(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "username", required = false) String username,
+            Model model) {
+        // Obtén la autenticación actual
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() &&
+                !authentication.getPrincipal().equals("anonymousUser")) {
+            return "redirect:/registro-horarios";
+        }
+        model.addAttribute("error", error);
+        model.addAttribute("username", username);
+        return "index";
+    }
+
+    @PostMapping("/actualizar-agrupacion")
+    @ResponseBody
+    public void actualizarAgrupacion(@RequestParam Long agrupacionId) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+        Agrupacion agrupacion = agrupacionService.getAgrupacionPorId(agrupacionId);
+        usuario.setAgrupacionSeleccionada(agrupacion);
+        usuarioService.save(usuario);
+        System.out.println("[POST] Actualizando agrupacionSeleccionadaId en BD a: " + agrupacionId);
+    }
 
     @GetMapping("/registro-horarios")
     public String redirigePaginaRegistro(Model model) {
-        colaboradorService.getModelSelectColaboradoresActivos(model);
-        sedeService.getModelSedesActivas(model);
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+        Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+        System.out.println("[Controlador] agrupacionSeleccionadaId al entrar: " + agrupacionSeleccionadaId);
+
+        colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+        sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
+
         model.addAttribute("Titulo", "IPOR - Horarios | Registro");
+        model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
         return "gestion-horarios/inicio";
     }
-
     @GetMapping("/personal")
     public String redirigePaginaPersonal(Model model) {
         model.addAttribute("Titulo", "IPOR - Horarios | Mi Personal");

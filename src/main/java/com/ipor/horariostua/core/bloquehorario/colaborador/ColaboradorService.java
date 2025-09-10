@@ -1,9 +1,8 @@
 package com.ipor.horariostua.core.bloquehorario.colaborador;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
-import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
-import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaborador;
+import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaboradorDTO;
 import com.ipor.horariostua.core.bloquehorario.colaborador.dto.ColaboradorSeleccionableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class ColaboradorService {
@@ -21,20 +19,20 @@ public class ColaboradorService {
     @Autowired
     DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
 
-    public Colaborador agregar(AgregarColaborador agregarColaborador){
+    public Colaborador agregar(AgregarColaboradorDTO agregarColaboradorDTO){
         Colaborador colaborador;
-        if (existeEnBD(agregarColaborador.getEmpleado())){
-            colaborador = getColaboradorPorId(agregarColaborador.getEmpleado());
+        if (existeEnBD(agregarColaboradorDTO.getEmpleado())){
+            colaborador = getColaboradorPorId(agregarColaboradorDTO.getEmpleado());
         }else{
             colaborador = new Colaborador();
             colaborador.setServicio("No Asignado");
         }
-        colaborador.setId(agregarColaborador.getEmpleado());
-        colaborador.setNombreCompleto(agregarColaborador.getNombreCompleto());
-        colaborador.setNumeroDocumento(agregarColaborador.getDocumento());
-        colaborador.setColegioProfesional(agregarColaborador.getTipoColegio());
-        colaborador.setNumeroColegiatura(agregarColaborador.getCmp());
-        colaborador.setEspecialidad(agregarColaborador.getEspecialidadNombre());
+        colaborador.setId(agregarColaboradorDTO.getEmpleado());
+        colaborador.setNombreCompleto(agregarColaboradorDTO.getNombreCompleto());
+        colaborador.setNumeroDocumento(agregarColaboradorDTO.getDocumento());
+        colaborador.setColegioProfesional(agregarColaboradorDTO.getTipoColegio());
+        colaborador.setNumeroColegiatura(agregarColaboradorDTO.getCmp());
+        colaborador.setEspecialidad(agregarColaboradorDTO.getEspecialidadNombre());
         colaborador.setIsActive(Boolean.TRUE);
         colaboradorRepository.save(colaborador);
         return colaborador;
@@ -55,15 +53,16 @@ public class ColaboradorService {
 
 
 
-    public void getModelSelectColaboradoresActivos(Model model) {
+    public void getModelSelectColaboradoresActivosPorAgrupacion(Model model, Long idAgrupacion) {
+        List<DetalleColaboradorAgrupacion> listaDetalleColab = detalleColaboradorAgrupacionService.listarDetallePorIdAgrupacion(idAgrupacion);
         List<ColaboradorSeleccionableDTO> listaDTO = new ArrayList<>();
-        for (Colaborador colaborador : colaboradorRepository.findByIsActiveTrue()) {
+        for (DetalleColaboradorAgrupacion detalle : listaDetalleColab){
             ColaboradorSeleccionableDTO dto = new ColaboradorSeleccionableDTO();
-            dto.setId(colaborador.getId());
-            dto.setNombreCompleto(colaborador.getNombreCompleto());
+            dto.setId(detalle.getColaborador().getId());
+            dto.setNombreCompleto(detalle.getColaborador().getNombreCompleto());
             listaDTO.add(dto);
         }
-        model.addAttribute("listaSelectColaboradoresActivos", listaDTO);
+        model.addAttribute("listaSelectColaboradoresActivosPorAgrupacion", listaDTO);
     }
 
     public boolean cambiarEstado(Long id, Boolean estado) {

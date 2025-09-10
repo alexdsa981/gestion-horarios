@@ -81,3 +81,17 @@ main label, main input, main select, main textarea {
 #multi-date-picker {
   display: none;
 }
+
+
+.agrupacion-select {
+    min-width: 180px;
+    background-color: #212529;
+    color: #fff;
+    border: 1px solid #6c757d;
+    font-weight: 500;
+    font-size: 1rem;
+}
+.agrupacion-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
+}

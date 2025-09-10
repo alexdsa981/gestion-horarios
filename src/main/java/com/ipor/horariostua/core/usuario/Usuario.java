@@ -1,11 +1,13 @@
 package com.ipor.horariostua.core.usuario;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Getter
@@ -37,18 +39,21 @@ public class Usuario {
     @JoinColumn(name = "id_rol_usuario", nullable = false)
     private RolUsuario rolUsuario;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_agrupacion_seleccionada")
+    private Agrupacion agrupacionSeleccionada;
 
 
-//    //en SERVICE SE USA PARA ENCRIPTAR DIRECTAMENTE
-//    public void asignarYEncriptarPassword(String password) {
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        this.password = passwordEncoder.encode(password);
-//    }
-//
-//    public boolean verificarPassword(String rawPassword, String encodedPassword) {
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        return passwordEncoder.matches(rawPassword, encodedPassword);
-//    }
+    //en SERVICE SE USA PARA ENCRIPTAR DIRECTAMENTE
+    public void asignarYEncriptarPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password);
+    }
+
+    public boolean verificarPassword(String rawPassword, String encodedPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
 
 
 }

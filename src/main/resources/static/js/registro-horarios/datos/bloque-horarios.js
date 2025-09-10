@@ -1,6 +1,7 @@
+
 async function cargarBloquesHorariosEnCalendario(calendar) {
   try {
-    const response = await fetch("/app/bloque-horarios/listar-todo");
+    const response = await fetch("/app/bloque-horarios/listar/" + agrupacionGlobalId);
     if (!response.ok) throw new Error("No se pudieron obtener los bloques horarios");
     const bloques = await response.json();
 

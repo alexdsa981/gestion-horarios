@@ -29,9 +29,6 @@ document.getElementById("btn-agregar-bloque").addEventListener("click", () => {
   const color = colab.options[colab.selectedIndex].dataset.color;
   const idColaborador = Number(colab.value);
 
-  // Si aún no tienes agrupación en el front, envía null
-  const idAgrupacion = null; // O reemplaza por el valor correspondiente cuando lo tengas
-
   // Construir el objeto que espera el backend (Agrega_BH_DTO)
   const data = {
     fecha: fecha,
@@ -39,13 +36,10 @@ document.getElementById("btn-agregar-bloque").addEventListener("click", () => {
     horaFin: fin,
     idColaborador: idColaborador,
     idSede: sede,
-    idAgrupacion: idAgrupacion
+    idAgrupacion: agrupacionGlobalId
   };
-
-  // 🚩 Imprime el data antes de enviar
   console.log("Datos enviados al backend:", data);
 
-  // Enviar al backend
   fetch("/app/bloque-horarios/agregar", {
     method: "POST",
     headers: {

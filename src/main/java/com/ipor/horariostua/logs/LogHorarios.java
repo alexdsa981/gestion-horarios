@@ -25,8 +25,8 @@ public class LogHorarios {
     private BloqueHorario bloqueHorario;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario_creador", nullable = false)
-    private Usuario usuarioCreador;
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
 
     private String accion;
 

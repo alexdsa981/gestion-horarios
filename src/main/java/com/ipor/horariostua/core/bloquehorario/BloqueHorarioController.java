@@ -36,7 +36,7 @@ public class BloqueHorarioController {
     @Autowired
     private DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
 
-    @GetMapping("/listar-agrupacion/{idAgrupacion}")
+    @GetMapping("/listar/{idAgrupacion}")
     public ResponseEntity<List<BloqueHorario>> listarBloquesAgrupacion(@PathVariable Long idAgrupacion) {
         List<BloqueHorario> listaHorarios = bloqueHorarioService.listarPorAgrupacionId(idAgrupacion);
         return ResponseEntity.ok(listaHorarios);

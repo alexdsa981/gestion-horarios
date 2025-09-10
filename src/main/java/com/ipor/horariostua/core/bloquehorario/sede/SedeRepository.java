@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface SedeRepository extends JpaRepository<Sede, Long> {
     List<Sede> findByIsActiveTrue();
-
 }

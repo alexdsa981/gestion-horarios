@@ -12,7 +12,7 @@
             <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
             <select id="left-panel-colaborador-select" class="form-select">
                 <option
-                        th:each="colaborador : ${listaSelectColaboradoresActivos}"
+                        th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
                         th:value="${colaborador.id}"
                         th:text="${colaborador.nombreCompleto}"
                         th:attr="data-color=${colaborador.color}">
@@ -40,7 +40,7 @@
         <div class="mb-3">
             <label for="left-panel-sedes-select" class="form-label">Sede</label>
             <select id="left-panel-sedes-select" class="form-select">
-                <option th:each="sede : ${listaSedesActivas}" th:value="${sede.id}"
+                <option th:each="sede : ${listaSedesActivasPorAgrupacion}" th:value="${sede.id}"
                         th:text="${sede.nombre}"></option>
             </select>
         </div>

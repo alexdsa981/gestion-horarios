@@ -10,6 +10,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Sede {
+    public Sede(String nombre) {
+        this.nombre = nombre;
+        this.isActive = true;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

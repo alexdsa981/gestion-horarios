@@ -10,6 +10,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Agrupacion {
+    public Agrupacion(String nombre) {
+        this.nombre = nombre;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

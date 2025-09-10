@@ -11,4 +11,5 @@ public class AgrupacionService {
     public Agrupacion getAgrupacionPorId(Long id){
         return agrupacionRepository.findById(id).get();
     }
+
 }
