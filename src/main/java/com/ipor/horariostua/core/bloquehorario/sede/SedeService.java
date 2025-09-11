@@ -1,7 +1,6 @@
 package com.ipor.horariostua.core.bloquehorario.sede;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
-import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ public class SedeService {
     DetalleSedeAgrupacionService detalleSedeAgrupacionService;
 
     public Model getModelSedesActivasPorAgrupacion(Model model, Long idAgrupacion) {
-        List<DetalleSedeAgrupacion> listaDetalle =  detalleSedeAgrupacionService.listarDetallePorIdAgrupacion(idAgrupacion);
+        List<DetalleSedeAgrupacion> listaDetalle =  detalleSedeAgrupacionService.listarDetalleActivosPorIdAgrupacion(idAgrupacion);
         List<Sede> listaSedes = new ArrayList<>();
         for (DetalleSedeAgrupacion detalle : listaDetalle){
             listaSedes.add(detalle.getSede());
@@ -26,8 +25,14 @@ public class SedeService {
         model.addAttribute("listaSedesActivasPorAgrupacion", listaSedes);
         return model;
     }
-    public List<Sede> getSelectSedes(){
-        return sedeRepository.findByIsActiveTrue();
+    public List<Sede> getSedes(){
+        return sedeRepository.findAll();
+    }
+
+    public void cambiarEstado(Long id, Boolean estado){
+        Sede sede = sedeRepository.findById(id).get();
+        sede.setIsActive(estado);
+        sedeRepository.save(sede);
     }
 
     public Sede getSedePorId(Long id){

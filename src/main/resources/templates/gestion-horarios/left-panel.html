@@ -2,20 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head></head>
 <body>
-
-
 <div th:fragment="left-panel-add">
     <div id="left-panel" class="p-3 bg-light border rounded mt-3"
-         style="position: sticky; top: 20px; height: fit-content">
-        <div id="nav"></div>
+         style="position: sticky; top: 20px; height: fit-content; max-width: 240px; min-width: 240px;">
+        <!-- CENTRAR NAVIGATOR -->
+        <div class="d-flex justify-content-center mb-3">
+            <div id="nav"></div>
+        </div>
         <div class="mb-2">
             <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
-            <select id="left-panel-colaborador-select" class="form-select">
+            <select id="left-panel-colaborador-select" class="form-select"
+                    style="max-width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                 <option
                         th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
                         th:value="${colaborador.id}"
                         th:text="${colaborador.nombreCompleto}"
-                        th:attr="data-color=${colaborador.color}">
+                        th:attr="data-color=${colaborador.color}"
+                        style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
                 </option>
             </select>
         </div>
@@ -48,6 +51,5 @@
         <button id="btn-agregar-bloque" class="btn btn-primary w-100">Agregar al calendario</button>
     </div>
 </div>
-
 </body>
 </html>

@@ -4,6 +4,7 @@ import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaboradorDTO;
+import com.ipor.horariostua.core.bloquehorario.colaborador.dto.EditarColorColaboradorDTO;
 import com.ipor.horariostua.core.bloquehorario.colaborador.dto.ListarColaboradoresDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,14 @@ public class ColaboradorController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Colaborador no encontrado");
         }
+    }
+
+    @PostMapping("/color")
+    public ResponseEntity<?> actualizarColor(@RequestBody EditarColorColaboradorDTO dto) {
+        // colaboradorService.actualizarColor(dto.getColaboradorId(), dto.getColor());
+        DetalleColaboradorAgrupacion detalleColaboradorAgrupacion = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getColaboradorId(), dto.getAgrupacionId());
+        detalleColaboradorAgrupacion.setEventoColor(dto.getColor());
+        detalleColaboradorAgrupacionService.save(detalleColaboradorAgrupacion);
+        return ResponseEntity.ok().build();
     }
 }

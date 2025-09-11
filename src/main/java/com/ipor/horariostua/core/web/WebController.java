@@ -76,22 +76,26 @@ public class WebController {
 
         model.addAttribute("Titulo", "IPOR - Horarios | Registro");
         model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+        model.addAttribute("paginaActual", "horarios");
         return "gestion-horarios/inicio";
     }
     @GetMapping("/personal")
     public String redirigePaginaPersonal(Model model) {
+        model.addAttribute("paginaActual", "personal");
         model.addAttribute("Titulo", "IPOR - Horarios | Mi Personal");
         return "personalsedes/personal/personal";
     }
 
     @GetMapping("/sedes")
     public String redirigePaginaSedes(Model model) {
+        model.addAttribute("paginaActual", "personal");
         model.addAttribute("Titulo", "IPOR - Horarios | Sedes");
         return "personalsedes/sedes/sedes";
     }
 
     @GetMapping("/usuarios")
     public String redirigePaginaUsuarios(Model model) {
+        model.addAttribute("paginaActual", "config");
         model.addAttribute("Titulo", "IPOR - Horarios | Usuarios");
         return "usuarios/usuarios";
     }

@@ -95,3 +95,10 @@ main label, main input, main select, main textarea {
     border-color: #0d6efd;
     box-shadow: 0 0 0 0.15rem rgba(13,110,253,.25);
 }
+
+
+.boton-presionado {
+    background-color: #343a40 !important;
+    color: #fff !important;
+    border-color: #343a40 !important;
+}

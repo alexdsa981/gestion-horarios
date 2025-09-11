@@ -16,6 +16,7 @@ public class DetalleSedeAgrupacion {
     public DetalleSedeAgrupacion(Sede sede, Agrupacion agrupacion) {
         this.sede = sede;
         this.agrupacion = agrupacion;
+        this.isActive = true;
     }
 
     @Id
@@ -27,4 +28,6 @@ public class DetalleSedeAgrupacion {
     @ManyToOne
     @JoinColumn(name = "id_agrupacion", nullable = false)
     private Agrupacion agrupacion;
+
+    private Boolean isActive;
 }

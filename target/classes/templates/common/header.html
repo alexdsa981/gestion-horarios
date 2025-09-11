@@ -17,10 +17,26 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#"><i class="bi bi-house-door me-1"></i>Home</a>
-                <a class="nav-item nav-link active" href="/registro-horarios"><i class="bi bi-calendar-event me-1"></i>Horarios</a>
-                <a class="nav-item nav-link" href="/personal"><i class="bi bi-people me-1"></i>Sedes y Personal</a>
-                <a class="nav-item nav-link" href="#"><i class="bi bi-gear me-1"></i>Configuración</a>
+                <a class="nav-item nav-link"
+                   th:classappend="${paginaActual} == 'home' ? 'active' : ''"
+                   href="/">
+                    <i class="bi bi-house-door me-1"></i>Home
+                </a>
+                <a class="nav-item nav-link"
+                   th:classappend="${paginaActual} == 'horarios' ? 'active' : ''"
+                   href="/registro-horarios">
+                    <i class="bi bi-calendar-event me-1"></i>Horarios
+                </a>
+                <a class="nav-item nav-link"
+                   th:classappend="${paginaActual} == 'personal' ? 'active' : ''"
+                   href="/personal">
+                    <i class="bi bi-people me-1"></i>Sedes y Personal
+                </a>
+                <a class="nav-item nav-link"
+                   th:classappend="${paginaActual} == 'config' ? 'active' : ''"
+                   href="#">
+                    <i class="bi bi-gear me-1"></i>Configuración
+                </a>
             </div>
             <div class="ms-auto d-flex align-items-center me-3">
                 <select class="form-select me-3 agrupacion-select" id="agrupacion-select">

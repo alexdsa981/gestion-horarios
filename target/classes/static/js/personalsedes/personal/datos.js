@@ -1,3 +1,4 @@
+
 async function cargarColaboradores() {
     const cuerpoTabla = document.getElementById('tablaColaboradoresBody');
 
@@ -17,13 +18,44 @@ async function cargarColaboradores() {
                 <tr>
                     <td class="text-center">${index + 1}</td>
                     <td>${colaborador.nombreCompleto}</td>
-                    <td>
-                      <input type="color" name="color" value="${colaborador.color}">
+                    <td class="text-center">
+                      <input type="color" name="color" value="${colaborador.color}" data-id="${colaborador.id}">
                     </td>
                     <td class="text-center">${estadoHTML}</td>
                 </tr>
             `;
             cuerpoTabla.insertAdjacentHTML('beforeend', fila);
+        });
+
+        // Evento para cambio de color y envío de DTO
+        cuerpoTabla.querySelectorAll('input[type="color"][name="color"]').forEach(input => {
+            input.addEventListener('change', async function () {
+                const colaboradorId = this.getAttribute('data-id');
+                const nuevoColor = this.value;
+
+                // Construir el DTO
+                const dto = {
+                    agrupacionId: agrupacionGlobalId,
+                    colaboradorId: colaboradorId,
+                    color: nuevoColor
+                };
+
+                try {
+                    const res = await fetch('/app/colaboradores/color', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dto)
+                    });
+
+                    if (!res.ok) throw new Error('Error al actualizar el color');
+                    Swal.fire('Color actualizado', '', 'success');
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire('Error', 'No se pudo actualizar el color.', 'error');
+                }
+            });
         });
 
         // Agregar eventos a spans activos
@@ -42,7 +74,7 @@ async function cargarColaboradores() {
 
                 if (result.isConfirmed) {
                     try {
-                        const res = await fetch("/app/colaboradores/desactivar/"+agrupacionGlobalId+"/"+idColaborador, {
+                        const res = await fetch("/app/colaboradores/desactivar/" + agrupacionGlobalId + "/" + idColaborador, {
                             method: 'POST'
                         });
 
