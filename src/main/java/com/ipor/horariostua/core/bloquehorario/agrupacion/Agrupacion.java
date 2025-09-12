@@ -12,6 +12,7 @@ import lombok.Setter;
 public class Agrupacion {
     public Agrupacion(String nombre) {
         this.nombre = nombre;
+        this.isActive = true;
     }
 
     @Id
@@ -20,5 +21,7 @@ public class Agrupacion {
 
     @Column(nullable = false)
     private String nombre;
+
+    private Boolean isActive;
 
 }

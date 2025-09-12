@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://thymeleaf.org">
-<head th:fragment="headImports">
+<head th:fragment="headImports(extraCss)">
     <link rel="shortcut icon" href="#">
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
     <link rel="stylesheet" href="/css/styles.css"/>
     <link rel="stylesheet" href="/imports/flatpickr/flatpickr.min.css"/>
     <link rel="stylesheet" href="/imports/sweetalert2.min.css">
     <link rel="stylesheet" href="/imports/litepicker.css">
     <link rel="stylesheet" href="/imports/bootstrap-icons/font/bootstrap-icons.min.css">
-    <!--Para usar WS LOCAL-->
     <script src="/imports/sockjs.min.js"></script>
     <script src="/imports/stomp.min.js"></script>
     <link rel="stylesheet" href="/imports/bootstrap/css/bootstrap.min.css"/>
-
     <link rel="icon" type="image/png" th:href="@{/images/IPOR.png}">
-    <title th:text="${Titulo}">Quimioterapia</title>
+    <title th:text="${Titulo}"></title>
+    <!-- CSS específico de la página -->
+    <th:block th:if="${extraCss}">
+        <th:block th:each="css : ${extraCss}">
+            <link rel="stylesheet" th:href="@{${css}}"/>
+        </th:block>
+    </th:block>
 </head>
+
 <body>
 
 

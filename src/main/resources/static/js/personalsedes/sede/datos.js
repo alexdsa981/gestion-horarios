@@ -33,6 +33,7 @@ async function cargarSedes() {
                         body: JSON.stringify(nuevoEstado)
                     });
                     if (!res.ok) throw new Error('No se pudo actualizar el estado');
+                    cargarSedes();
                     await Swal.fire({
                         icon: 'success',
                         title: 'Estado actualizado',

@@ -19,13 +19,28 @@ public class SedeController {
     @Autowired
     DetalleSedeAgrupacionService detalleSedeAgrupacionService;
 
+    @GetMapping("/listar")
+    public ResponseEntity<List<Sede>> getSedesGlobal() {
+        List<Sede> sedes = sedeService.getSedes();
+        return ResponseEntity.ok(sedes);
+    }
+
+    @PostMapping("/estado/{idSede}")
+    public ResponseEntity<?> cambiarEstadoSedeGlobal(@PathVariable Long idSede, @RequestBody Boolean isActive) {
+        sedeService.cambiarEstado(idSede, isActive);
+        return ResponseEntity.ok().build();
+    }
+
+
     @GetMapping("/listar/{idAgrupacion}")
-    public ResponseEntity<List<ListarSedesDTO>> getColaboradoresSeleccionables(@PathVariable Long idAgrupacion) {
+    public ResponseEntity<List<ListarSedesDTO>> getSedesSeleccionables(@PathVariable Long idAgrupacion) {
         List<Sede> sedes = sedeService.getSedes();
         List<ListarSedesDTO> listaDTO =  new ArrayList<>();
         for (Sede sede : sedes){
             DetalleSedeAgrupacion detalle = detalleSedeAgrupacionService.getDetallePorSedeYAgrupacion(sede.getId(),idAgrupacion);
-            listaDTO.add(new ListarSedesDTO(sede, detalle));
+            if (sede.getIsActive() || detalle.getIsActive()){
+                listaDTO.add(new ListarSedesDTO(sede, detalle));
+            }
         }
         return ResponseEntity.ok(listaDTO);
     }

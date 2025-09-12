@@ -1,0 +1,173 @@
+/*ESTILOS EN INTELLIJ*/
+/*--------------------------*/
+.calendar_default_corner {
+    position: relative;
+}
+
+.calendar_default_corner::after {
+    content: "Horas";
+    color: #555;
+    font-size: 6px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    top: 80%;
+    transform: translate(-50%, -50%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/*HORAS NO LABORABLES EN GRIS*/
+.calendar_default_cell .calendar_default_cell_inner {
+    background-color: #e7e7e7 !important;
+}
+
+/*HORAS LABORABLES ROJIZO*/
+.calendar_default_cell_business .calendar_default_cell_inner {
+    background-color: #ffe5e5 !important;
+}
+
+.calendar_default_main div {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.calendar_default_main div::-webkit-scrollbar {
+    display: none;
+}
+
+.calendar_default_main,
+.calendar_default_main>div {
+    overflow: hidden !important;
+}
+
+
+/*--------------------------*/
+
+.calendar_default_colheader_inner {
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 8px !important;
+    padding: 0 2px;
+}
+
+
+
+.calendar_default_rowheader_inner {
+    font-size: 8px !important;
+}
+
+.calendar_default_rowheader_inner span {
+    /*font-size: 8px !important;*/
+    display: none;
+}
+
+.calendar_default_colheader_inner {
+    font-size: 8px !important;
+}
+
+.calendar_default_event_inner {
+    font-size: 8px !important;
+}
+
+
+/*esta contenido dentro de un table y ese table está dentro de otro que son todos los datos de la izquierda como horas y el corner*/
+.calendar_default_corner {
+    width: 20px !important;
+}
+
+.calendar_default_rowheader {
+    width: 20px !important;
+}
+
+
+
+
+
+.mes-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin: auto;
+}
+
+.mini-celda {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #f7f8fa;
+    min-height: 110px;
+    min-width: 110px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mini-celda .fecha-label {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 0.65em;
+    color: #4e91e2;
+    background: #fff;
+    padding: 1px 3px;
+    border-radius: 3px;
+    z-index: 2;
+    font-weight: bold;
+    opacity: .9;
+}
+
+/* DayPilot ultra-compact tweaks */
+.dp_calendar_main {
+    font-size: 8px !important;
+}
+
+.dp_calendar_header {
+    font-size: 8px !important;
+}
+
+.dp_calendar_colheader {
+    font-size: 7px !important;
+    padding: 0 !important;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.dp_calendar_timeheader {
+    font-size: 7px !important;
+    padding: 0 !important;
+}
+
+.dp_calendar_event {
+    font-size: 8px !important;
+    font-weight: bold;
+    padding: 0 1px !important;
+}
+
+.dp_event_inner {
+    font-size: 8px !important;
+    padding: 0 !important;
+}
+
+.dp_calendar_rowheader,
+.dp_calendar_row {
+    height: 11px !important;
+}
+
+.dp_calendar_scroll {
+    font-size: 7px !important;
+}
+
+.dp_calendar_event {
+    margin-bottom: 0 !important;
+    border-radius: 2px !important;
+}
+
+.dp_calendar_colheader {
+    max-width: 32px !important;
+}
+
+/* Opcional: oculta scroll vertical de horas */
+.dp_calendar_scroll {
+    overflow-y: hidden !important;
+}

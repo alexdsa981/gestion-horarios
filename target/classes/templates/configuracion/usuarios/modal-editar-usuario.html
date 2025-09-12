@@ -1,7 +1,4 @@
 <div th:fragment="modalEditarUsuario" xmlns:th="http://www.thymeleaf.org">
-
-
-
     <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -12,7 +9,6 @@
                 </div>
                 <!-- Cuerpo del modal con el formulario -->
                 <div class="modal-body">
-                    <!-- Quitar th:action y usar una acción estática -->
                     <form id="editUserForm" method="post">
                         <div class="mb-3">
                             <label for="usernameEdit" class="form-label">Username</label>
@@ -28,21 +24,19 @@
                             <input type="text" class="form-control" id="nombreEdit" name="nombre" required>
                         </div>
                         <div class="mb-3">
-
-
-                            <div class="mb-3">
-                                <label for="rolEdit" class="form-label">Asignar Rol</label>
-                                <select class="form-select" id="rolEdit" name="rol" required>
-                                    <option selected disabled value="">Selecciona Rol</option>
-                                    <option th:each="rol : ${Lista_Roles}" th:value="${rol.id}"
-                                            th:text="${rol.nombre}"></option>
-                                </select>
-                            </div>
-
-
+                            <label for="rolEdit" class="form-label">Asignar Rol</label>
+                            <select class="form-select" id="rolEdit" name="rol" required>
+                                <option selected disabled value="">Selecciona Rol</option>
+                                <option th:each="rol : ${Lista_Roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                            </select>
                         </div>
-
-
+                        <!-- Agrupaciones activas como etiquetas -->
+                        <div class="mb-3">
+                            <label class="form-label d-block">Seleccione Agrupaciones</label>
+                            <div id="agrupacionesContainerEdit" class="d-flex flex-wrap gap-2">
+                            </div>
+                            <input type="hidden" id="agrupacionesSeleccionadasEdit" name="agrupacionesSeleccionadas">
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary submit-btn">Guardar cambios</button>
@@ -52,8 +46,4 @@
             </div>
         </div>
     </div>
-
-
-
-
 </div>

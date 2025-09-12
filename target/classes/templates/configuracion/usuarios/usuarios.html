@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head th:insert="~{common/imports :: headImports}">
+<head th:insert="~{common/imports :: headImports(null)}">
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 <div th:replace="~{common/header :: header}">
@@ -14,9 +14,8 @@
                 <i class="bi bi-gear text-primary"></i> Configuración
             </h3>
 
-            <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm btn-active">
-                Gestor de usuarios
-            </a>
+            <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm  boton-presionado">Usuarios</a>
+            <a href="/configuracion/sedes" class="btn btn-outline-dark btn-sm">Sedes</a>
         </div>
     </div>
     <div class="container border shadow p-3 px-4 mb-5 bg-body rounded">
@@ -59,9 +58,10 @@
                     <div>
                         Usuarios Activos
                     </div>
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalBuscarUsuario">
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                         <i class="bi bi-person-plus-fill"></i> Agregar Usuario
                     </button>
+
 
                 </div>
             </div>
@@ -92,18 +92,20 @@
 
 
 </main>
-<div th:replace="~{usuarios/modal-buscar-usuario :: modalBuscarUsuario}"></div>
-<div th:replace="~{usuarios/modal-editar-usuario :: modalEditarUsuario}"></div>
+<div th:replace="~{configuracion/usuarios/modal-buscar-usuario :: modalBuscarUsuario}"></div>
+<div th:replace="~{configuracion/usuarios/modal-editar-usuario :: modalEditarUsuario}"></div>
+<div th:replace="~{configuracion/usuarios/modal-agregar-usuario :: modalAgregarUsuario}"></div>
 
 
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 
-<script src="/js/usuario/filtro.js"></script>
-<script src="/js/usuario/modal-editar.js"></script>
--
-<script src="/js/usuario/lista.js"></script>
-<script src="/js/usuario/spring.js"></script>
+<script src="/js/configuracion/usuario/filtro.js"></script>
+<script src="/js/configuracion/usuario/modal-editar.js"></script>
+<script src="/js/configuracion/usuario/modal-add.js"></script>
+<script src="/js/configuracion/usuario/lista.js"></script>
+<script src="/js/configuracion/usuario/agrupacion.js"></script>
+<script src="/js/configuracion/usuario/spring.js"></script>
 
 </body>
 

@@ -1,6 +1,8 @@
 package com.ipor.horariostua.core.usuario;
 
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import com.ipor.horariostua.core.usuario.spring.SpringUserService;
 import com.ipor.horariostua.core.usuario.spring.UsuarioSpringDTO;
@@ -19,9 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/app/usuarios")
@@ -34,7 +35,8 @@ public class UsuariosController {
     private LogService logService;
     @Autowired
     private SpringUserService springUserService;
-
+    @Autowired
+    private DetalleGruposUsuarioService detalleGruposUsuarioService;
     // Mostrar la lista de usuarios
     @GetMapping("/activos")
     @ResponseBody
@@ -60,12 +62,14 @@ public class UsuariosController {
     }
 
     @PostMapping("/spring/nuevo")
-    public ResponseEntity<String> crearOActualizarUsuario(
-            @RequestParam("username") String username,
-            @RequestParam("nombre") String nombre,
-            @RequestParam("rolUsuario") Long rolId) {
-
+    public ResponseEntity<String> crearOActualizarUsuario(@RequestBody Map<String, Object> payload) {
         try {
+            String username = (String) payload.get("username");
+            String nombre = (String) payload.get("nombre");
+            // El frontend envía "rolUsuario" como string o número
+            Long rolId = Long.valueOf(payload.get("rolUsuario").toString());
+            String agrupacionesCSV = (String) payload.get("agrupacionesSeleccionadas");
+
             // Obtener datos desde el sistema externo (incluye clave)
             UsuarioSpringDTO usuarioSpringDTO = springUserService.obtenerUsuarioSpring(username);
             String claveSpring = usuarioSpringDTO.getClave();
@@ -73,19 +77,29 @@ public class UsuariosController {
             Optional<Usuario> optionalUsuario = usuarioService.getUsuarioPorUsername(username.toUpperCase());
             Usuario usuario;
 
+            List<Long> agrupacionesIds = new ArrayList<>();
+            if (agrupacionesCSV != null && !agrupacionesCSV.isEmpty()) {
+                agrupacionesIds = Arrays.stream(agrupacionesCSV.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+            }
+
             if (optionalUsuario.isPresent()) {
                 usuario = optionalUsuario.get();
                 usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
-
                 usuario.asignarYEncriptarPassword(claveSpring);
-
-
                 usuario.setNombre(nombre.toUpperCase());
                 usuario.setIsSpringUser(Boolean.TRUE);
                 usuario.setIsActive(Boolean.TRUE);
                 usuario.setChangedPass(Boolean.FALSE);
                 usuarioService.save(usuario);
 
+                // Actualiza agrupaciones del usuario
+                for (Long idAgrupacion : agrupacionesIds) {
+                    detalleGruposUsuarioService.agrupar(usuario, idAgrupacion);
+                }
 
                 //LOG GLOBAL----------------------
                 String descripcion = String.format("El usuario %s añadió la cuenta (ya existente localmente) de %s. Fecha: %s",
@@ -97,16 +111,11 @@ public class UsuariosController {
                 logService.saveDeGlobal(usuarioService.getUsuarioLogeado(), AccionLogGlobal.AGREGA_USUARIO, descripcion);
                 //-------------------------------
 
-
                 return ResponseEntity.ok("Usuario actualizado correctamente");
             } else {
                 usuario = new Usuario();
                 usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
-
-
                 usuario.asignarYEncriptarPassword(claveSpring);
-
-
                 usuario.setNombre(nombre.toUpperCase());
                 usuario.setUsername(username.toUpperCase());
                 usuario.setIsSpringUser(Boolean.TRUE);
@@ -114,6 +123,11 @@ public class UsuariosController {
                 usuario.setChangedPass(Boolean.FALSE);
 
                 usuarioService.save(usuario);
+
+                // Asocia agrupaciones al usuario nuevo
+                for (Long idAgrupacion : agrupacionesIds) {
+                    detalleGruposUsuarioService.agrupar(usuario, idAgrupacion);
+                }
 
                 //LOG GLOBAL----------------------
                 String descripcion = String.format("El usuario %s añadió la cuenta (no existente localmente) de %s. Fecha: %s",
@@ -125,10 +139,8 @@ public class UsuariosController {
                 logService.saveDeGlobal(usuarioService.getUsuarioLogeado(), AccionLogGlobal.AGREGA_USUARIO, descripcion);
                 //-------------------------------
 
-
                 return ResponseEntity.status(HttpStatus.CREATED).body("Usuario creado correctamente");
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,16 +150,15 @@ public class UsuariosController {
     }
 
 
-
-
-
     @PostMapping("/actualizar/{id}")
     public ResponseEntity<String> actualizarUsuario(
             @PathVariable Long id,
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("nombre") String nombre,
-            @RequestParam("rol") Long rolId) {
+            @RequestParam("rol") Long rolId,
+            @RequestParam("agrupacionesSeleccionadas") String agrupacionesCSV // <-- recibe el CSV de IDs
+    ) {
 
         try {
             Usuario usuario = new Usuario();
@@ -158,16 +169,41 @@ public class UsuariosController {
             }
 
             String rolAnterior = usuarioService.getUsuarioPorId(id).getRolUsuario().getNombre();
-
             usuario.setNombre(nombre.toUpperCase());
             usuario.setRolUsuario(usuarioService.getRolPorId(rolId));
             usuario.setIsActive(Boolean.TRUE);
 
             usuarioService.actualizarUsuario(id, usuario);
 
+            // --- LOGICA DE AGRUPACIONES ---
+            // 1. Obtener agrupaciones actuales del usuario
+            List<Agrupacion> agrupacionesActuales = detalleGruposUsuarioService.getAgrupacionesPorUsuarioId(id);
+            Set<Long> idsActuales = agrupacionesActuales.stream().map(Agrupacion::getId).collect(Collectors.toSet());
 
+            // 2. Obtener agrupaciones nuevas desde el formulario
+            Set<Long> idsNuevos = Arrays.stream(agrupacionesCSV.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(Long::parseLong)
+                    .collect(Collectors.toSet());
 
+            // 3. Determinar cuáles eliminar, agregar y mantener
+            Set<Long> idsEliminar = new HashSet<>(idsActuales);
+            idsEliminar.removeAll(idsNuevos); // Los que ya no están
 
+            Set<Long> idsAgregar = new HashSet<>(idsNuevos);
+            idsAgregar.removeAll(idsActuales); // Los nuevos
+
+            // Eliminar agrupaciones que ya no están
+            for (Long idAgrupacion : idsEliminar) {
+                detalleGruposUsuarioService.desagrupar(usuarioService.getUsuarioPorId(id), idAgrupacion);
+            }
+
+            // Agregar agrupaciones nuevas
+            for (Long idAgrupacion : idsAgregar) {
+                detalleGruposUsuarioService.agrupar(usuarioService.getUsuarioPorId(id), idAgrupacion);
+            }
+            // Las que no cambiaron quedan igual
 
             //LOG GLOBAL----------------------
             String descripcion = String.format("El usuario %s actualizó la cuenta de %s. Fecha: %s Rol: %s -> %s",
@@ -181,9 +217,6 @@ public class UsuariosController {
             logService.saveDeGlobal(usuarioService.getUsuarioLogeado(), AccionLogGlobal.ACTUALIZA_USUARIO, descripcion);
             //-------------------------------
 
-
-
-
             return ResponseEntity.ok("Usuario actualizado correctamente");
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Nombre de usuario duplicado");
@@ -192,7 +225,6 @@ public class UsuariosController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error general al actualizar usuario");
         }
     }
-
 
 
     @PostMapping("/desactivar/{id}")

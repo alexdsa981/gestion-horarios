@@ -16,71 +16,6 @@ main label, main input, main select, main textarea {
   font-size: 15px !important;
 }
 
-/*ESTILOS CONTENEDOR HORARIOS*/
-.calendar_default_rowheader_inner {
-  background-color: #e7e7e7;
-}
-
-.calendar_default_corner {
-  position: relative;
-}
-.calendar_default_corner::after {
-  content: "Horas";
-  color: #555;
-  font-size: 13px;
-  font-weight: bold;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-/*HORAS NO LABORABLES EN GRIS*/
-.calendar_default_cell .calendar_default_cell_inner {
-  background-color: #e7e7e7 !important;
-}
-/*HORAS LABORABLES ROJIZO*/
-.calendar_default_cell_business .calendar_default_cell_inner {
-  background-color: #ffe5e5 !important;
-}
-
-/* Mostrar "vacío" si la celda está vacía */
-.calendar_default_cell_business .calendar_default_cell_inner:empty::after {
-  content: "Sin cobertura";
-  color: rgb(0, 0, 0);
-  font-size: 10px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-/*SIN SCROLL*/
-.calendar_default_main div {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.calendar_default_main div::-webkit-scrollbar {
-  display: none;
-}
-.calendar_default_main,
-.calendar_default_main > div {
-  overflow: hidden !important;
-}
-
-/*DIAS DE CALENDARIO CON FONDO BLANCO*/
-.navigator_default_day {
-  background-color: #fff !important;
-}
-
-/*MODAL REPETIR*/
-#multi-date-picker {
-  display: none;
-}
 
 
 .agrupacion-select {
@@ -101,4 +36,31 @@ main label, main input, main select, main textarea {
     background-color: #343a40 !important;
     color: #fff !important;
     border-color: #343a40 !important;
+}
+
+.input-readonly {
+    background-color: #e9ecef !important;  /* Gris claro, igual que Bootstrap disabled */
+    color: #6c757d !important;             /* Texto gris como disabled */
+    border-color: #ced4da !important;
+    opacity: 1 !important;                 /* Evita que se vea opaco como disabled real */
+    cursor: not-allowed;
+}
+
+.agrupacion-label {
+    display: inline-block;
+    padding: 0.35em 1em;
+    border-radius: 20px;
+    background: #f1f1f1;
+    color: #6c757d;
+    border: 1px solid #ced4da;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+}
+
+.agrupacion-label.selected {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
 }

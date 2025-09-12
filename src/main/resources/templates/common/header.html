@@ -8,7 +8,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom">
         <a class="navbar-brand ms-3 logo-outline" href="/inicio"
            style="margin-right: 10px; display: flex; align-items: center">
-            <img class="" style="width: 27px; margin-right: 5px" src="images/IPOR.png" alt="logo"/>
+            <img class="" style="width: 27px; margin-right: 5px" src="/images/IPOR.png" alt="logo"/>
             <span>HorariosIPOR</span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -19,7 +19,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link"
                    th:classappend="${paginaActual} == 'home' ? 'active' : ''"
-                   href="/">
+                   href="/home">
                     <i class="bi bi-house-door me-1"></i>Home
                 </a>
                 <a class="nav-item nav-link"
@@ -34,7 +34,7 @@
                 </a>
                 <a class="nav-item nav-link"
                    th:classappend="${paginaActual} == 'config' ? 'active' : ''"
-                   href="#">
+                   href="/configuracion/usuarios">
                     <i class="bi bi-gear me-1"></i>Configuración
                 </a>
             </div>

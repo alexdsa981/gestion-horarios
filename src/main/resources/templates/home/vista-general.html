@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/imports :: headImports('/css/vista-general.css')}"></head>
+
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+
+<main class=" py-4 flex-fill">
+    <h3 style="text-align:center;">Mes: Mini-calendarios de recursos por día</h3>
+    <div class="mes-grid" id="mesGrid"></div>
+</main>
+
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/js/home/vista-general.js"></script>
+</body>
+</html>

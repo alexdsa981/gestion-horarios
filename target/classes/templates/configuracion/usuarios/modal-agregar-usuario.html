@@ -1,0 +1,58 @@
+<div th:fragment="modalAgregarUsuario" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content shadow-lg">
+                <!-- Encabezado -->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addUserModalLabel">
+                        <i class="bi bi-person-plus"></i> Añadir Usuario
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <!-- Cuerpo -->
+                <div class="modal-body">
+                    <form id="addUserForm" method="post">
+                        <!-- Username (solo se llena desde modal de búsqueda) -->
+                        <div class="mb-3">
+                            <label for="usernameAdd" class="form-label">Username</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control input-readonly" id="usernameAdd" name="username" readonly required>
+                                <button type="button" class="btn btn-outline-secondary" id="btnBuscarUsuario">
+                                    <i class="bi bi-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Nombre completo (opcional llenar automáticamente al seleccionar en modal de búsqueda) -->
+                        <div class="mb-3">
+                            <label for="nombreAdd" class="form-label">Nombre completo</label>
+                            <input type="text" class="form-control input-readonly" id="nombreAdd" name="nombre" readonly>
+                        </div>
+
+                        <!-- Selección de Rol -->
+                        <div class="mb-3">
+                            <label for="rolAdd" class="form-label">Asignar Rol</label>
+                            <select class="form-select" id="rolAdd" name="rol" required>
+                                <option selected disabled value="">Selecciona Rol</option>
+                                <option th:each="rol : ${Lista_Roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                            </select>
+                        </div>
+                        <!-- Agrupaciones activas como etiquetas -->
+                        <div class="mb-3">
+                            <label class="form-label d-block">Seleccione Agrupaciones</label>
+                            <div id="agrupacionesContainer" class="d-flex flex-wrap gap-2">
+                            </div>
+                            <input type="hidden" id="agrupacionesSeleccionadas" name="agrupacionesSeleccionadas">
+                        </div>
+                        <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Usuario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

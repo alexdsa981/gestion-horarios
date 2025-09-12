@@ -21,11 +21,8 @@ const calendar = new DayPilot.Calendar("calendar", {
 
     if (args.cell.start.dayOfWeek() === 6 && isWorkingHour) {
       args.cell.properties.business = true;
-    } else if (args.cell.start.dayOfWeek() !== 0 && isWorkingHour) {
+    } else if (args.cell.start.dayOfWeek() === 0 && isWorkingHour){
       args.cell.properties.business = true;
-    } else {
-      args.cell.properties.business = false;
-      args.cell.disabled = true;
     }
   },
 

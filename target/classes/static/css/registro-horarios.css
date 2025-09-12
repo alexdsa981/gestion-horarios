@@ -1,0 +1,66 @@
+
+/*ESTILOS CONTENEDOR HORARIOS*/
+.calendar_default_rowheader_inner {
+  background-color: #e7e7e7;
+}
+
+.calendar_default_corner {
+  position: relative;
+}
+.calendar_default_corner::after {
+  content: "Horas";
+  color: #555;
+  font-size: 13px;
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/*HORAS NO LABORABLES EN GRIS*/
+.calendar_default_cell .calendar_default_cell_inner {
+  background-color: #e7e7e7 !important;
+}
+/*HORAS LABORABLES ROJIZO*/
+.calendar_default_cell_business .calendar_default_cell_inner {
+  background-color: #ffe5e5 !important;
+}
+
+/* Mostrar "vacío" si la celda está vacía */
+.calendar_default_cell_business .calendar_default_cell_inner:empty::after {
+  content: "Sin cobertura";
+  color: rgb(0, 0, 0);
+  font-size: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/*SIN SCROLL*/
+.calendar_default_main div {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.calendar_default_main div::-webkit-scrollbar {
+  display: none;
+}
+.calendar_default_main,
+.calendar_default_main > div {
+  overflow: hidden !important;
+}
+
+/*DIAS DE CALENDARIO CON FONDO BLANCO*/
+.navigator_default_day {
+  background-color: #fff !important;
+}
+
+/*MODAL REPETIR*/
+#multi-date-picker {
+  display: none;
+}

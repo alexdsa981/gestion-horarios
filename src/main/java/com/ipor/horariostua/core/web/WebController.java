@@ -8,6 +8,7 @@ import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import com.ipor.horariostua.core.usuario.Usuario;
 import com.ipor.horariostua.core.usuario.UsuarioService;
+import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -67,6 +68,22 @@ public class WebController {
         System.out.println("[POST] Actualizando agrupacionSeleccionadaId en BD a: " + agrupacionId);
     }
 
+
+
+    @GetMapping("/home")
+    public String redirigePaginaHome(Model model) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+        Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+        colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+        sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
+
+        model.addAttribute("Titulo", "IPOR - Horarios | Home");
+        model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+        model.addAttribute("paginaActual", "home");
+        return "home/vista-general";
+    }
+
+
     @GetMapping("/registro-horarios")
     public String redirigePaginaRegistro(Model model) {
         Usuario usuario = usuarioService.getUsuarioLogeado();
@@ -93,11 +110,20 @@ public class WebController {
         return "personalsedes/sedes/sedes";
     }
 
-    @GetMapping("/usuarios")
+    @GetMapping("/configuracion/usuarios")
     public String redirigePaginaUsuarios(Model model) {
         model.addAttribute("paginaActual", "config");
-        model.addAttribute("Titulo", "IPOR - Horarios | Usuarios");
-        return "usuarios/usuarios";
+        List<RolUsuario> listaRoles = usuarioService.getListaRoles();
+        model.addAttribute("Lista_Roles", listaRoles);
+        model.addAttribute("Titulo", "IPOR - Horarios | Admin - Usuarios");
+        return "configuracion/usuarios/usuarios";
+    }
+
+    @GetMapping("/configuracion/sedes")
+    public String redirigePaginaSedesGlobal(Model model) {
+        model.addAttribute("paginaActual", "config");
+        model.addAttribute("Titulo", "IPOR - Horarios | Admin - Sedes");
+        return "configuracion/sedes/sedes";
     }
 
 

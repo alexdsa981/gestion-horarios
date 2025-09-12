@@ -21,4 +21,5 @@ public class DetalleGruposUsuario {
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+    private Boolean isActive;
 }
