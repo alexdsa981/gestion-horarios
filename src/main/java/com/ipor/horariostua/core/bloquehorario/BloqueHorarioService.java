@@ -37,6 +37,14 @@ public class BloqueHorarioService {
         return bloqueHorarioRepository.findByAgrupacionId(idAgrupacion);
     }
 
+    public List<BloqueHorario> listarPorFecha(LocalDate desde, LocalDate hasta ){
+        return bloqueHorarioRepository.findByFechaBetween(desde, hasta);
+    }
+
+    public List<BloqueHorario> listarPorFechaYagrupacion(Long idAgrupacion, LocalDate desde, LocalDate hasta ){
+       return bloqueHorarioRepository.findByAgrupacionIdAndFechaBetween(idAgrupacion, desde, hasta);
+    }
+
     public BloqueHorario agregar(Recibido_BH_DTO dto){
         BloqueHorario bloqueHorario = new BloqueHorario();
         bloqueHorario.setHorarioLaboral(horarioLaboralService.getUltimoHorarioLaboral());

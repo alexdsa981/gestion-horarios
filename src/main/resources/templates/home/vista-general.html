@@ -4,15 +4,31 @@
 
 <body class="bg-light d-flex flex-column min-vh-100">
 <header th:replace="~{common/header :: header}"></header>
-
-<main class=" py-4 flex-fill">
-    <h3 style="text-align:center;">Mes: Mini-calendarios de recursos por día</h3>
+<script th:inline="javascript">
+    let listaSedesActivasPorAgrupacion = /*[[${listaSedesActivasPorAgrupacion}]]*/ [];
+</script>
+<main class="py-4 flex-fill" style="position:relative;">
+    <div style="display:flex; justify-content:center; align-items:center; gap:1rem;">
+        <h3 id="tituloMes" style="margin:0;">Horarios del Mes</h3>
+        <select id="selectorAno" style="height:2.2rem; font-size:1rem;"></select>
+        <select id="selectorMes" style="height:2.2rem; font-size:1rem;"></select>
+    </div>
+    <div id="loadingSpinner"
+         style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <div style="margin-top:10px;">Cargando horarios...</div>
+    </div>
+    <!-- Grid de horarios -->
     <div class="mes-grid" id="mesGrid"></div>
 </main>
-
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/js/home/otros/spinner.js"></script>
+<script src="/js/home/otros/daypilot-init.js"></script>
+<script src="/js/home/otros/calendario-utils.js"></script>
 <script src="/js/home/vista-general.js"></script>
 </body>
 </html>

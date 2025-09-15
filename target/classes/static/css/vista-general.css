@@ -11,7 +11,7 @@
     font-weight: bold;
     position: absolute;
     left: 50%;
-    top: 80%;
+    top: 50%;
     transform: translate(-50%, -50%);
     opacity: 0.8;
     pointer-events: none;
@@ -109,7 +109,6 @@
     left: 2px;
     font-size: 0.65em;
     color: #4e91e2;
-    background: #fff;
     padding: 1px 3px;
     border-radius: 3px;
     z-index: 2;
@@ -170,4 +169,32 @@
 /* Opcional: oculta scroll vertical de horas */
 .dp_calendar_scroll {
     overflow-y: hidden !important;
+}
+
+
+
+.dia-semana-label {
+    margin-bottom: 2px;
+}
+.fecha-label {
+    font-size: 8px;
+    color: #666;
+    text-align: center;
+}
+
+#loadingSpinner {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 2;
+  background: rgba(255,255,255,0.7);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-celda.celda-vacia {
+    border: 1px solid #ccc;
+    min-height: 238px;
+
 }

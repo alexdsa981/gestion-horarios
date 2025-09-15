@@ -93,10 +93,13 @@ public class DataInitializer implements CommandLineRunner {
             DetalleGruposUsuario detalleGruposUsuario1 = new DetalleGruposUsuario();
             detalleGruposUsuario1.setUsuario(usuarioRepository.findById(1L).get());
             detalleGruposUsuario1.setAgrupacion(agrupacionRepository.findById(1L).get());
+            detalleGruposUsuario1.setIsActive(true);
 
             DetalleGruposUsuario detalleGruposUsuario2 = new DetalleGruposUsuario();
             detalleGruposUsuario2.setUsuario(usuarioRepository.findById(1L).get());
             detalleGruposUsuario2.setAgrupacion(agrupacionRepository.findById(2L).get());
+            detalleGruposUsuario1.setIsActive(true);
+
 
             detalleGruposUsuarioRepository.save(detalleGruposUsuario1);
             detalleGruposUsuarioRepository.save(detalleGruposUsuario2);

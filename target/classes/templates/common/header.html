@@ -37,6 +37,10 @@
                    href="/configuracion/usuarios">
                     <i class="bi bi-gear me-1"></i>Configuración
                 </a>
+                <button type="button" class="btn-exportar" data-bs-toggle="modal" data-bs-target="#export-modal">
+                    <i class="bi bi-download me-1"></i> Exportar
+                </button>
+
             </div>
             <div class="ms-auto d-flex align-items-center me-3">
                 <select class="form-select me-3 agrupacion-select" id="agrupacion-select">
@@ -55,6 +59,7 @@
             </div>
         </div>
     </nav>
+    <div th:replace="~{common/exportar/modal-exportar :: modal-exportar}"></div>
 </header>
 
 </body>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="modal-exportar">
+    <div class="modal fade" id="export-modal" tabindex="-1" aria-labelledby="export-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="export-modal-label">Exportar Horarios</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="export-form">
+                        <div class="mb-3">
+                            <label for="export-fecha-desde" class="form-label">Fecha desde</label>
+                            <input type="date" class="form-control" id="export-fecha-desde" name="export-fecha-desde" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="export-fecha-hasta" class="form-label">Fecha hasta</label>
+                            <input type="date" class="form-control" id="export-fecha-hasta" name="export-fecha-hasta" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" form="export-form" class="btn btn-success">
+                        <i class="bi bi-download"></i> Exportar
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

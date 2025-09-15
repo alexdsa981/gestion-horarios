@@ -1,168 +1,171 @@
+const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
+    name: sede.nombre,
+    id: sede.id
+}));
 
-// Recursos demo
-const columnas = [
-    { name: "Vesalio", id: "central" },
-
-    //{ name: "San Isidro - Clinica", id: "norte" },
-    //{ name: "Sur", id: "sur" }
-];
-
-// Bloques demo
-const bloques =
-    [
-        // Ejemplo de horarios compartidos y jornadas largas en "central" el 15
-        { fecha: "2025-09-15", recurso: "central", start: "07:00", end: "17:00", color: "#4e91e2", text: "Juan Pérez" },
-        { fecha: "2025-09-15", recurso: "central", start: "08:00", end: "16:00", color: "#e2784e", text: "María González" },
-        { fecha: "2025-09-15", recurso: "central", start: "09:00", end: "19:00", color: "#4ee2ab", text: "José Paredes" },
-
-        // Más entradas en "central" ese día
-        { fecha: "2025-09-15", recurso: "central", start: "12:00", end: "22:00", color: "#e24e9c", text: "Patricia Mendoza" },
-
-        // Ejemplo de horarios compartidos y jornadas largas en "norte"
-        { fecha: "2025-09-15", recurso: "norte", start: "07:00", end: "17:00", color: "#4e91e2", text: "Ana Torres" },
-        { fecha: "2025-09-15", recurso: "norte", start: "08:00", end: "18:00", color: "#e2784e", text: "Carlos Ramírez" },
-        { fecha: "2025-09-15", recurso: "norte", start: "10:00", end: "20:00", color: "#4ee2ab", text: "Andrea Tapia" },
-
-        // Más entradas en "sur" con jornadas largas y compartidas
-        { fecha: "2025-09-15", recurso: "sur", start: "07:00", end: "17:00", color: "#4e91e2", text: "Luis Domínguez" },
-        { fecha: "2025-09-15", recurso: "sur", start: "09:00", end: "19:00", color: "#e2784e", text: "María López" },
-        { fecha: "2025-09-15", recurso: "sur", start: "12:00", end: "22:00", color: "#4ee2ab", text: "Patricia Torres" },
-
-        // Otro día, más jornadas largas y compartidas
-        { fecha: "2025-09-17", recurso: "central", start: "07:00", end: "17:00", color: "#4e91e2", text: "Fernando Gómez" },
-        { fecha: "2025-09-17", recurso: "central", start: "08:00", end: "18:00", color: "#e2784e", text: "Sofía Martínez" },
-        { fecha: "2025-09-17", recurso: "central", start: "10:00", end: "20:00", color: "#4ee2ab", text: "Roberto Herrera" },
-
-        { fecha: "2025-09-17", recurso: "norte", start: "07:00", end: "17:00", color: "#4e91e2", text: "Valeria Suárez" },
-        { fecha: "2025-09-17", recurso: "norte", start: "08:00", end: "16:00", color: "#e2784e", text: "Javier Medina" },
-
-        { fecha: "2025-09-17", recurso: "sur", start: "09:00", end: "19:00", color: "#4ee2ab", text: "Claudia Vargas" },
-        { fecha: "2025-09-17", recurso: "sur", start: "12:00", end: "22:00", color: "#e24e9c", text: "Miguel Castro" },
-
-        // Otro día
-        { fecha: "2025-09-19", recurso: "central", start: "07:00", end: "17:00", color: "#4e91e2", text: "Gabriela Ruiz" },
-        { fecha: "2025-09-19", recurso: "central", start: "08:00", end: "16:00", color: "#e2784e", text: "Diego Fernández" },
-
-        { fecha: "2025-09-19", recurso: "norte", start: "09:00", end: "19:00", color: "#4ee2ab", text: "Camila Ortiz" },
-        { fecha: "2025-09-19", recurso: "norte", start: "12:00", end: "22:00", color: "#e24e9c", text: "Martín Castillo" },
-
-        { fecha: "2025-09-19", recurso: "sur", start: "07:00", end: "17:00", color: "#4e91e2", text: "Esteban Molina" },
-        { fecha: "2025-09-19", recurso: "sur", start: "08:00", end: "18:00", color: "#e2784e", text: "Paula Romero" }
-    ];
-
-// Genera días del mes actual
-function getDaysInMonth(year, month) {
-    let days = [];
-    let total = new Date(year, month + 1, 0).getDate();
-    for (let d = 1; d <= total; d++) {
-        days.push(`${year}-${(month + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`);
+function generarOpcionesAno() {
+    const selectorAno = document.getElementById("selectorAno");
+    selectorAno.innerHTML = "";
+    const anoActual = new Date().getFullYear();
+    for (let y = anoActual - 2; y <= anoActual + 2; y++) {
+        selectorAno.innerHTML += `<option value="${y}" ${y === anoActual ? 'selected' : ''}>${y}</option>`;
     }
-    return days;
 }
 
-// Renderiza la cuadrícula
-const hoy = new Date();
-const year = hoy.getFullYear();
-const month = hoy.getMonth();
-const diasMes = getDaysInMonth(year, month);
+function generarOpcionesMes() {
+    const selectorMes = document.getElementById("selectorMes");
+    selectorMes.innerHTML = "";
+    const mesActual = new Date().getMonth();
+    for (let m = 0; m < 12; m++) {
+        selectorMes.innerHTML += `<option value="${m}" ${m === mesActual ? 'selected' : ''}>${nombresMeses[m]}</option>`;
+    }
+}
 
-const grid = document.getElementById('mesGrid');
-diasMes.forEach(fechaISO => {
-    const celda = document.createElement('div');
-    celda.className = 'mini-celda';
+function getFechaRango(ano, mes) {
+    // mes: 0-indexed
+    const desde = `${ano}-${(mes+1).toString().padStart(2, '0')}-01`;
+    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+    const hasta = `${ano}-${(mes+1).toString().padStart(2, '0')}-${ultimoDia.toString().padStart(2, '0')}`;
+    return {desde, hasta};
+}
 
-    // Label de fecha
-    const fechaLabel = document.createElement('div');
-    fechaLabel.className = 'fecha-label';
-    fechaLabel.textContent = new Date(fechaISO).getDate();
-    celda.appendChild(fechaLabel);
+async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
+    document.getElementById('tituloMes').textContent = `Horarios de ${nombresMeses[mesIdx]} ${ano}`;
+    const grid = document.getElementById('mesGrid');
 
-    // Mini calendar container
-    const calDiv = document.createElement('div');
-    const calId = "mini-calendar-" + fechaISO;
-    calDiv.id = calId;
-    calDiv.style.height = "237px";
-    calDiv.style.width = "110px";
-    celda.appendChild(calDiv);
+    grid.style.visibility = "hidden";
+    mostrarSpinner();
 
-    grid.appendChild(celda);
+    const diasMes = getDaysInMonth(ano, mesIdx);
+    const bloques = await obtenerBloquesHorarios(agrupacionGlobalId, desde, hasta);
 
-    // Eventos para ese día
-    const eventosDia = bloques.filter(b => b.fecha === fechaISO).map(b => ({
-        id: b.text + b.start,
-        resource: b.recurso,
-        start: fechaISO + "T" + b.start + ":00",
-        end: fechaISO + "T" + b.end + ":00",
-        text: b.text,
-        backColor: b.color
-    }));
+    const fragment = document.createDocumentFragment();
+
+    // --- Espacios vacíos al inicio ---
+    const fechaObjPrimerDia = new Date(diasMes[0] + "T00:00");
+    let diaSemana = fechaObjPrimerDia.getDay();
+    let espaciosVaciosInicio = diaSemana === 0 ? 6 : diaSemana - 1;
+
+    for (let i = 0; i < espaciosVaciosInicio; i++) {
+        const celdaVacia = document.createElement('div');
+        celdaVacia.className = 'mini-celda celda-vacia';
+        celdaVacia.style.background = "#e0e0e0";
+        celdaVacia.style.display = "flex";
+        celdaVacia.style.alignItems = "center";
+        celdaVacia.style.justifyContent = "center";
+        celdaVacia.style.color = "#888";
+        celdaVacia.innerHTML = "<span style='font-size:10px'>Mes anterior</span>";
+        fragment.appendChild(celdaVacia);
+    }
+
+    // --- Días del mes ---
+    diasMes.forEach(fechaISO => {
+        const celda = document.createElement('div');
+        celda.className = 'mini-celda';
+
+        const fechaObj = new Date(fechaISO + "T00:00");
+        const nombreDia = nombresDiasSemana[fechaObj.getDay()];
+        const numeroDia = fechaObj.getDate();
+
+        const diaSemanaLabel = document.createElement('div');
+        diaSemanaLabel.className = 'dia-semana-label';
+        diaSemanaLabel.textContent = `${nombreDia} ${numeroDia}`;
+        diaSemanaLabel.style.fontWeight = "bold";
+        diaSemanaLabel.style.fontSize = "11px";
+        diaSemanaLabel.style.textAlign = "center";
+        celda.appendChild(diaSemanaLabel);
+
+        const fechaLabel = document.createElement('div');
+        fechaLabel.className = 'fecha-label';
+        fechaLabel.textContent = fechaISO.slice(-2);
+        celda.appendChild(fechaLabel);
+
+        const calDiv = document.createElement('div');
+        const calId = "mini-calendar-" + fechaISO;
+        calDiv.id = calId;
+        calDiv.style.height = "238px";
+        calDiv.style.width = "110px";
+        calDiv.style.visibility = "hidden";
+        celda.appendChild(calDiv);
+
+        fragment.appendChild(celda);
+    });
+
+    // --- Espacios vacíos al final ---
+    const fechaObjUltimoDia = new Date(diasMes[diasMes.length - 1] + "T00:00");
+    let diaSemanaUltimo = fechaObjUltimoDia.getDay();
+    let espaciosVaciosFinal = diaSemanaUltimo === 0 ? 0 : 7 - diaSemanaUltimo;
+    if (espaciosVaciosFinal > 0 && espaciosVaciosFinal < 7) {
+        for (let i = 0; i < espaciosVaciosFinal; i++) {
+            const celdaVacia = document.createElement('div');
+            celdaVacia.className = 'mini-celda celda-vacia';
+            celdaVacia.style.background = "#e0e0e0";
+            celdaVacia.style.display = "flex";
+            celdaVacia.style.alignItems = "center";
+            celdaVacia.style.justifyContent = "center";
+            celdaVacia.style.color = "#888";
+            celdaVacia.innerHTML = "<span style='font-size:10px'>Mes siguiente</span>";
+            fragment.appendChild(celdaVacia);
+        }
+    }
+
+    grid.innerHTML = "";
+    grid.appendChild(fragment);
+
+    // Inicializa mini-calendarios solo en días válidos
+    diasMes.forEach(fechaISO => {
+        const calId = "mini-calendar-" + fechaISO;
+        const eventosDia = bloques.filter(b => b.fecha === fechaISO).map(b => ({
+            id: b.id,
+            resource: b.idSede,
+            start: `${b.fecha}T${b.horaInicio}`,
+            end: `${b.fecha}T${b.horaFin}`,
+            text: b.nombreColaborador,
+            backColor: b.color,
+            idColaborador: b.idColaborador,
+            grupoAnidado: b.grupoAnidado,
+        }));
+        inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia);
+    });
 
     setTimeout(() => {
-        const calendar = new DayPilot.Calendar(calId, {
-            viewType: "Resources",
-            columns: columnas,
-            startDate: fechaISO,
-            events: eventosDia,
-            cellDuration: 30,
-            businessBeginsHour: 7,
-            businessEndsHour: 20,
-            cellHeight: 8,
-            height: 100,
-            showHours: true,
-            locale: "es-es",
-            timeFormat: "Clock24Hours",
-            eventClickHandling: "Disabled",
-            eventMoveHandling: "Disabled",
-            eventResizeHandling: "Disabled",
-            eventDeleteHandling: "Disabled",
-            eventMarginBottom: 0,
-            eventMarginTop: 0,
-            eventHeight: 11,
-            onBeforeEventRender: function (args) {
-                args.data.toolTip = args.data.text;
-                args.data.fontColor = "#fff";
-                args.data.fontSize = "8px";
-                args.data.borderColor = "#222";
-            },
-            onBeforeCellRender: function (args) {
-                const hour = args.cell.start.getHours();
-                const isWorkingHour = hour >= this.businessBeginsHour && hour < this.businessEndsHour;
-
-                if (args.cell.start.dayOfWeek() === 6 && isWorkingHour) {
-                    args.cell.properties.business = true;
-                } else if (args.cell.start.dayOfWeek() === 0 && isWorkingHour) {
-                    args.cell.properties.business = true;
-                }
-            },
-
+        document.querySelectorAll('.calendar_default_rowheader').forEach(td => {
+            const table = td.closest('table');
+            if (table) {
+                table.style.width = "20px";
+                table.style.minWidth = "20px";
+                table.style.maxWidth = "20px";
+                table.style.tableLayout = "fixed";
+            }
         });
-        calendar.init();
+        ocultarSpinner();
+        grid.style.visibility = "visible";
     }, 0);
-});
+}
 
+window.addEventListener("DOMContentLoaded", () => {
+    generarOpcionesAno();
+    generarOpcionesMes();
 
+    const selectorAno = document.getElementById("selectorAno");
+    const selectorMes = document.getElementById("selectorMes");
 
+    // Inicializar con valores actuales
+    const ano = Number(selectorAno.value);
+    const mes = Number(selectorMes.value);
+    const {desde, hasta} = getFechaRango(ano, mes);
+    renderizarMesGrid(desde, hasta, ano, mes);
 
-
-
-
-
-
-
-
-
-
-
-setTimeout(() => {
-    document.querySelectorAll('.calendar_default_rowheader').forEach(td => {
-        const table = td.closest('table');
-        if (table) {
-            table.style.width = "20px";
-            table.style.minWidth = "20px";
-            table.style.maxWidth = "20px";
-            table.style.tableLayout = "fixed";
-        }
+    selectorAno.addEventListener("change", () => {
+        const ano = Number(selectorAno.value);
+        const mes = Number(selectorMes.value);
+        const {desde, hasta} = getFechaRango(ano, mes);
+        renderizarMesGrid(desde, hasta, ano, mes);
     });
-}, 0);
-
-
+    selectorMes.addEventListener("change", () => {
+        const ano = Number(selectorAno.value);
+        const mes = Number(selectorMes.value);
+        const {desde, hasta} = getFechaRango(ano, mes);
+        renderizarMesGrid(desde, hasta, ano, mes);
+    });
+});

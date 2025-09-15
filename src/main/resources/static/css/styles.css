@@ -18,6 +18,33 @@ main label, main input, main select, main textarea {
 
 
 
+.btn-exportar {
+    color: #ffffff;                      /* Texto blanco */
+    background: rgba(255,255,255,0.16);  /* Fondo blanco suave y semi-transparente */
+    border: none;
+    border-radius: 18px;
+    padding: 0.25rem 0.75rem;
+    font-weight: 500;
+    box-shadow: none;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.btn-exportar:hover,
+.btn-exportar:focus {
+    background: rgba(255,255,255,0.27);  /* Un poco más visible al pasar el mouse */
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-exportar i {
+    font-size: 1.1rem;
+}
+
 .agrupacion-select {
     min-width: 180px;
     background-color: #212529;

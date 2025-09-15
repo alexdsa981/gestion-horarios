@@ -10,6 +10,7 @@ import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Repetir_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,24 @@ public class BloqueHorarioController {
     private AgrupacionService agrupacionService;
     @Autowired
     private DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+
+
+    @GetMapping("/listar-fecha/{idAgrupacion}")
+    public ResponseEntity<List<Mostrar_BH_DTO>> listarBloquesAgrupacionYFecha(
+            @PathVariable Long idAgrupacion,
+            @RequestParam("desde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate desde,
+            @RequestParam("hasta") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate hasta
+    ) {
+        List<BloqueHorario> listaHorarios = bloqueHorarioService.listarPorFechaYagrupacion(idAgrupacion, desde, hasta);
+        List<Mostrar_BH_DTO> listaDTO = new ArrayList<>();
+        for (BloqueHorario bloque : listaHorarios) {
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
+                    bloque.getColaborador().getId(), idAgrupacion);
+            Mostrar_BH_DTO dto = new Mostrar_BH_DTO(bloque, detalle);
+            listaDTO.add(dto);
+        }
+        return ResponseEntity.ok(listaDTO);
+    }
 
     @GetMapping("/listar/{idAgrupacion}")
     public ResponseEntity<List<Mostrar_BH_DTO>> listarBloquesAgrupacion(@PathVariable Long idAgrupacion) {

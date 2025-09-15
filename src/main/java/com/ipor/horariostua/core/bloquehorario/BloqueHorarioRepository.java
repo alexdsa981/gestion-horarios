@@ -3,6 +3,7 @@ package com.ipor.horariostua.core.bloquehorario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BloqueHorarioRepository extends JpaRepository<BloqueHorario, Long> {
@@ -12,4 +13,9 @@ public interface BloqueHorarioRepository extends JpaRepository<BloqueHorario, Lo
     List<BloqueHorario> findByGrupoAnidado(Integer grupoAnidado);
 
     List<BloqueHorario> findByAgrupacionId(Long id);
+
+    List<BloqueHorario> findByFechaBetween(LocalDate desde, LocalDate hasta);
+
+    List<BloqueHorario> findByAgrupacionIdAndFechaBetween(Long agrupacionId, LocalDate desde, LocalDate hasta);
+
 }
