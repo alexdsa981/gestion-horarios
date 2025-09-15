@@ -13,9 +13,9 @@ public class WSNotificacionesService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    /*
+
     public void notificarActualizacionTabla() {
-        messagingTemplate.convertAndSend("/topic/actualizar-tabla", "refrescar");
+        messagingTemplate.convertAndSend("/topic/actualizar-home", "refrescar");
     }
-    */
+
 }

@@ -21,4 +21,25 @@ public class AgrupacionService {
         return agrupacionRepository.findByIsActiveTrue();
     }
 
+
+
+    public Agrupacion crearAgrupacion(String nombre) {
+        Agrupacion agrupacion = new Agrupacion();
+        agrupacion.setNombre(nombre);
+        agrupacion.setIsActive(true);
+        return agrupacionRepository.save(agrupacion);
+    }
+
+    public void actualizarAgrupacion(Agrupacion agrupacion) {
+        agrupacionRepository.save(agrupacion);
+    }
+
+    public void cambiarEstado(Long idAgrupacion, Boolean isActive) {
+        Agrupacion agrupacion = getAgrupacionPorId(idAgrupacion);
+        if (agrupacion != null) {
+            agrupacion.setIsActive(isActive);
+            agrupacionRepository.save(agrupacion);
+        }
+    }
+
 }

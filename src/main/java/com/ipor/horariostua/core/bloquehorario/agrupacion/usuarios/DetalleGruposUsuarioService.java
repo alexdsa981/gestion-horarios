@@ -24,6 +24,8 @@ public class DetalleGruposUsuarioService {
         }
         return listaAgrupaciones;
     }
+
+
     public void agrupar(Usuario usuario, Long idAgrupacion){
         DetalleGruposUsuario detalleAgrupacion;
         if (detalleGruposUsuarioRepository.findByUsuarioIdAndAgrupacionId(usuario.getId(), idAgrupacion).isPresent()){

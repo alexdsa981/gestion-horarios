@@ -2,6 +2,7 @@ package com.ipor.horariostua.core.usuario;
 
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import com.ipor.horariostua.core.usuario.spring.SpringUserService;
@@ -37,6 +38,9 @@ public class UsuariosController {
     private SpringUserService springUserService;
     @Autowired
     private DetalleGruposUsuarioService detalleGruposUsuarioService;
+    @Autowired
+    private AgrupacionService agrupacionService;
+
     // Mostrar la lista de usuarios
     @GetMapping("/activos")
     @ResponseBody
@@ -94,6 +98,7 @@ public class UsuariosController {
                 usuario.setIsSpringUser(Boolean.TRUE);
                 usuario.setIsActive(Boolean.TRUE);
                 usuario.setChangedPass(Boolean.FALSE);
+                usuario.setAgrupacionSeleccionada(agrupacionService.getAgrupacionPorId(agrupacionesIds.getFirst()));
                 usuarioService.save(usuario);
 
                 // Actualiza agrupaciones del usuario
@@ -121,7 +126,7 @@ public class UsuariosController {
                 usuario.setIsSpringUser(Boolean.TRUE);
                 usuario.setIsActive(Boolean.TRUE);
                 usuario.setChangedPass(Boolean.FALSE);
-
+                usuario.setAgrupacionSeleccionada(agrupacionService.getAgrupacionPorId(agrupacionesIds.getFirst()));
                 usuarioService.save(usuario);
 
                 // Asocia agrupaciones al usuario nuevo

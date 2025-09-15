@@ -40,6 +40,7 @@ public class GlobalAdviceController {
             model.addAttribute("listaGruposUsuario", listaGruposUsuario);
 
             model.addAttribute("agrupacionSeleccionadaId", usuario.getAgrupacionSeleccionada().getId());
+
         }
     }
 }

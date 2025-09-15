@@ -119,6 +119,13 @@ public class WebController {
         return "configuracion/usuarios/usuarios";
     }
 
+    @GetMapping("/configuracion/agrupaciones")
+    public String redirigePaginaAgrupacionesGlobal(Model model) {
+        model.addAttribute("paginaActual", "config");
+        model.addAttribute("Titulo", "IPOR - Horarios | Admin - Agrupaciones");
+        return "configuracion/agrupaciones/agrupaciones";
+    }
+
     @GetMapping("/configuracion/sedes")
     public String redirigePaginaSedesGlobal(Model model) {
         model.addAttribute("paginaActual", "config");

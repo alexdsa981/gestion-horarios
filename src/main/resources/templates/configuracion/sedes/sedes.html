@@ -11,6 +11,7 @@
                 <i class="bi bi-gear text-primary"></i> Configuración
             </h3>
             <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm">Usuarios</a>
+            <a href="/configuracion/agrupaciones" class="btn btn-outline-dark btn-sm">Agrupaciones</a>
             <a href="/configuracion/sedes" class="btn btn-outline-dark btn-sm boton-presionado">Sedes</a>
         </div>
         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarSede">
@@ -23,6 +24,7 @@
             <tr>
                 <th>#</th>
                 <th>Sede</th>
+                <th>Editar</th>
                 <th>Estado</th>
             </tr>
             </thead>
@@ -30,6 +32,49 @@
         </table>
     </div>
 </main>
+
+<div class="modal fade" id="modalAgregarSede" tabindex="-1" aria-labelledby="modalAgregarSedeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formAgregarSede" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarSedeLabel">Agregar Sede</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputNombreSede" class="form-label">Nombre de la sede</label>
+                    <input type="text" class="form-control" id="inputNombreSede" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Editar Sede -->
+<div class="modal fade" id="modalEditarSede" tabindex="-1" aria-labelledby="modalEditarSedeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formEditarSede" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarSedeLabel">Editar Sede</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputEditarNombreSede" class="form-label">Nombre de la sede</label>
+                    <input type="text" class="form-control" id="inputEditarNombreSede" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>

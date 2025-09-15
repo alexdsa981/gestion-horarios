@@ -54,4 +54,23 @@ public class SedeController {
         }
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearSede(@RequestBody Sede nuevaSede) {
+        if (nuevaSede.getNombre() == null || nuevaSede.getNombre().trim().isEmpty())
+            return ResponseEntity.badRequest().body("Nombre requerido");
+        Sede creada = sedeService.crearSede(nuevaSede.getNombre());
+        return ResponseEntity.ok(creada);
+    }
+
+    @PutMapping("/editar/{idSede}")
+    public ResponseEntity<?> editarSede(@PathVariable Long idSede, @RequestBody Sede datosSede) {
+        if (datosSede.getNombre() == null || datosSede.getNombre().trim().isEmpty())
+            return ResponseEntity.badRequest().body("Nombre requerido");
+        Sede sede = sedeService.getSedePorId(idSede);
+        if (sede == null) return ResponseEntity.notFound().build();
+        sede.setNombre(datosSede.getNombre());
+        sedeService.actualizarSede(sede);
+        return ResponseEntity.ok(sede);
+    }
 }

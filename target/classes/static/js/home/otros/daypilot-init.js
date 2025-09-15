@@ -22,7 +22,7 @@ function inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia) {
         onBeforeEventRender: function (args) {
             args.data.toolTip = args.data.text;
             args.data.fontColor = "#fff";
-            args.data.fontSize = "8px";
+            args.data.fontSize = "10px";
             args.data.borderColor = "#222";
         },
         onBeforeCellRender: function (args) {

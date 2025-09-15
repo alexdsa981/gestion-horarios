@@ -16,6 +16,20 @@ public class SedeService {
     @Autowired
     DetalleSedeAgrupacionService detalleSedeAgrupacionService;
 
+
+    public Sede crearSede(String nombre) {
+        Sede sede = new Sede();
+        sede.setNombre(nombre);
+        sede.setIsActive(true);
+        return sedeRepository.save(sede);
+    }
+
+    public void actualizarSede(Sede sede) {
+
+        sedeRepository.save(sede);
+    }
+
+
     public Model getModelSedesActivasPorAgrupacion(Model model, Long idAgrupacion) {
         List<DetalleSedeAgrupacion> listaDetalle =  detalleSedeAgrupacionService.listarDetalleActivosPorIdAgrupacion(idAgrupacion);
         List<Sede> listaSedes = new ArrayList<>();

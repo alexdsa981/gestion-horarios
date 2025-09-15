@@ -6,13 +6,11 @@ import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGrupos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/app/agrupacion")
@@ -25,10 +23,55 @@ public class AgrupacionController {
 
     @GetMapping("/listar")
     @ResponseBody
-    public ResponseEntity<List<Agrupacion>> listarAgrupaciones() {
-        List<Agrupacion> lista = agrupacionService.getListaAgrupacion();
+    public ResponseEntity<List<ListarAgrupacionDTO>> listarAgrupaciones() {
+        List<ListarAgrupacionDTO> lista = agrupacionService.getListaAgrupacion().stream()
+                .map(ListarAgrupacionDTO::new)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(lista);
     }
+
+    @PostMapping("/crear")
+    public ResponseEntity<?> crearAgrupacion(@RequestBody Agrupacion nuevaAgrupacion) {
+        if (nuevaAgrupacion.getNombre() == null || nuevaAgrupacion.getNombre().trim().isEmpty())
+            return ResponseEntity.badRequest().body("Nombre requerido");
+        Agrupacion creada = agrupacionService.crearAgrupacion(nuevaAgrupacion.getNombre());
+        return ResponseEntity.ok(creada);
+    }
+
+    @PutMapping("/editar/{idAgrupacion}")
+    public ResponseEntity<?> editarAgrupacion(@PathVariable Long idAgrupacion, @RequestBody Agrupacion datosAgrupacion) {
+        if (datosAgrupacion.getNombre() == null || datosAgrupacion.getNombre().trim().isEmpty())
+            return ResponseEntity.badRequest().body("Nombre requerido");
+        Agrupacion agrupacion = agrupacionService.getAgrupacionPorId(idAgrupacion);
+        if (agrupacion == null) return ResponseEntity.notFound().build();
+        agrupacion.setNombre(datosAgrupacion.getNombre());
+        agrupacionService.actualizarAgrupacion(agrupacion);
+        return ResponseEntity.ok(agrupacion);
+    }
+
+    @PostMapping("/estado/{idAgrupacion}")
+    public ResponseEntity<?> cambiarEstadoAgrupacion(@PathVariable Long idAgrupacion, @RequestBody Boolean isActive) {
+        agrupacionService.cambiarEstado(idAgrupacion, isActive);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @GetMapping("/listar-activos")
     @ResponseBody

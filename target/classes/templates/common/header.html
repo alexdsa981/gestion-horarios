@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 </head>
 <body>
@@ -34,10 +34,10 @@
                 </a>
                 <a class="nav-item nav-link"
                    th:classappend="${paginaActual} == 'config' ? 'active' : ''"
-                   href="/configuracion/usuarios">
+                   href="/configuracion/usuarios" sec:authorize="hasAnyAuthority('Admin')">
                     <i class="bi bi-gear me-1"></i>Configuración
                 </a>
-                <button type="button" class="btn-exportar" data-bs-toggle="modal" data-bs-target="#export-modal">
+                <button type="button" class="btn-exportar" data-bs-toggle="modal" data-bs-target="#export-modal" sec:authorize="hasAnyAuthority('Admin')">
                     <i class="bi bi-download me-1"></i> Exportar
                 </button>
 

@@ -30,7 +30,6 @@ function getFechaRango(ano, mes) {
 }
 
 async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
-    document.getElementById('tituloMes').textContent = `Horarios de ${nombresMeses[mesIdx]} ${ano}`;
     const grid = document.getElementById('mesGrid');
 
     grid.style.visibility = "hidden";
