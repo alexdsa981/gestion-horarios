@@ -203,15 +203,15 @@ public class ExportarService {
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Código Único
-            row.createCell(colIdx).setCellValue("00000001"); // Ejemplo
+            row.createCell(colIdx).setCellValue("00008389");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Nombre IPRESS
-            row.createCell(colIdx).setCellValue("CLINICA EJEMPLO S.A.C."); // Ejemplo
+            row.createCell(colIdx).setCellValue("IPOR: INSTITUTO PERUANO DE ONCOLOGIA & RADIOTERAPIA");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Tipo Documento
-            row.createCell(colIdx).setCellValue("DNI"); // Ejemplo
+            row.createCell(colIdx).setCellValue("DNI");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Número Documento

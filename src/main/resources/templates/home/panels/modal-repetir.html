@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="modal-repetir">
+    <div class="modal fade" id="modalRepetir" tabindex="-1" aria-labelledby="modalRepetirLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalRepetirLabel">Selecciona las fechas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div style="min-height: 300px" class="d-flex justify-content-center align-items-center">
+                        <input type="text" id="multi-date-picker" class="form-control text-center" style="max-width: 250px"
+                               readonly placeholder="Selecciona fechas..."/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnRepetirFechas">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
