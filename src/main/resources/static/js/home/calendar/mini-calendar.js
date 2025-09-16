@@ -1,4 +1,4 @@
-function inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia) {
+function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia) {
     const calendar = new DayPilot.Calendar(calId, {
         viewType: "Resources",
         columns: columnas,
@@ -13,8 +13,8 @@ function inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia) {
         locale: "es-es",
         timeFormat: "Clock24Hours",
         eventClickHandling: "Disabled",
-        eventMoveHandling: "Disabled",
-        eventResizeHandling: "Disabled",
+        eventMoveHandling: "Update",
+        eventResizeHandling: "Update",
         eventDeleteHandling: "Disabled",
         eventMarginBottom: 0,
         eventMarginTop: 0,
@@ -26,15 +26,20 @@ function inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia) {
             args.data.borderColor = "#222";
         },
         onBeforeCellRender: function (args) {
-            const hour = args.cell.start.getHours();
-            const isWorkingHour = hour >= this.businessBeginsHour && hour < this.businessEndsHour;
-            if (args.cell.start.dayOfWeek() === 6 && isWorkingHour) {
-                args.cell.properties.business = true;
-            } else if (args.cell.start.dayOfWeek() === 0 && isWorkingHour) {
-                args.cell.properties.business = true;
-            }
+            marcarHorasLaborales(args, this.businessBeginsHour, this.businessEndsHour);
         },
     });
+
+    // Handlers de edición (cada calendar tiene su propio estado)
+    const handlers = crearHandlersEdicion(calendar);
+    calendar.onEventResized = handlers.onEventResized;
+    calendar.onEventMove = handlers.onEventMove;
+    calendar.onEventMoved = handlers.onEventMoved;
+    calendar.onEventRightClick = handlers.onEventRightClick;
+
+
+
+
     calendar.init();
     document.getElementById(calId).style.visibility = "visible";
 }

@@ -41,9 +41,14 @@ public class BloqueHorarioService {
         return bloqueHorarioRepository.findByFechaBetween(desde, hasta);
     }
 
-    public List<BloqueHorario> listarPorFechaYagrupacion(Long idAgrupacion, LocalDate desde, LocalDate hasta ){
+    public List<BloqueHorario> listarPorRangoFechaYagrupacion(Long idAgrupacion, LocalDate desde, LocalDate hasta ){
        return bloqueHorarioRepository.findByAgrupacionIdAndFechaBetween(idAgrupacion, desde, hasta);
     }
+
+    public List<BloqueHorario> listarPorFechaYagrupacion(Long idAgrupacion, LocalDate fecha ){
+        return bloqueHorarioRepository.findByAgrupacionIdAndFecha(idAgrupacion, fecha);
+    }
+
 
     public BloqueHorario agregar(Recibido_BH_DTO dto){
         BloqueHorario bloqueHorario = new BloqueHorario();

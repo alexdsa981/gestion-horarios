@@ -35,13 +35,81 @@
     </div>
     <!-- Grid de horarios -->
     <div class="mes-grid" id="mesGrid"></div>
+
+    <!-- Botón flotante Agregar -->
+    <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
+            style="position:fixed; bottom:30px; right:30px; width:60px; height:60px; z-index:10; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+        <i class="bi bi-plus-lg"></i>
+    </button>
+
+    <!-- Modal agregar bloque -->
+    <div class="modal fade" id="modalAgregarBloque" tabindex="-1" aria-labelledby="modalAgregarBloqueLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="form-agregar-bloque">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgregarBloqueLabel">Agregar bloque horario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="modal-colaborador-select" class="form-label">Colaborador</label>
+                            <select id="modal-colaborador-select" class="form-select"
+                                    style="max-width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                <option
+                                        th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
+                                        th:value="${colaborador.id}"
+                                        th:text="${colaborador.nombreCompleto}"
+                                        th:attr="data-color=${colaborador.color}"
+                                        style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-2 row">
+                            <div class="col-6">
+                                <label class="form-label">Hora inicio</label>
+                                <div class="d-flex">
+                                    <select id="modal-horaInicioHora" class="form-control me-2"></select>
+                                    <select id="modal-horaInicioMinuto" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Hora fin</label>
+                                <div class="d-flex">
+                                    <select id="modal-horaFinHora" class="form-control me-2"></select>
+                                    <select id="modal-horaFinMinuto" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="modal-sedes-select" class="form-label">Sede</label>
+                            <select id="modal-sedes-select" class="form-select">
+                                <option th:each="sede : ${listaSedesActivasPorAgrupacion}" th:value="${sede.id}"
+                                        th:text="${sede.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="modal-fecha" class="form-label">Fecha</label>
+                            <input type="date" id="modal-fecha" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </main>
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
 <script src="/js/home/otros/spinner.js"></script>
-<script src="/js/home/otros/daypilot-init.js"></script>
 <script src="/js/home/otros/calendario-utils.js"></script>
+<script src="/js/home/calendar/calendar-shared.js"></script>
+<script src="/js/home/calendar/mini-calendar.js"></script>
+<script src="/js/home/calendar/agregar-bloque-modal.js"></script>
 <script src="/js/home/vista-general.js"></script>
 </body>
 </html>

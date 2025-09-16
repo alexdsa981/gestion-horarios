@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="left-panel-add">
+    <div id="left-panel" class="p-3 bg-light border rounded mt-3"
+         style="position: sticky; top: 20px; height: fit-content; max-width: 240px; min-width: 240px;">
+        <!-- CENTRAR NAVIGATOR -->
+        <div class="d-flex justify-content-center mb-3">
+            <div id="nav"></div>
+        </div>
+        <div class="mb-2">
+            <label for="left-panel-colaborador-select" class="form-label">Colaborador</label>
+            <select id="left-panel-colaborador-select" class="form-select"
+                    style="max-width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                <option
+                        th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
+                        th:value="${colaborador.id}"
+                        th:text="${colaborador.nombreCompleto}"
+                        th:attr="data-color=${colaborador.color}"
+                        style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-2 row">
+            <div class="col-12 mb-2">
+                <label class="form-label">Hora inicio</label>
+                <div class="d-flex">
+                    <select id="horaInicioHora" class="form-control me-2"></select>
+                    <select id="horaInicioMinuto" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Hora fin</label>
+                <div class="d-flex">
+                    <select id="horaFinHora" class="form-control me-2"></select>
+                    <select id="horaFinMinuto" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="left-panel-sedes-select" class="form-label">Sede</label>
+            <select id="left-panel-sedes-select" class="form-select">
+                <option th:each="sede : ${listaSedesActivasPorAgrupacion}" th:value="${sede.id}"
+                        th:text="${sede.nombre}"></option>
+            </select>
+        </div>
+
+        <button id="btn-agregar-bloque" class="btn btn-primary w-100">Agregar al calendario</button>
+    </div>
+</div>
+</body>
+</html>

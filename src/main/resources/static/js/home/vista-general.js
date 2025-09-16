@@ -29,9 +29,14 @@ function getFechaRango(ano, mes) {
     return {desde, hasta};
 }
 
+
+
+
+
+
+
 async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
     const grid = document.getElementById('mesGrid');
-
     grid.style.visibility = "hidden";
     mostrarSpinner();
 
@@ -111,7 +116,7 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
     grid.innerHTML = "";
     grid.appendChild(fragment);
 
-    // Inicializa mini-calendarios solo en días válidos
+    // Inicializa mini-calendarios editables en días válidos
     diasMes.forEach(fechaISO => {
         const calId = "mini-calendar-" + fechaISO;
         const eventosDia = bloques.filter(b => b.fecha === fechaISO).map(b => ({
@@ -124,7 +129,7 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
             idColaborador: b.idColaborador,
             grupoAnidado: b.grupoAnidado,
         }));
-        inicializarMiniCalendario(calId, fechaISO, columnas, eventosDia);
+        inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia);
     });
 
     setTimeout(() => {
@@ -141,6 +146,15 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
         grid.style.visibility = "visible";
     }, 0);
 }
+
+
+
+
+
+
+
+
+
 
 window.addEventListener("DOMContentLoaded", () => {
     generarOpcionesAno();
