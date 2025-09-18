@@ -1,3 +1,4 @@
+// --- Destaca horas laborales en el calendario (para fines visuales) ---
 function marcarHorasLaborales(args, beginsHour, endsHour) {
     const hour = args.cell.start.getHours();
     const isWorkingHour = hour >= beginsHour && hour < endsHour;
@@ -6,9 +7,8 @@ function marcarHorasLaborales(args, beginsHour, endsHour) {
     }
 }
 
-// Handlers para edición de eventos, encapsula el estado lastEventState por instancia
+// --- Handlers para edición de eventos (drag, resize, click derecho) ---
 function crearHandlersEdicion(calendar, getRightPanelId = null) {
-    // Cada calendar tiene su propio estado para revertir movimientos
     let lastEventState = {};
 
     return {
@@ -17,11 +17,10 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 const panel = document.getElementById(getRightPanelId());
                 if (panel) panel.style.display = "none";
             }
-
-            // DTO para backend
             const id = args.e.data.id;
             const idColaborador = args.e.data.idColaborador;
             const idSede = args.e.data.resource;
+            const idAgrupacion = args.e.data.idAgrupacion;
             const fecha = args.newStart.toString("yyyy-MM-dd");
             const horaInicio = args.newStart.toString("HH:mm");
             const horaFin = args.newEnd.toString("HH:mm");
@@ -29,6 +28,7 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
             const dto = {
                 idColaborador: Number(idColaborador),
                 idSede: Number(idSede),
+                idAgrupacion: idAgrupacion ? Number(idAgrupacion) : undefined,
                 fecha: fecha,
                 horaInicio: horaInicio,
                 horaFin: horaFin
@@ -44,14 +44,12 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 return response.json();
             })
             .then(data => {
-                args.e.data.text = data.nombreColaborador;
-                args.e.data.start = `${data.fecha}T${data.horaInicio}`;
-                args.e.data.end = `${data.fecha}T${data.horaFin}`;
-                args.e.data.resource = data.idSede;
-                args.e.data.backColor = data.color;
-                args.e.data.idColaborador = data.idColaborador;
-                args.e.data.grupoAnidado = data.grupoAnidado;
-                calendar.events.update(args.e);
+                actualizarEventoEnCalendario(args.e, data, calendar);
+
+                // Solo refresca si el evento cambió de día (muy raro en resize)
+                if (args.e.start().toString().substring(0, 10) !== data.fecha && window.refrescarMiniCalendario) {
+                    window.refrescarMiniCalendario(data.fecha);
+                }
 
                 Swal.fire({
                     icon: "success",
@@ -61,17 +59,7 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 });
             })
             .catch(error => {
-                // Revertir visualmente si error
-                calendar.events.update({
-                    id: args.e.data.id,
-                    start: args.e.data.start,
-                    end: args.e.data.end,
-                    resource: args.e.data.resource,
-                    text: args.e.data.text,
-                    backColor: args.e.data.backColor,
-                    idColaborador: args.e.data.idColaborador,
-                    grupoAnidado: args.e.data.grupoAnidado,
-                });
+                revertirEventoEnCalendario(args.e, lastEventState, calendar);
                 Swal.fire({
                     icon: "error",
                     title: "Error",
@@ -85,36 +73,21 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 const panel = document.getElementById(getRightPanelId());
                 if (panel) panel.style.display = "none";
             }
-            lastEventState = {
-                id: args.e.id(),
-                start: args.e.start().toString(),
-                end: args.e.end().toString(),
-                resource: args.e.resource(),
-                text: args.e.text(),
-                backColor: args.e.data.backColor,
-                idColaborador: args.e.data.idColaborador,
-                grupoAnidado: args.e.data.grupoAnidado,
-            };
+            lastEventState = estadoEvento(args.e);
         },
 
         onEventMoved: function (args) {
-            const day = args.newStart.toString("yyyy-MM-dd");
+            const origenFecha = args.e.start().toString().substring(0, 10); // "YYYY-MM-DD"
+            const destinoFecha = args.newStart.toString("yyyy-MM-dd");
+
+            const day = destinoFecha;
             const workStart = new DayPilot.Date(`${day}T${String(calendar.businessBeginsHour).padStart(2, "0")}:00:00`);
             const workEnd = new DayPilot.Date(`${day}T${String(calendar.businessEndsHour).padStart(2, "0")}:00:00`);
 
-            const isWorkingHour = args.newStart >= workStart && args.newEnd <= workEnd; 
+            const isWorkingHour = args.newStart >= workStart && args.newEnd <= workEnd;
 
             if (!isWorkingHour) {
-                calendar.events.update({
-                    id: lastEventState.id,
-                    start: lastEventState.start,
-                    end: lastEventState.end,
-                    resource: lastEventState.resource,
-                    text: lastEventState.text,
-                    backColor: lastEventState.backColor,
-                    idColaborador: lastEventState.idColaborador,
-                    grupoAnidado: lastEventState.grupoAnidado,
-                });
+                revertirEventoEnCalendario(args.e, lastEventState, calendar);
                 Swal.fire({
                     icon: "warning",
                     title: "Fuera de horario laboral",
@@ -127,13 +100,15 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
             const id = args.e.data.id;
             const idColaborador = args.e.data.idColaborador;
             const idSede = args.e.data.resource;
-            const fecha = args.newStart.toString("yyyy-MM-dd");
+            const idAgrupacion = args.e.data.idAgrupacion;
+            const fecha = destinoFecha;
             const horaInicio = args.newStart.toString("HH:mm");
             const horaFin = args.newEnd.toString("HH:mm");
 
             const dto = {
                 idColaborador: Number(idColaborador),
                 idSede: Number(idSede),
+                idAgrupacion: idAgrupacion ? Number(idAgrupacion) : undefined,
                 fecha: fecha,
                 horaInicio: horaInicio,
                 horaFin: horaFin
@@ -149,14 +124,13 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 return response.json();
             })
             .then(data => {
-                args.e.data.text = data.nombreColaborador;
-                args.e.data.start = `${data.fecha}T${data.horaInicio}`;
-                args.e.data.end = `${data.fecha}T${data.horaFin}`;
-                args.e.data.resource = data.idSede;
-                args.e.data.backColor = data.color;
-                args.e.data.idColaborador = data.idColaborador;
-                args.e.data.grupoAnidado = data.grupoAnidado;
-                calendar.events.update(args.e);
+                actualizarEventoEnCalendario(args.e, data, calendar);
+
+                // Solo refresca si el evento cambió de día
+                if (origenFecha !== destinoFecha && window.refrescarMiniCalendario) {
+                    window.refrescarMiniCalendario(origenFecha);
+                    window.refrescarMiniCalendario(destinoFecha);
+                }
 
                 Swal.fire({
                     icon: "success",
@@ -166,17 +140,7 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 });
             })
             .catch(error => {
-                calendar.events.update({
-                    id: lastEventState.id,
-                    start: lastEventState.start,
-                    end: lastEventState.end,
-                    resource: lastEventState.resource,
-                    text: lastEventState.text,
-                    backColor: lastEventState.backColor,
-                    idColaborador: lastEventState.idColaborador,
-                    grupoAnidado: lastEventState.grupoAnidado,
-                });
-
+                revertirEventoEnCalendario(args.e, lastEventState, calendar);
                 Swal.fire({
                     icon: "error",
                     title: "Error",
@@ -199,7 +163,6 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                     })
                     .then(response => {
                         if (!response.ok) throw new Error("No se pudo eliminar en el servidor");
-                        // Si fue exitoso, eliminar visualmente
                         calendar.events.remove(args.e.id());
                         Swal.fire({
                             title: "Eliminado",
@@ -223,4 +186,42 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
             });
         }
     };
+}
+
+// --- Helpers para manejar el estado del evento ---
+function estadoEvento(e) {
+    return {
+        id: e.id(),
+        start: e.start().toString(),
+        end: e.end().toString(),
+        resource: e.resource(),
+        text: e.text(),
+        backColor: e.data.backColor,
+        idColaborador: e.data.idColaborador,
+        grupoAnidado: e.data.grupoAnidado,
+    };
+}
+
+function actualizarEventoEnCalendario(e, data, calendar) {
+    e.data.text = data.nombreColaborador;
+    e.data.start = `${data.fecha}T${data.horaInicio}`;
+    e.data.end = `${data.fecha}T${data.horaFin}`;
+    e.data.resource = data.idSede;
+    e.data.backColor = data.color;
+    e.data.idColaborador = data.idColaborador;
+    e.data.grupoAnidado = data.grupoAnidado;
+    calendar.events.update(e);
+}
+
+function revertirEventoEnCalendario(e, lastState, calendar) {
+    calendar.events.update({
+        id: lastState.id,
+        start: lastState.start,
+        end: lastState.end,
+        resource: lastState.resource,
+        text: lastState.text,
+        backColor: lastState.backColor,
+        idColaborador: lastState.idColaborador,
+        grupoAnidado: lastState.grupoAnidado,
+    });
 }

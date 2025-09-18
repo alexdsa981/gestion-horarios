@@ -1,3 +1,5 @@
+let lastCalendarUsed = null;
+
 function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia) {
     const calendar = new DayPilot.Calendar(calId, {
         viewType: "Resources",
@@ -7,12 +9,14 @@ function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia
         cellDuration: 30,
         businessBeginsHour: 7,
         businessEndsHour: 20,
+        showNonBusiness: false,
         cellHeight: 8,
         height: 100,
+        rowHeaderWidth: 20,
         showHours: true,
         locale: "es-es",
         timeFormat: "Clock24Hours",
-        eventClickHandling: "Disabled",
+        eventClickHandling: "Enabled",
         eventMoveHandling: "Update",
         eventResizeHandling: "Update",
         eventDeleteHandling: "Disabled",
@@ -30,16 +34,19 @@ function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia
         },
     });
 
-    // Handlers de edición (cada calendar tiene su propio estado)
-    const handlers = crearHandlersEdicion(calendar);
+    const handlers = crearHandlersEdicion(calendar, null);
     calendar.onEventResized = handlers.onEventResized;
     calendar.onEventMove = handlers.onEventMove;
     calendar.onEventMoved = handlers.onEventMoved;
     calendar.onEventRightClick = handlers.onEventRightClick;
 
 
-
+    calendar.onEventClick = function(args) {
+        lastCalendarUsed = calendar;
+        mostrarModalEdicionBloque({ modo: "editar", evento: args.e.data });
+    };
 
     calendar.init();
+    document.getElementById(calId).calendar = calendar;
     document.getElementById(calId).style.visibility = "visible";
 }

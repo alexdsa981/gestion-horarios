@@ -5,6 +5,9 @@
 <div th:fragment="right-panel-edit">
     <div id="right-panel" class="p-3 bg-light border rounded m-3"
          style="display: none; min-width: 300px; position: sticky; top: 20px; height: fit-content">
+        <div id="right-panel-drag" style="cursor:move; height:30px; margin:-12px -12px 8px -12px; background:#f7f7f7; border-radius:8px 8px 0 0; display:flex; align-items:center; padding-left:12px;">
+            <span style="font-size:13px;color:#888;">Mover</span>
+        </div>
         <button type="button" id="edit-cancel" class="btn-close position-absolute" style="top: 10px; right: 10px"
                 aria-label="Cerrar"></button>
 
@@ -20,7 +23,10 @@
                     </option>
                 </select>
             </div>
-
+            <div class="mb-2">
+                <label for="edit-fecha" class="form-label">Fecha</label>
+                <input type="date" id="edit-fecha" class="form-control">
+            </div>
             <div class="mb-2 row">
                 <div class="col-12 mb-2">
                     <label class="form-label">Hora inicio (editar)</label>

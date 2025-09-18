@@ -73,6 +73,7 @@ public class BloqueHorarioService {
 
     public BloqueHorario editar(Recibido_BH_DTO dto, Long id){
         BloqueHorario bloque = bloqueHorarioRepository.findById(id).get();
+        bloque.setFecha(dto.getFecha());
         bloque.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
         bloque.setSede(sedeService.getSedePorId(dto.getIdSede()));
         bloque.setHoraInicio(dto.getHoraInicio());

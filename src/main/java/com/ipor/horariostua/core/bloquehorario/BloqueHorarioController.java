@@ -131,13 +131,26 @@ public class BloqueHorarioController {
 
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario( @RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
+    public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario(@RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
+
+        // --- LOG DE TODOS LOS ATRIBUTOS DEL DTO ---
+        System.out.println("========= Recibido_BH_DTO en /editar/" + id + " =========");
+        System.out.println("fecha: " + dto.getFecha());
+        System.out.println("horaInicio: " + dto.getHoraInicio());
+        System.out.println("horaFin: " + dto.getHoraFin());
+        System.out.println("idColaborador: " + dto.getIdColaborador());
+        System.out.println("idAgrupacion: " + dto.getIdAgrupacion());
+        System.out.println("idSede: " + dto.getIdSede());
+        System.out.println("===============================================");
+
         BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
-        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(guardado.getColaborador().getId(), guardado.getAgrupacion().getId());
+        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
+                guardado.getColaborador().getId(),
+                guardado.getAgrupacion().getId()
+        );
         Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
         return ResponseEntity.ok(mostrarDto);
     }
-
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarBloqueHorario(@PathVariable Long id) {
         bloqueHorarioService.eliminar(id);

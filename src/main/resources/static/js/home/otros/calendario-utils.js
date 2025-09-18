@@ -43,3 +43,22 @@ async function obtenerBloquesHorarios(agrupacionGlobalId, desde, hasta) {
         return [];
     }
 }
+
+
+
+function forzarAnchoRowHeader() {
+    document.querySelectorAll('.calendar_default_rowheader').forEach(td => {
+        const table = td.closest('table');
+        if (table) {
+            table.style.width = "20px";
+            table.style.minWidth = "20px";
+            table.style.maxWidth = "20px";
+            table.style.tableLayout = "fixed";
+        }
+    });
+}
+
+
+function eliminarTrSoloConCellSimple() {
+
+}

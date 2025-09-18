@@ -1,22 +1,5 @@
 // --- Lógica para FAB y modal de agregar bloque horario en la página de minicalendarios ---
 
-function rellenarSelectHorasMinutos(selectHora, selectMinuto) {
-    selectHora.innerHTML = "";
-    selectMinuto.innerHTML = "";
-    for (let h = 7; h <= 20; h++) {
-        let opt = document.createElement("option");
-        opt.value = h.toString().padStart(2, "0");
-        opt.textContent = h.toString().padStart(2, "0");
-        selectHora.appendChild(opt);
-    }
-    for (let m = 0; m < 60; m += 5) {
-        let opt = document.createElement("option");
-        opt.value = m.toString().padStart(2, "0");
-        opt.textContent = m.toString().padStart(2, "0");
-        selectMinuto.appendChild(opt);
-    }
-}
-
 function mostrarModalAgregarBloque(fechaISO = null) {
     rellenarSelectHorasMinutos(
         document.getElementById("modal-horaInicioHora"),
@@ -117,7 +100,8 @@ document.getElementById("form-agregar-bloque").addEventListener("submit", async 
         }
     })
     .then(async bloqueCreado => {
-        await recargarEventosMiniCalendario(bloqueCreado.fecha, columnas); // columnas también debe ser global o pásala como parámetro
+        await recargarEventosMiniCalendario(bloqueCreado.fecha, columnas);
+        forzarAnchoRowHeader();
         Swal.fire({
             icon: "success",
             title: "Éxito",
