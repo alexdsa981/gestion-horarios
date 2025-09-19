@@ -1,21 +1,10 @@
-// --- Helper para rellenar selects de hora/minuto ---
-function rellenarSelectHorasMinutos(selectHora, selectMinuto) {
-    selectHora.innerHTML = "";
-    selectMinuto.innerHTML = "";
-    for (let h = 7; h <= 20; h++) {
-        let opt = document.createElement("option");
-        opt.value = h.toString().padStart(2, "0");
-        opt.textContent = h.toString().padStart(2, "0");
-        selectHora.appendChild(opt);
+// Cerrar el panel si se hace click fuera
+document.addEventListener('mousedown', function(e) {
+    const panel = document.getElementById("right-panel");
+    if (panel.style.display !== "none" && !panel.contains(e.target)) {
+        cerrarModalEdicionBloque();
     }
-    for (let m = 0; m < 60; m += 5) {
-        let opt = document.createElement("option");
-        opt.value = m.toString().padStart(2, "0");
-        opt.textContent = m.toString().padStart(2, "0");
-        selectMinuto.appendChild(opt);
-    }
-}
-
+});
 // --- Helper para buscar colaborador por nombre en el select ---
 function getColaboradorIdByText(text) {
     const select = document.getElementById("edit-colaborador");

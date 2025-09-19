@@ -1,5 +1,3 @@
-// --- Lógica para FAB y modal de agregar bloque horario en la página de minicalendarios ---
-
 function mostrarModalAgregarBloque(fechaISO = null) {
     rellenarSelectHorasMinutos(
         document.getElementById("modal-horaInicioHora"),
@@ -10,7 +8,11 @@ function mostrarModalAgregarBloque(fechaISO = null) {
         document.getElementById("modal-horaFinMinuto")
     );
     const inputFecha = document.getElementById("modal-fecha");
-    inputFecha.value = fechaISO || "";
+    if (!fechaISO) {
+        const hoy = new Date();
+        fechaISO = hoy.toISOString().slice(0, 10);
+    }
+    inputFecha.value = fechaISO;
     const modal = new bootstrap.Modal(document.getElementById("modalAgregarBloque"));
     modal.show();
 }

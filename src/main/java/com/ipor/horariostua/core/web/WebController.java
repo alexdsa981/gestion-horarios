@@ -51,7 +51,7 @@ public class WebController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getPrincipal().equals("anonymousUser")) {
-            return "redirect:/registro-horarios";
+            return "redirect:/home";
         }
         model.addAttribute("error", error);
         model.addAttribute("username", username);
@@ -84,18 +84,6 @@ public class WebController {
     }
 
 
-    @GetMapping("/registro-horarios")
-    public String redirigePaginaRegistro(Model model) {
-        Usuario usuario = usuarioService.getUsuarioLogeado();
-        Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
-        colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
-        sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
-
-        model.addAttribute("Titulo", "IPOR - Horarios | Registro");
-        model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
-        model.addAttribute("paginaActual", "horarios");
-        return "gestion-horarios/inicio";
-    }
     @GetMapping("/personal")
     public String redirigePaginaPersonal(Model model) {
         model.addAttribute("paginaActual", "personal");

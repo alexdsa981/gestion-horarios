@@ -123,11 +123,11 @@ public class LoginService {
 
             // 7. Redirección final
             if (!usuarioLocal.getChangedPass()) {
-                System.out.println("Redirigiendo a /registro-horarios?changePassword");
-                response.sendRedirect("/registro-horarios?changePassword");
+                System.out.println("Redirigiendo a /home");
+                response.sendRedirect("/home");
             } else {
-                System.out.println("Redirigiendo a /registro-horarios");
-                response.sendRedirect("/registro-horarios");
+                System.out.println("Redirigiendo a /home");
+                response.sendRedirect("home");
             }
 
 

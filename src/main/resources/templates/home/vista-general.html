@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/imports :: headImports('/css/vista-general.css')}"></head>
 <body class="bg-light d-flex flex-column min-vh-100">
 <header th:replace="~{common/header :: header}"></header>
@@ -51,6 +51,8 @@
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
 <script src="/js/home/otros/spinner.js"></script>
 <script src="/js/home/otros/selectores.js"></script>
 <script src="/js/home/otros/calendario-utils.js"></script>
@@ -59,6 +61,7 @@
 <script src="/js/home/calendar/agregar-bloque-modal.js"></script>
 <script src="/js/home/calendar/edit-modal.js"></script>
 <script src="/js/home/calendar/edit-modal-submit.js"></script>
+<script src="/js/home/calendar/modal-repetir.js"></script>
 <script src="/js/home/vista-general.js"></script>
 </body>
 </html>

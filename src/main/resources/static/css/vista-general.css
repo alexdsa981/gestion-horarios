@@ -226,7 +226,7 @@
     outline: none !important;
 }
 
-
+/*MODAL REPETIR*/
 #modalRepetir .btn-repetir {
     background: #ffca2c !important;   /* Amarillo Bootstrap o elige otro */
     color: #222 !important;           /* Contraste fuerte */
@@ -240,8 +240,9 @@
     color: #111 !important;
 }
 
-
-
+#multi-date-picker {
+  display: none;
+}
 
 #right-panel {
     border-radius: 14px !important;
