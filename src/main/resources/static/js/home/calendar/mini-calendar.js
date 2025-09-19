@@ -1,4 +1,5 @@
 let lastCalendarUsed = null;
+let lastCalendarUsedDiv = null;
 
 function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia) {
     const calendar = new DayPilot.Calendar(calId, {
@@ -40,13 +41,22 @@ function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia
     calendar.onEventMoved = handlers.onEventMoved;
     calendar.onEventRightClick = handlers.onEventRightClick;
 
-
     calendar.onEventClick = function(args) {
         lastCalendarUsed = calendar;
         mostrarModalEdicionBloque({ modo: "editar", evento: args.e.data });
+
+        const currentDiv = document.getElementById(calId);
+
+        if (lastCalendarUsedDiv && lastCalendarUsedDiv !== currentDiv) {
+            lastCalendarUsedDiv.classList.remove("calendar-activo");
+        }
+
+        currentDiv.classList.add("calendar-activo");
+        lastCalendarUsedDiv = currentDiv;
     };
 
     calendar.init();
     document.getElementById(calId).calendar = calendar;
     document.getElementById(calId).style.visibility = "visible";
 }
+

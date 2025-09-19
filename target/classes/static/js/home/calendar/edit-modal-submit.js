@@ -90,7 +90,7 @@ document.getElementById("edit-form").addEventListener("submit", function (e) {
         }
         forzarAnchoRowHeader();
         Swal.fire({ icon: "success", title: "Editado correctamente", timer: 1200, showConfirmButton: false });
-        document.getElementById("right-panel").style.display = "none";
+        cerrarModalEdicionBloque();
     })
     .catch(error => {
         Swal.fire({ icon: "error", title: "Error", text: error.message });

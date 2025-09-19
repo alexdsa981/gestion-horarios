@@ -5,12 +5,11 @@
 <div th:fragment="right-panel-edit">
     <div id="right-panel" class="p-3 bg-light border rounded m-3"
          style="display: none; min-width: 300px; position: sticky; top: 20px; height: fit-content">
-        <div id="right-panel-drag" style="cursor:move; height:30px; margin:-12px -12px 8px -12px; background:#f7f7f7; border-radius:8px 8px 0 0; display:flex; align-items:center; padding-left:12px;">
+        <div id="right-panel-drag" style="cursor:move; height:30px; background:#f7f7f7; border-radius:8px 8px 0 0; display:flex; align-items:center; padding-left:12px;">
             <span style="font-size:13px;color:#888;">Mover</span>
         </div>
         <button type="button" id="edit-cancel" class="btn-close position-absolute" style="top: 10px; right: 10px"
-                aria-label="Cerrar"></button>
-
+                aria-label="Cerrar" onclick="cerrarModalEdicionBloque()"></button>
         <form id="edit-form">
             <div class="mb-2">
                 <label for="edit-colaborador" class="form-label">Colaborador</label>
@@ -56,7 +55,7 @@
                     <i class="bi bi-check-circle me-1"></i>
                     Guardar
                 </button>
-                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
                         data-bs-target="#modalRepetir">
                     <i class="bi bi-calendar-plus me-1"></i>
                     Repetir

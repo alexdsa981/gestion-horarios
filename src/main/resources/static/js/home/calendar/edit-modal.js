@@ -71,6 +71,18 @@ function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = 
     setTimeout(() => { panel.focus(); }, 200);
 }
 
+
+
+function cerrarModalEdicionBloque() {
+        document.getElementById("right-panel").style.display = "none";
+    if (lastCalendarUsedDiv) {
+        lastCalendarUsedDiv.classList.remove("calendar-activo");
+        lastCalendarUsedDiv = null;
+    }
+}
+
+
+
 // --- Hacer el panel movible con el mouse ---
 (function() {
     const panel = document.getElementById("right-panel");
