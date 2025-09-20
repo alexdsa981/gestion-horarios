@@ -25,6 +25,15 @@ public class SedeController {
         return ResponseEntity.ok(sedes);
     }
 
+    @GetMapping("/listar/activos")
+    public ResponseEntity<List<Sede>> getSedesGlobalActivos() {
+        List<Sede> sedes = sedeService.getSedesActivas();
+        return ResponseEntity.ok(sedes);
+    }
+
+
+
+
     @PostMapping("/estado/{idSede}")
     public ResponseEntity<?> cambiarEstadoSedeGlobal(@PathVariable Long idSede, @RequestBody Boolean isActive) {
         sedeService.cambiarEstado(idSede, isActive);

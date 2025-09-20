@@ -87,6 +87,7 @@ document.getElementById("form-agregar-bloque").addEventListener("submit", async 
         idAgrupacion: agrupacionGlobalId // <--- USO DIRECTO DE LA VARIABLE GLOBAL
     };
 
+
     fetch("/app/bloque-horarios/agregar", {
         method: "POST",
         headers: {
@@ -94,11 +95,13 @@ document.getElementById("form-agregar-bloque").addEventListener("submit", async 
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
+    .then(async response => {
         if (response.ok) {
-            return response.json(); // El objeto Mostrar_BH_DTO creado
+            return response.json();
         } else {
-            throw new Error("Error al crear el bloque horario");
+            const errorData = await response.json();
+            // Si trae un mensaje de error personalizado, lo mostramos
+            throw new Error(errorData.error || "Error al crear el bloque horario");
         }
     })
     .then(async bloqueCreado => {
@@ -113,9 +116,11 @@ document.getElementById("form-agregar-bloque").addEventListener("submit", async 
     })
     .catch(error => {
         Swal.fire({
-            icon: "error",
-            title: "Error",
+            icon: "warning",
+            title: "Aviso",
             text: error.message
         });
     });
+
+
 });

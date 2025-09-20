@@ -5,24 +5,7 @@ const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
     id: sede.id
 }));
 
-// --- Selectores de año y mes ---
-function generarOpcionesAno() {
-    const selectorAno = document.getElementById("selectorAno");
-    selectorAno.innerHTML = "";
-    const anoActual = new Date().getFullYear();
-    for (let y = anoActual - 2; y <= anoActual + 2; y++) {
-        selectorAno.innerHTML += `<option value="${y}" ${y === anoActual ? 'selected' : ''}>${y}</option>`;
-    }
-}
 
-function generarOpcionesMes() {
-    const selectorMes = document.getElementById("selectorMes");
-    selectorMes.innerHTML = "";
-    const mesActual = new Date().getMonth();
-    for (let m = 0; m < 12; m++) {
-        selectorMes.innerHTML += `<option value="${m}" ${m === mesActual ? 'selected' : ''}>${nombresMeses[m]}</option>`;
-    }
-}
 
 function getFechaRango(ano, mes) {
     // mes: 0-indexed

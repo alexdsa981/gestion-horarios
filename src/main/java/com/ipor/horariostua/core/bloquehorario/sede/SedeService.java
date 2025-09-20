@@ -43,6 +43,11 @@ public class SedeService {
         return sedeRepository.findAll();
     }
 
+    public List<Sede> getSedesActivas(){
+        return sedeRepository.findByIsActiveTrue();
+    }
+
+
     public void cambiarEstado(Long id, Boolean estado){
         Sede sede = sedeRepository.findById(id).get();
         sede.setIsActive(estado);

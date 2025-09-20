@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,10 @@ public class BloqueHorarioService {
         return bloqueHorarioRepository.findByAgrupacionId(idAgrupacion);
     }
 
-    public List<BloqueHorario> listarPorFecha(LocalDate desde, LocalDate hasta ){
-        return bloqueHorarioRepository.findByFechaBetween(desde, hasta);
+    public List<BloqueHorario> listarPorAnoMesSede(int ano, int mes, Long sedeId){
+        LocalDate desde = LocalDate.of(ano, mes, 1);
+        LocalDate hasta = desde.withDayOfMonth(desde.lengthOfMonth());
+        return bloqueHorarioRepository.findByFechaBetweenAndSedeId(desde, hasta, sedeId);
     }
 
     public List<BloqueHorario> listarPorRangoFechaYagrupacion(Long idAgrupacion, LocalDate desde, LocalDate hasta ){
@@ -49,8 +52,39 @@ public class BloqueHorarioService {
         return bloqueHorarioRepository.findByAgrupacionIdAndFecha(idAgrupacion, fecha);
     }
 
+    public boolean hayCruceCrearHorario(Long idColaborador, LocalDate fecha, LocalTime nuevoInicio, LocalTime nuevoFin) {
+        List<BloqueHorario> bloques = bloqueHorarioRepository.findByColaboradorIdAndFecha(idColaborador, fecha);
+
+        for (BloqueHorario existente : bloques) {
+            LocalTime existenteInicio = existente.getHoraInicio();
+            LocalTime existenteFin = existente.getHoraFin();
+
+            // Verifica traslape: (nuevoInicio < existenteFin) && (nuevoFin > existenteInicio)
+            if (nuevoInicio.isBefore(existenteFin) && nuevoFin.isAfter(existenteInicio)) {
+                return true; // Hay cruce
+            }
+        }
+        return false; // No hay cruce
+    }
+    public boolean hayCruceHorarioEditar(Long idColaborador, LocalDate fecha, LocalTime nuevoInicio, LocalTime nuevoFin, Long idBloqueEditar) {
+        List<BloqueHorario> bloques = bloqueHorarioRepository.findByColaboradorIdAndFecha(idColaborador, fecha);
+
+        for (BloqueHorario existente : bloques) {
+            if (existente.getId().equals(idBloqueEditar)) continue; // Ignora el que se está editando
+            LocalTime existenteInicio = existente.getHoraInicio();
+            LocalTime existenteFin = existente.getHoraFin();
+            if (nuevoInicio.isBefore(existenteFin) && nuevoFin.isAfter(existenteInicio)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public BloqueHorario agregar(Recibido_BH_DTO dto){
+        if (hayCruceCrearHorario(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin())) {
+            throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
+        }
         BloqueHorario bloqueHorario = new BloqueHorario();
         bloqueHorario.setHorarioLaboral(horarioLaboralService.getUltimoHorarioLaboral());
         bloqueHorario.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
@@ -72,6 +106,9 @@ public class BloqueHorarioService {
     }
 
     public BloqueHorario editar(Recibido_BH_DTO dto, Long id){
+        if (hayCruceHorarioEditar(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin(), id)) {
+            throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
+        }
         BloqueHorario bloque = bloqueHorarioRepository.findById(id).get();
         bloque.setFecha(dto.getFecha());
         bloque.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));

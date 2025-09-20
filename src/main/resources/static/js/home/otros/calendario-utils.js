@@ -1,10 +1,3 @@
-const nombresMeses = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
-const nombresDiasSemana = [
-    "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"
-];
 
 function getDaysInMonth(year, month) {
     let days = [];

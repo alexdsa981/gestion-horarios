@@ -12,13 +12,13 @@ import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/app/bloque-horarios")
@@ -85,23 +85,17 @@ public class BloqueHorarioController {
     }
 
     @PostMapping("/agregar")
-    public ResponseEntity<Mostrar_BH_DTO> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
-        System.out.println("=====/app/bloque-horarios/agregar=====");
-        System.out.println("DTO recibido:");
-        System.out.println("  fecha: " + dto.getFecha());
-        System.out.println("  horaInicio: " + dto.getHoraInicio());
-        System.out.println("  horaFin: " + dto.getHoraFin());
-        System.out.println("  idColaborador: " + dto.getIdColaborador());
-        System.out.println("  idAgrupacion: " + dto.getIdAgrupacion());
-        System.out.println("  idSede: " + dto.getIdSede());
-        BloqueHorario guardado = bloqueHorarioService.agregar(dto);
-        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
-        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
-        System.out.println("DTO a retornar: " + mostrarDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
+    public ResponseEntity<?> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
+        try {
+            BloqueHorario guardado = bloqueHorarioService.agregar(dto);
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
+            Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
+        } catch (IllegalArgumentException ex) {
+            // Devuelve el mensaje de error y un 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("error", ex.getMessage()));
+        }
     }
-
-
 
     @PostMapping("/repetir")
     public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
@@ -131,25 +125,22 @@ public class BloqueHorarioController {
 
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Mostrar_BH_DTO> editarBloqueHorario(@RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
-
-        // --- LOG DE TODOS LOS ATRIBUTOS DEL DTO ---
-        System.out.println("========= Recibido_BH_DTO en /editar/" + id + " =========");
-        System.out.println("fecha: " + dto.getFecha());
-        System.out.println("horaInicio: " + dto.getHoraInicio());
-        System.out.println("horaFin: " + dto.getHoraFin());
-        System.out.println("idColaborador: " + dto.getIdColaborador());
-        System.out.println("idAgrupacion: " + dto.getIdAgrupacion());
-        System.out.println("idSede: " + dto.getIdSede());
-        System.out.println("===============================================");
-
-        BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
-        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
-                guardado.getColaborador().getId(),
-                guardado.getAgrupacion().getId()
-        );
-        Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
-        return ResponseEntity.ok(mostrarDto);
+    public ResponseEntity<?> editarBloqueHorario(@RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
+        System.out.println("LLAMADA A EDITAR BLOQUE con id=" + id + ", dto=" + dto); // log para depuración
+        try {
+            BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
+                    guardado.getColaborador().getId(),
+                    guardado.getAgrupacion().getId()
+            );
+            Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
+            System.out.println("EDIT OK, devuelve DTO: " + mostrarDto); // log para depuración
+            return ResponseEntity.ok(mostrarDto);
+        } catch (IllegalArgumentException ex) {
+            System.out.println("EDIT ERROR: " + ex.getMessage()); // log para depuración
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Collections.singletonMap("error", ex.getMessage()));
+        }
     }
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarBloqueHorario(@PathVariable Long id) {

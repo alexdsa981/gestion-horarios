@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("edit-form");
     const idBloque = form.dataset.eventId;
     const fechaOriginal = form.dataset.eventFecha;
+    const grupoAnidado = form.dataset.eventGrupoAnidado; // <- Asegúrate de setear esto en el form
 
     if (!idBloque) {
       Swal.fire({
@@ -48,6 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.getElementById("edit-form");
     const idBloque = form.dataset.eventId;
+    const grupoAnidado = form.dataset.eventGrupoAnidado; // <- Asegúrate de setear esto en el form
+
     if (!idBloque) {
       Swal.fire({
         icon: "error",
@@ -57,24 +60,19 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Filtra domingos si es necesario
-    const fechasSinDomingos = fechas.filter(fecha => {
-      const d = new Date(fecha);
-      return d.getDay() !== 6; // 6 = domingo
-    });
-
-    if (fechasSinDomingos.length === 0) {
+    // Validación: Debe haber al menos una fecha seleccionada
+    if (fechas.length === 0) {
       Swal.fire({
-        icon: "info",
-        title: "Sin fechas válidas",
-        text: "No se seleccionaron fechas válidas (todas son domingo)."
+        icon: "warning",
+        title: "Debe seleccionar al menos una fecha",
+        text: "Por favor, seleccione una o más fechas para repetir el bloque."
       });
       return;
     }
 
     const dto = {
       id: Number(idBloque),
-      fechas: fechasSinDomingos
+      fechas: fechas
     };
 
     fetch('/app/bloque-horarios/repetir', {
@@ -93,30 +91,16 @@ document.addEventListener("DOMContentLoaded", function () {
         text: `Se guardaron ${data.length} bloques en el sistema.`
       });
 
-      const grupoActual = data.length > 0 ? data[0].grupoAnidado : null;
-      const fechasSeleccionadas = new Set(data.map(b => b.fecha));
+      // Determina el grupoAnidado y fechas seleccionadas
+      let grupoActual = null;
+      let fechasSeleccionadas = new Set();
 
-      // Agrega los nuevos bloques a cada mini-calendario
-      data.forEach(bloque => {
-        const calId = "mini-calendar-" + bloque.fecha;
-        const calDiv = document.getElementById(calId);
-        if (calDiv && calDiv.calendar) {
-          // Evita duplicados
-          const yaExiste = calDiv.calendar.events.list.some(ev => ev.id === bloque.id);
-          if (!yaExiste) {
-            calDiv.calendar.events.add({
-              start: `${bloque.fecha}T${bloque.horaInicio}`,
-              end: `${bloque.fecha}T${bloque.horaFin}`,
-              id: bloque.id,
-              resource: bloque.idSede,
-              text: bloque.nombreColaborador,
-              backColor: bloque.color,
-              idColaborador: bloque.idColaborador,
-              grupoAnidado: bloque.grupoAnidado,
-            });
-          }
-        }
-      });
+      if (data.length > 0) {
+        grupoActual = data[0].grupoAnidado;
+        fechasSeleccionadas = new Set(data.map(b => b.fecha));
+      } else {
+        grupoActual = grupoAnidado;
+      }
 
       // Elimina visualmente los bloques del grupo anidado que ya no están en fechas seleccionadas
       document.querySelectorAll('[id^="mini-calendar-"]').forEach(calDiv => {
@@ -129,6 +113,30 @@ document.addEventListener("DOMContentLoaded", function () {
           calDiv.calendar.events.remove(ev.id);
         });
       });
+
+      // Agrega los nuevos bloques solo si hay data
+      if (data.length > 0) {
+        data.forEach(bloque => {
+          const calId = "mini-calendar-" + bloque.fecha;
+          const calDiv = document.getElementById(calId);
+          if (calDiv && calDiv.calendar) {
+            // Evita duplicados
+            const yaExiste = calDiv.calendar.events.list.some(ev => ev.id === bloque.id);
+            if (!yaExiste) {
+              calDiv.calendar.events.add({
+                start: `${bloque.fecha}T${bloque.horaInicio}`,
+                end: `${bloque.fecha}T${bloque.horaFin}`,
+                id: bloque.id,
+                resource: bloque.idSede,
+                text: bloque.nombreColaborador,
+                backColor: bloque.color,
+                idColaborador: bloque.idColaborador,
+                grupoAnidado: bloque.grupoAnidado,
+              });
+            }
+          }
+        });
+      }
 
       if (typeof forzarAnchoRowHeader === "function") {
         forzarAnchoRowHeader();

@@ -119,8 +119,26 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dto)
             })
-            .then(response => {
-                if (!response.ok) throw new Error("Error al guardar movimiento en el servidor");
+            .then(async response => {
+                if (!response.ok) {
+                    // Intenta leer el error personalizado
+                    let mensaje = "Error al guardar movimiento en el servidor";
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.error) {
+                            mensaje = errorData.error;
+                        }
+                    } catch {
+                        // Si no es JSON, intenta como texto
+                        try {
+                            const textError = await response.text();
+                            if (textError && textError.trim().length > 0) {
+                                mensaje = textError;
+                            }
+                        } catch {}
+                    }
+                    throw new Error(mensaje);
+                }
                 return response.json();
             })
             .then(data => {
@@ -142,8 +160,8 @@ function crearHandlersEdicion(calendar, getRightPanelId = null) {
             .catch(error => {
                 revertirEventoEnCalendario(args.e, lastEventState, calendar);
                 Swal.fire({
-                    icon: "error",
-                    title: "Error",
+                    icon: "warning",
+                    title: "Aviso",
                     text: error.message
                 });
             });

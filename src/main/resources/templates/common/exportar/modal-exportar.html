@@ -13,12 +13,22 @@
                 <div class="modal-body">
                     <form id="export-form">
                         <div class="mb-3">
-                            <label for="export-fecha-desde" class="form-label">Fecha desde</label>
-                            <input type="date" class="form-control" id="export-fecha-desde" name="export-fecha-desde" required>
+                            <div style="display: flex; gap: 10px;">
+                                <div style="flex: 1;">
+                                    <label for="selectorAnoExportar" class="form-label">Año</label>
+                                    <select class="form-select" id="selectorAnoExportar" name="ano" required></select>
+                                </div>
+                                <div style="flex: 1;">
+                                    <label for="selectorMesExportar" class="form-label">Mes</label>
+                                    <select class="form-select" id="selectorMesExportar" name="mes" required></select>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="export-fecha-hasta" class="form-label">Fecha hasta</label>
-                            <input type="date" class="form-control" id="export-fecha-hasta" name="export-fecha-hasta" required>
+                            <label for="selectorSedeExportar" class="form-label">Sede</label>
+                            <select class="form-select" id="selectorSedeExportar" name="sede" required>
+                                <!-- Opciones cargadas dinámicamente -->
+                            </select>
                         </div>
                     </form>
                 </div>

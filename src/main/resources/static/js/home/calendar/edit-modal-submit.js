@@ -50,8 +50,26 @@ document.getElementById("edit-form").addEventListener("submit", function (e) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dto)
     })
-    .then(response => {
-        if (!response.ok) throw new Error("Error al editar en el servidor");
+    .then(async response => {
+        if (!response.ok) {
+            // Intenta leer el error personalizado del backend
+            let mensaje = "Error al editar en el servidor";
+            try {
+                const errorJson = await response.clone().json();
+                if (errorJson && errorJson.error) {
+                    mensaje = errorJson.error;
+                }
+            } catch {
+                // Si no es JSON, intenta como texto
+                try {
+                    const errorText = await response.clone().text();
+                    if (errorText && errorText.trim().length > 0) {
+                        mensaje = errorText;
+                    }
+                } catch {}
+            }
+            throw new Error(mensaje);
+        }
         return response.json();
     })
     .then(data => {
@@ -64,18 +82,14 @@ document.getElementById("edit-form").addEventListener("submit", function (e) {
 
         // Si la fecha cambió, mueve el evento al nuevo mini-calendar
         if (fechaNueva !== fechaOriginal) {
-            // Remueve del calendar original
             if (lastCalendarUsed && lastCalendarUsed.events && typeof lastCalendarUsed.events.remove === "function") {
                 lastCalendarUsed.events.remove(event);
             }
-            // Agrega al calendar del nuevo día
             const nuevoCalId = "mini-calendar-" + fechaNueva;
             const nuevoCalDiv = document.getElementById(nuevoCalId);
             if (nuevoCalDiv && nuevoCalDiv.calendar && typeof nuevoCalDiv.calendar.events.add === "function") {
-                // Asegúrate de clonar el objeto si DayPilot lo requiere, si no simplemente:
                 nuevoCalDiv.calendar.events.add(event.data);
             }
-            // Refresca ambos mini-calendarios para visualizar correctamente
             if (lastCalendarUsed && typeof lastCalendarUsed.update === "function") {
                 lastCalendarUsed.update();
             }
@@ -83,7 +97,6 @@ document.getElementById("edit-form").addEventListener("submit", function (e) {
                 nuevoCalDiv.calendar.update();
             }
         } else {
-            // Si la fecha no cambió, solo actualiza el evento
             if (lastCalendarUsed && typeof lastCalendarUsed.events.update === "function") {
                 lastCalendarUsed.events.update(event);
             }
@@ -96,9 +109,6 @@ document.getElementById("edit-form").addEventListener("submit", function (e) {
         Swal.fire({ icon: "error", title: "Error", text: error.message });
     });
 });
-
-
-
 
 // Cerrar el panel con el botón cancelar
 document.getElementById("edit-cancel").addEventListener("click", function () {

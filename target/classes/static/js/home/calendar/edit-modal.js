@@ -1,11 +1,30 @@
 // Cerrar el panel si se hace click fuera
 document.addEventListener('mousedown', function(e) {
     const panel = document.getElementById("right-panel");
-    // Solo cerrar si está visible
-    if (panel.style.display !== "none" && !panel.contains(e.target)) {
+
+    const calendarSelectors = ['.litepicker', '.litepicker-container', '.datepicker-dropdown'];
+    let clickInsideCalendar = false;
+    let calendarElements = [];
+
+    calendarSelectors.forEach(sel => {
+        const elems = Array.from(document.querySelectorAll(sel));
+        calendarElements = calendarElements.concat(elems);
+    });
+
+    if (panel.contains(e.target)) {
+        return;
+    }
+    for (const cal of calendarElements) {
+        if (cal.contains(e.target)) {
+            clickInsideCalendar = true;
+            break;
+        }
+    }
+    if (panel.style.display !== "none" && !clickInsideCalendar) {
         cerrarModalEdicionBloque();
     }
 });
+
 // --- Helper para buscar colaborador por nombre en el select ---
 function getColaboradorIdByText(text) {
     const select = document.getElementById("edit-colaborador");

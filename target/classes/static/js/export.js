@@ -1,31 +1,42 @@
+
+// Llamar a las funciones al abrir el modal o al cargar la página
+function cargarSedesExportar() {
+    fetch("/app/sedes/listar/activos")
+        .then(response => response.json())
+        .then(data => {
+            const selectorSede = document.getElementById("selectorSedeExportar");
+            selectorSede.innerHTML = '<option value="">Seleccione una sede</option>';
+            data.forEach(sede => {
+                selectorSede.innerHTML += `<option value="${sede.id}">${sede.nombre}</option>`;
+            });
+        })
+        .catch(err => {
+            const selectorSede = document.getElementById("selectorSedeExportar");
+            selectorSede.innerHTML = '<option value="">No se pudieron cargar las sedes</option>';
+        });
+}
+
+// Llama a los inicializadores de los selectores normales (no exportar)
+document.addEventListener("DOMContentLoaded", function() {
+    generarOpcionesAnoExportar();
+    generarOpcionesMesExportar();
+    cargarSedesExportar();
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const exportModal = document.getElementById('export-modal');
-    exportModal.addEventListener('show.bs.modal', function () {
-        const hoy = new Date();
-        const año = hoy.getFullYear();
-        const mes = hoy.getMonth(); // 0-indexed
+    document.getElementById("export-form").addEventListener("submit", function(e){
+        e.preventDefault();
+        const ano = document.getElementById("selectorAnoExportar").value;
+        const mes = document.getElementById("selectorMesExportar").value;
+        const sede = document.getElementById("selectorSedeExportar").value;
 
-        // Primer día del mes
-        const primeroMes = new Date(año, mes, 1);
-        // Último día del mes
-        const ultimoMes = new Date(año, mes + 1, 0);
-
-        // Formatear a yyyy-MM-dd para LocalDate en Java
-        function formatoFecha(fecha) {
-            const m = (fecha.getMonth() + 1).toString().padStart(2, '0');
-            const d = fecha.getDate().toString().padStart(2, '0');
-            return `${fecha.getFullYear()}-${m}-${d}`;
+        if (!ano || !mes || !sede) {
+            alert("Debe seleccionar año, mes y sede.");
+            return;
         }
 
-        document.getElementById("export-fecha-desde").value = formatoFecha(primeroMes);
-        document.getElementById("export-fecha-hasta").value = formatoFecha(ultimoMes);
-    });
-
-    document.getElementById("export-form").addEventListener("submit", function(e){
-      e.preventDefault();
-      const desde = document.getElementById("export-fecha-desde").value;
-      const hasta = document.getElementById("export-fecha-hasta").value;
-      // Descarga el archivo Excel
-      window.location.href = `/app/exportar/horarios?desde=${desde}&hasta=${hasta}`;
+        // Descarga el archivo Excel usando los nuevos parámetros
+        window.location.href = `/app/exportar/horarios?ano=${ano}&mes=${mes}&sede=${sede}`;
     });
 });
