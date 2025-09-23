@@ -12,10 +12,16 @@ public class EmpleadoSpringService {
     @Autowired
     RestTemplate restTemplate;
 
+    //PRUEBAS
+//    public List<EmpleadoSpringDTO> obtenerEmpleadoPorTexto(String texto) {
+//        String url = "http://localhost:9000/api/gh/colaborador/lista/" + texto;
+//        EmpleadoSpringDTO[] empleados = restTemplate.getForObject(url, EmpleadoSpringDTO[].class);
+//        return Arrays.asList(empleados);
+//    }
+    //PRODUCCION
     public List<EmpleadoSpringDTO> obtenerEmpleadoPorTexto(String texto) {
-        String url = "http://localhost:9000/api/gh/colaborador/lista/" + texto;
+        String url = "http://192.168.47.250:9000/api/gh/colaborador/lista/" + texto;
         EmpleadoSpringDTO[] empleados = restTemplate.getForObject(url, EmpleadoSpringDTO[].class);
         return Arrays.asList(empleados);
     }
-
 }
