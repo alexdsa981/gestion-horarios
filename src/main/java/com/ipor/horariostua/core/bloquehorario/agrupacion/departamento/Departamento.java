@@ -1,6 +1,5 @@
-package com.ipor.horariostua.core.bloquehorario.agrupacion;
+package com.ipor.horariostua.core.bloquehorario.agrupacion.departamento;
 
-import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-public class Agrupacion {
-    public Agrupacion(String nombre, Departamento departamento) {
-        this.departamento = departamento;
+public class Departamento {
+    public Departamento(String nombre) {
         this.nombre = nombre;
         this.isActive = true;
     }
@@ -24,12 +22,6 @@ public class Agrupacion {
     @Column(nullable = false)
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn(name = "id_departamento", nullable = false)
-    private Departamento departamento;
-
-
     private Boolean isActive;
-
 
 }

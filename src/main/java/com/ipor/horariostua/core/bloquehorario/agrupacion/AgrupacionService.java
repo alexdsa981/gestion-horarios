@@ -1,5 +1,6 @@
 package com.ipor.horariostua.core.bloquehorario.agrupacion;
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,20 @@ public class AgrupacionService {
     public List<Agrupacion> getListaAgrupacion(){
         return agrupacionRepository.findAll();
     }
+
+    public List<Agrupacion> getListaAgrupacionPorDepartamento(Long idDepartamento){
+        return agrupacionRepository.findByDepartamentoId(idDepartamento);
+    }
+
     public List<Agrupacion> getListaAgrupacionTrue(){
         return agrupacionRepository.findByIsActiveTrue();
     }
 
 
 
-    public Agrupacion crearAgrupacion(String nombre) {
+    public Agrupacion crearAgrupacion(String nombre, Departamento departamento) {
         Agrupacion agrupacion = new Agrupacion();
+        agrupacion.setDepartamento(departamento);
         agrupacion.setNombre(nombre);
         agrupacion.setIsActive(true);
         return agrupacionRepository.save(agrupacion);

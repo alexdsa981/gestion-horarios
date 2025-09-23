@@ -3,6 +3,8 @@ package com.ipor.horariostua.config.initializer;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionRepository;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.DepartamentoRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorRepository;
@@ -43,6 +45,8 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     SedeRepository sedeRepository;
     @Autowired
+    DepartamentoRepository departamentoRepository;
+    @Autowired
     AgrupacionRepository agrupacionRepository;
     @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
@@ -70,16 +74,53 @@ public class DataInitializer implements CommandLineRunner {
 
         if (agrupacionRepository.count() == 0) {
             List<String> nombres = Arrays.asList(
+                    "Área Clínica", "Área Administrativa", "Externo"
+            );
+
+            List<Departamento> departamentos = nombres.stream()
+                    .map(Departamento::new)
+                    .collect(Collectors.toList());
+
+            departamentoRepository.saveAll(departamentos);
+        }
+
+
+        if (agrupacionRepository.count() == 0) {
+            Departamento medico  = departamentoRepository.findById(1L).get();
+            List<String> nombresMedico = Arrays.asList(
                     "Rol de Enfermería", "Rol de Farmacia", "Imágenes", "Tecnólogos",
                     "Radioterapia", "Psicologia", "Nutrición", "Oncologos",
                     "Dr. Rodriguez", "Dr. Ponce"
             );
 
-            List<Agrupacion> agrupaciones = nombres.stream()
-                    .map(Agrupacion::new)
+            List<Agrupacion> agrupacionesMedico = nombresMedico.stream()
+                    .map(nombre -> new Agrupacion(nombre, medico))
                     .collect(Collectors.toList());
+            agrupacionRepository.saveAll(agrupacionesMedico);
 
-            agrupacionRepository.saveAll(agrupaciones);
+
+            Departamento administrativo  = departamentoRepository.findById(2L).get();
+            List<String> nombresAdministrativo = Arrays.asList(
+                    "RRHH", "Facturación", "Contabilidad", "Comercial", "Logistica"
+            );
+
+            List<Agrupacion> agrupacionesAdministrativo = nombresAdministrativo.stream()
+                    .map(nombre -> new Agrupacion(nombre, administrativo))
+                    .collect(Collectors.toList());
+            agrupacionRepository.saveAll(agrupacionesAdministrativo);
+
+
+
+            Departamento externo  = departamentoRepository.findById(3L).get();
+            List<String> nombresExterno = Arrays.asList(
+                    "TI", "Limpieza"
+            );
+
+            List<Agrupacion> agrupacionesExterno = nombresExterno.stream()
+                    .map(nombre -> new Agrupacion(nombre, externo))
+                    .collect(Collectors.toList());
+            agrupacionRepository.saveAll(agrupacionesExterno);
+
         }
 
         if (detalleSedeAgrupacionRepository.count() == 0){
@@ -109,21 +150,14 @@ public class DataInitializer implements CommandLineRunner {
             admin.setIsSpringUser(false);
             admin.setAgrupacionSeleccionada(agrupacionRepository.findById(1L).get());
             usuarioRepository.save(admin);
+        }
 
-            DetalleGruposUsuario detalleGruposUsuario1 = new DetalleGruposUsuario();
-            detalleGruposUsuario1.setUsuario(usuarioRepository.findById(1L).get());
-            detalleGruposUsuario1.setAgrupacion(agrupacionRepository.findById(1L).get());
-            detalleGruposUsuario1.setIsActive(true);
-
-            DetalleGruposUsuario detalleGruposUsuario2 = new DetalleGruposUsuario();
-            detalleGruposUsuario2.setUsuario(usuarioRepository.findById(1L).get());
-            detalleGruposUsuario2.setAgrupacion(agrupacionRepository.findById(2L).get());
-            detalleGruposUsuario1.setIsActive(true);
-
-
-            detalleGruposUsuarioRepository.save(detalleGruposUsuario1);
-            detalleGruposUsuarioRepository.save(detalleGruposUsuario2);
-
+        if (detalleGruposUsuarioRepository.count() == 0){
+            List<Agrupacion> agrupaciones = agrupacionRepository.findAll();
+            for (Agrupacion agrupacion : agrupaciones){
+                DetalleGruposUsuario detalle = new DetalleGruposUsuario(usuarioRepository.findById(1L).get(), agrupacion);
+                detalleGruposUsuarioRepository.save(detalle);
+            }
         }
 
         if (horarioLaboralRepository.count() == 0){

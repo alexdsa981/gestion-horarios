@@ -12,6 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class DetalleGruposUsuario {
+    public DetalleGruposUsuario(Usuario usuario, Agrupacion agrupacion) {
+        this.agrupacion = agrupacion;
+        this.usuario = usuario;
+        this.isActive = true;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

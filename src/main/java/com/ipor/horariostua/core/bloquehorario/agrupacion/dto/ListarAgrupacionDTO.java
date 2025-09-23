@@ -13,9 +13,11 @@ public class ListarAgrupacionDTO {
         this.id = agrupacion.getId();
         this.nombre = agrupacion.getNombre();
         this.isActive = agrupacion.getIsActive();
+        this.idDepartamento = agrupacion.getDepartamento().getId();
     }
 
     Long id;
+    Long idDepartamento;
     String nombre;
-   Boolean isActive;
+    Boolean isActive;
 }

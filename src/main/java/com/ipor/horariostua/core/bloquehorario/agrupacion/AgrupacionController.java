@@ -1,5 +1,7 @@
 package com.ipor.horariostua.core.bloquehorario.agrupacion;
 
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.DepartamentoService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.dto.ListarAgrupacionDTO;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionService;
@@ -26,7 +28,8 @@ public class AgrupacionController {
     private DetalleSedeAgrupacionService detalleSedeAgrupacionService;
     @Autowired
     private SedeService sedeService;
-
+    @Autowired
+    private DepartamentoService departamentoService;
 
     @GetMapping("/listar")
     @ResponseBody
@@ -37,15 +40,35 @@ public class AgrupacionController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/listar/{idDepartamento}")
+    @ResponseBody
+    public ResponseEntity<List<ListarAgrupacionDTO>> listarAgrupaciones(@PathVariable Long idDepartamento) {
+        List<ListarAgrupacionDTO> lista = agrupacionService.getListaAgrupacionPorDepartamento(idDepartamento).stream()
+                .map(ListarAgrupacionDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearAgrupacion(@RequestBody Agrupacion nuevaAgrupacion) {
         if (nuevaAgrupacion.getNombre() == null || nuevaAgrupacion.getNombre().trim().isEmpty())
             return ResponseEntity.badRequest().body("Nombre requerido");
-        Agrupacion creada = agrupacionService.crearAgrupacion(nuevaAgrupacion.getNombre());
-        detalleSedeAgrupacionService.agrupar(sedeService.getSedePorId(1L), creada.getId());
-        return ResponseEntity.ok(creada);
-    }
+        if (nuevaAgrupacion.getDepartamento() == null || nuevaAgrupacion.getDepartamento().getId() == null)
+            return ResponseEntity.badRequest().body("Departamento requerido");
 
+        // Busca el departamento real en la BD
+        Departamento dep = departamentoService.getDepartamentoPorId(nuevaAgrupacion.getDepartamento().getId());
+        if (dep == null)
+            return ResponseEntity.badRequest().body("Departamento no encontrado");
+
+        Agrupacion agrupacion = agrupacionService.crearAgrupacion(nuevaAgrupacion.getNombre(), dep);
+
+        // Si necesitas relacionar con sede
+        detalleSedeAgrupacionService.agrupar(sedeService.getSedePorId(1L), agrupacion.getId());
+
+        return ResponseEntity.ok(agrupacion);
+    }
     @PutMapping("/editar/{idAgrupacion}")
     public ResponseEntity<?> editarAgrupacion(@PathVariable Long idAgrupacion, @RequestBody Agrupacion datosAgrupacion) {
         if (datosAgrupacion.getNombre() == null || datosAgrupacion.getNombre().trim().isEmpty())

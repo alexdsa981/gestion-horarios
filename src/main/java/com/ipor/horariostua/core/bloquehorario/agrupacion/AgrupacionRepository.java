@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AgrupacionRepository extends JpaRepository<Agrupacion, Long> {
     List<Agrupacion> findByIsActiveTrue();
+
+    List<Agrupacion> findByDepartamentoId(Long idDepartamento);
 }

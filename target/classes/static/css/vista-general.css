@@ -316,7 +316,7 @@
 .sticky-controls {
   position: sticky;
   top: 0px;
-  z-index: 1200;
+  z-index: 1040;
   background: #f8fafc; /* pastel azul-gris muy suave */
   border: 1.5px solid #e1e5ee;
   border-radius: 14px;
