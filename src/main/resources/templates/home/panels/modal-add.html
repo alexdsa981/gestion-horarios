@@ -17,13 +17,7 @@
                             <label for="modal-colaborador-select" class="form-label">Colaborador</label>
                             <select id="modal-colaborador-select" class="form-select"
                                     style="max-width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                                <option
-                                        th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
-                                        th:value="${colaborador.id}"
-                                        th:text="${colaborador.nombreCompleto}"
-                                        th:attr="data-color=${colaborador.color}"
-                                        style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                                </option>
+
                             </select>
                         </div>
                         <div class="mb-2 row">

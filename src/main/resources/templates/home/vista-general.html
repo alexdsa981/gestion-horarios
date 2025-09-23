@@ -3,56 +3,51 @@
 <head th:replace="~{common/imports :: headImports('/css/vista-general.css')}"></head>
 <body class="bg-light d-flex flex-column min-vh-100">
 <header th:replace="~{common/header :: header}"></header>
-<script th:inline="javascript">
-    let listaSedesActivasPorAgrupacion = /*[[${listaSedesActivasPorAgrupacion}]]*/ [];
-</script>
-<main class="flex-fill" style="position:relative;">
-    <!-- Título y Filtros estilizados -->
-    <div class="container mb-2">
-        <div class="row justify-content-center align-items-center g-3">
-            <div class="col-auto">
-                <h3 id="tituloMes" class="fw-bold text-primary m-0" style="letter-spacing:1px; font-size:2rem;">
-                    Horarios del Mes
-                </h3>
-            </div>
-            <div class="col-auto">
-                <select id="selectorAno" class="form-select shadow-sm" style="height:2.5rem; min-width:110px; font-size:1rem;">
-                </select>
-            </div>
-            <div class="col-auto">
-                <select id="selectorMes" class="form-select shadow-sm" style="height:2.5rem; min-width:110px; font-size:1rem;">
-                </select>
-            </div>
-        </div>
-    </div>
-    <!-- Spinner de carga -->
-    <div id="loadingSpinner"
-         style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
-        <div style="margin-top:10px;">Cargando horarios...</div>
-    </div>
-    <!-- Grid de horarios -->
-    <div class="mes-grid" id="mesGrid"></div>
 
+<main class="flex-fill" style="position:relative;">
+    <!-- Sticky bar OUTSIDE of container for full width -->
+    <div class="mb-2">
+        <div class="sticky-controls">
+            <h3 id="tituloMes" class="fw-bold text-primary">
+                Horarios del Mes
+            </h3>
+            <div class="controls-right">
+                <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
+                <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
+                <div th:replace="~{home/panels/selector-sedes :: selector-sedes}"></div>
+                <div th:replace="~{home/panels/selector-colaboradores :: selector-colaboradores}"></div>
+            </div>
+        </div>
+        <!-- Aquí va el resto de tu contenido -->
+        <!-- Spinner de carga -->
+        <div id="loadingSpinner"
+             style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div style="margin-top:10px;">Cargando horarios...</div>
+        </div>
+        <!-- Grid de horarios -->
+        <div class="mes-grid" id="mesGrid"></div>
+    </div>
     <!-- Botón flotante Agregar -->
     <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
             style="position:fixed; bottom:30px; right:30px; width:60px; height:60px; z-index:10; display:flex; align-items:center; justify-content:center; font-size:2rem;">
         <i class="bi bi-plus-lg"></i>
     </button>
-
-
     <div th:replace="~{home/panels/right-panel :: right-panel-edit}"></div>
     <div th:replace="~{home/panels/modal-repetir :: modal-repetir}"></div>
     <div th:replace="~{home/panels/modal-add :: modal-add}"></div>
-    <!-- Modal agregar bloque -->
 </main>
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
 <script src="/imports/flatpickr/flatpickr.js"></script>
 <script src="/imports/flatpickr/es.js"></script>
+<script src="/js/home/personalsedes/sede/datos.js"></script>
+<script src="/js/home/personalsedes/init.js"></script>
+<script src="/js/home/personalsedes/personal/datos.js"></script>
+<script src="/js/home/personalsedes/personal/spring.js"></script>
 <script src="/js/home/otros/spinner.js"></script>
 <script src="/js/home/otros/litepicker-init.js"></script>
 <script src="/js/home/otros/calendario-utils.js"></script>

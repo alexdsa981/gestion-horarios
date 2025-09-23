@@ -14,12 +14,7 @@
             <div class="mb-2">
                 <label for="edit-colaborador" class="form-label">Colaborador</label>
                 <select id="edit-colaborador" class="form-select">
-                    <option
-                            th:each="colaborador : ${listaSelectColaboradoresActivosPorAgrupacion}"
-                            th:value="${colaborador.id}"
-                            th:text="${colaborador.nombreCompleto}"
-                            th:attr="data-color=${colaborador.color}">
-                    </option>
+
                 </select>
             </div>
             <div class="mb-2">

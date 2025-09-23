@@ -55,6 +55,18 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
+        if (sedeRepository.count() == 0) {
+            List<String> nombres = Arrays.asList(
+                    "San Isidro - Clinica", "San Isidro - Administrativo", "Jesús María", "Vesalio"
+            );
+
+            List<Sede> sedes = nombres.stream()
+                    .map(Sede::new)
+                    .collect(Collectors.toList());
+            sedeRepository.saveAll(sedes);
+
+        }
+
 
         if (agrupacionRepository.count() == 0) {
             List<String> nombres = Arrays.asList(
@@ -68,6 +80,14 @@ public class DataInitializer implements CommandLineRunner {
                     .collect(Collectors.toList());
 
             agrupacionRepository.saveAll(agrupaciones);
+        }
+
+        if (detalleSedeAgrupacionRepository.count() == 0){
+            List<Agrupacion> agrupaciones = agrupacionRepository.findAll();
+            for (Agrupacion agrupacion : agrupaciones){
+                DetalleSedeAgrupacion detalle = new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacion);
+                detalleSedeAgrupacionRepository.save(detalle);
+            }
         }
 
 
@@ -116,24 +136,6 @@ public class DataInitializer implements CommandLineRunner {
             horarioLaboralRepository.save(horarioLaboral);
         }
 
-        if (sedeRepository.count() == 0) {
-            List<String> nombres = Arrays.asList(
-                    "San Isidro - Clinica", "San Isidro - Administrativo", "Jesús María", "Vesalio"
-            );
-
-            List<Sede> sedes = nombres.stream()
-                    .map(Sede::new)
-                    .collect(Collectors.toList());
-            sedeRepository.saveAll(sedes);
-
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(1L).get()));
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(2L).get(), agrupacionRepository.findById(1L).get()));
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(3L).get(), agrupacionRepository.findById(1L).get()));
-
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(2L).get()));
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(2L).get(), agrupacionRepository.findById(3L).get()));
-            detalleSedeAgrupacionRepository.save(new DetalleSedeAgrupacion(sedeRepository.findById(1L).get(), agrupacionRepository.findById(3L).get()));
-        }
 
 
 

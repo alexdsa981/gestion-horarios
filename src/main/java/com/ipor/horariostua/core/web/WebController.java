@@ -91,12 +91,6 @@ public class WebController {
         return "personalsedes/personal/personal";
     }
 
-    @GetMapping("/sedes")
-    public String redirigePaginaSedes(Model model) {
-        model.addAttribute("paginaActual", "personal");
-        model.addAttribute("Titulo", "IPOR - Horarios | Sedes");
-        return "personalsedes/sedes/sedes";
-    }
 
     @GetMapping("/configuracion/usuarios")
     public String redirigePaginaUsuarios(Model model) {

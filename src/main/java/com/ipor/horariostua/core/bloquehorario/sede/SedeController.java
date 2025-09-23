@@ -31,6 +31,16 @@ public class SedeController {
         return ResponseEntity.ok(sedes);
     }
 
+    @GetMapping("/listar/activos/{IdAgrupacion}")
+    public ResponseEntity<List<Sede>> getSedesGlobalActivosAgrupacion(@PathVariable Long IdAgrupacion) {
+        List<DetalleSedeAgrupacion> listaDetalle =  detalleSedeAgrupacionService.listarDetalleActivosPorIdAgrupacion(IdAgrupacion);
+        List<Sede> listaSedes = new ArrayList<>();
+        for (DetalleSedeAgrupacion detalle : listaDetalle){
+            listaSedes.add(detalle.getSede());
+        }
+        return ResponseEntity.ok(listaSedes);
+    }
+
 
 
 

@@ -1,8 +1,11 @@
 package com.ipor.horariostua.core.bloquehorario.agrupacion;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.dto.ListarAgrupacionDTO;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuario;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
+import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,10 @@ public class AgrupacionController {
     private AgrupacionService agrupacionService;
     @Autowired
     private DetalleGruposUsuarioService detalleGruposUsuarioService;
+    @Autowired
+    private DetalleSedeAgrupacionService detalleSedeAgrupacionService;
+    @Autowired
+    private SedeService sedeService;
 
 
     @GetMapping("/listar")
@@ -35,6 +42,7 @@ public class AgrupacionController {
         if (nuevaAgrupacion.getNombre() == null || nuevaAgrupacion.getNombre().trim().isEmpty())
             return ResponseEntity.badRequest().body("Nombre requerido");
         Agrupacion creada = agrupacionService.crearAgrupacion(nuevaAgrupacion.getNombre());
+        detalleSedeAgrupacionService.agrupar(sedeService.getSedePorId(1L), creada.getId());
         return ResponseEntity.ok(creada);
     }
 

@@ -1,9 +1,9 @@
 
 // --- Configuración de columnas para los mini-calendarios (sedes activas) ---
-const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
-    name: sede.nombre,
-    id: sede.id
-}));
+//const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
+//    name: sede.nombre,
+//    id: sede.id
+//}));
 
 
 
@@ -66,7 +66,6 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
 
     setTimeout(() => {
         forzarAnchoRowHeader();
-        eliminarTrSoloConCellSimple();
         ocultarSpinner();
         grid.style.visibility = "visible";
     }, 0);
@@ -108,7 +107,7 @@ function crearCeldaDia(fechaISO, bloques) {
 
     const calDiv = document.createElement('div');
     calDiv.id = "mini-calendar-" + fechaISO;
-    calDiv.style.height = "238px";
+    calDiv.style.height = "240px";
     calDiv.style.width = "110px";
     calDiv.style.visibility = "hidden";
     celda.appendChild(calDiv);
@@ -117,7 +116,7 @@ function crearCeldaDia(fechaISO, bloques) {
 }
 
 // --- Inicialización global ---
-window.addEventListener("DOMContentLoaded", () => {
+function inicializarCalendario() {
     generarOpcionesAno();
     generarOpcionesMes();
 
@@ -127,7 +126,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const ano = Number(selectorAno.value);
     const mes = Number(selectorMes.value);
     const {desde, hasta} = getFechaRango(ano, mes);
-    renderizarMesGrid(desde, hasta, ano, mes);
+    renderizarMesGrid(desde, hasta, ano, mes); // Aquí ya tienes sedes activas
 
     selectorAno.addEventListener("change", () => {
         const ano = Number(selectorAno.value);
@@ -141,7 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
         const {desde, hasta} = getFechaRango(ano, mes);
         renderizarMesGrid(desde, hasta, ano, mes);
     });
-});
+}
 
 // --- Refresco individual de calendario de día ---
 window.refrescarMiniCalendario = async function(fechaISO) {
