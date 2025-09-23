@@ -127,7 +127,7 @@ public class LoginService {
                 response.sendRedirect("/home");
             } else {
                 System.out.println("Redirigiendo a /home");
-                response.sendRedirect("home");
+                response.sendRedirect("/home");
             }
 
 
