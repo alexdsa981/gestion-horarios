@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class DetalleGruposUsuarioService {
@@ -24,6 +25,19 @@ public class DetalleGruposUsuarioService {
         }
         return listaAgrupaciones;
     }
+
+    public List<Agrupacion> getAgrupacionesPorUsuarioIdAndDepartamentoId(Long idUser, Long idDepartamento){
+        List<DetalleGruposUsuario> detalleList = detalleGruposUsuarioRepository.findByUsuarioIdAndIsActiveTrue(idUser);
+        List<Agrupacion> listaAgrupaciones = new ArrayList<>();
+        for (DetalleGruposUsuario detalle : detalleList){
+            if (Objects.equals(detalle.getAgrupacion().getDepartamento().getId(), idDepartamento)){
+                listaAgrupaciones.add(detalle.getAgrupacion());
+            }
+        }
+        return listaAgrupaciones;
+    }
+
+
 
 
     public void agrupar(Usuario usuario, Long idAgrupacion){

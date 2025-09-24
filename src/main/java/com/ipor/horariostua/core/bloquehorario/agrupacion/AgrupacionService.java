@@ -23,6 +23,10 @@ public class AgrupacionService {
         return agrupacionRepository.findByDepartamentoId(idDepartamento);
     }
 
+    public List<Agrupacion> getListaAgrupacionPorDepartamentoAndTrue(Long idDepartamento){
+        return agrupacionRepository.findByDepartamentoIdAndIsActiveTrue(idDepartamento);
+    }
+
     public List<Agrupacion> getListaAgrupacionTrue(){
         return agrupacionRepository.findByIsActiveTrue();
     }

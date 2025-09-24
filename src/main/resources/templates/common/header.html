@@ -35,6 +35,13 @@
 
             </div>
             <div class="ms-auto d-flex align-items-center me-3">
+                <select id="departamento-select" class="form-select agrupacion-select me-2">
+                    <option th:each="departamento : ${listaDepartamentosUsuario}"
+                            th:value="${departamento.id}"
+                            th:text="${departamento.nombre}"
+                            th:selected="${departamento.id} == ${departamentoSeleccionadoId}">
+                    </option>
+                </select>
                 <select class="form-select me-3 agrupacion-select" id="agrupacion-select">
                     <option th:each="agrupacion : ${listaGruposUsuario}"
                             th:value="${agrupacion.id}"

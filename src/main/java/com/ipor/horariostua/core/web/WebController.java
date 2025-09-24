@@ -3,6 +3,8 @@ package com.ipor.horariostua.core.web;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.DepartamentoService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
@@ -35,6 +37,8 @@ public class WebController {
     UsuarioService usuarioService;
     @Autowired
     AgrupacionService agrupacionService;
+    @Autowired
+    DepartamentoService departamentoService;
 
     //redirige / a /login
     @GetMapping("/")
@@ -67,7 +71,14 @@ public class WebController {
         usuarioService.save(usuario);
         System.out.println("[POST] Actualizando agrupacionSeleccionadaId en BD a: " + agrupacionId);
     }
-
+    @PostMapping("/actualizar-departamento")
+    @ResponseBody
+    public void actualizarDepartamento(@RequestParam Long departamentoId) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+        usuario.setAgrupacionSeleccionada(agrupacionService.getListaAgrupacionPorDepartamentoAndTrue(departamentoId).getFirst());
+        usuarioService.save(usuario);
+        System.out.println("[POST] Actualizando departamentoSeleccionadoId en BD a: " + departamentoId);
+    }
 
 
     @GetMapping("/home")

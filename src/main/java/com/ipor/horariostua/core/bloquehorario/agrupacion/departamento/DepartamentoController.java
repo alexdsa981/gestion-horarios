@@ -59,10 +59,6 @@ public class DepartamentoController {
 
 
 
-
-
-
-
     @GetMapping("/listar-activos")
     @ResponseBody
     public ResponseEntity<List<ListarDepartamentoDTO>> listarDepartamentosActivas() {
