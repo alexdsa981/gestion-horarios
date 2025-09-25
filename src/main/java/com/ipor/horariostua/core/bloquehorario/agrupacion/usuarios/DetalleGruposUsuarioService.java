@@ -18,7 +18,7 @@ public class DetalleGruposUsuarioService {
     AgrupacionService agrupacionService;
 
     public List<Agrupacion> getAgrupacionesPorUsuarioId(Long id){
-        List<DetalleGruposUsuario> detalleList = detalleGruposUsuarioRepository.findByUsuarioIdAndIsActiveTrue(id);
+        List<DetalleGruposUsuario> detalleList = detalleGruposUsuarioRepository.findByUsuarioIdAndIsActiveTrueOrderByAgrupacionNombre(id);
         List<Agrupacion> listaAgrupaciones = new ArrayList<>();
         for (DetalleGruposUsuario detalle : detalleList){
             listaAgrupaciones.add(detalle.getAgrupacion());
@@ -27,7 +27,7 @@ public class DetalleGruposUsuarioService {
     }
 
     public List<Agrupacion> getAgrupacionesPorUsuarioIdAndDepartamentoId(Long idUser, Long idDepartamento){
-        List<DetalleGruposUsuario> detalleList = detalleGruposUsuarioRepository.findByUsuarioIdAndIsActiveTrue(idUser);
+        List<DetalleGruposUsuario> detalleList = detalleGruposUsuarioRepository.findByUsuarioIdAndIsActiveTrueOrderByAgrupacionNombre(idUser);
         List<Agrupacion> listaAgrupaciones = new ArrayList<>();
         for (DetalleGruposUsuario detalle : detalleList){
             if (Objects.equals(detalle.getAgrupacion().getDepartamento().getId(), idDepartamento)){

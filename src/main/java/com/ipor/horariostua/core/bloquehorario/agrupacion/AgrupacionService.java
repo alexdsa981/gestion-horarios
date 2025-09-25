@@ -16,19 +16,19 @@ public class AgrupacionService {
     }
 
     public List<Agrupacion> getListaAgrupacion(){
-        return agrupacionRepository.findAll();
+        return agrupacionRepository.findAllByOrderByNombre();
     }
 
     public List<Agrupacion> getListaAgrupacionPorDepartamento(Long idDepartamento){
-        return agrupacionRepository.findByDepartamentoId(idDepartamento);
+        return agrupacionRepository.findByDepartamentoIdOrderByNombre(idDepartamento);
     }
 
     public List<Agrupacion> getListaAgrupacionPorDepartamentoAndTrue(Long idDepartamento){
-        return agrupacionRepository.findByDepartamentoIdAndIsActiveTrue(idDepartamento);
+        return agrupacionRepository.findByDepartamentoIdAndIsActiveTrueOrderByNombre(idDepartamento);
     }
 
     public List<Agrupacion> getListaAgrupacionTrue(){
-        return agrupacionRepository.findByIsActiveTrue();
+        return agrupacionRepository.findByIsActiveTrueOrderByNombre();
     }
 
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DetalleGruposUsuarioRepository extends JpaRepository<DetalleGruposUsuario, Long> {
-    List<DetalleGruposUsuario> findByUsuarioIdAndIsActiveTrue(Long id);
+    List<DetalleGruposUsuario> findByUsuarioIdAndIsActiveTrueOrderByAgrupacionNombre(Long id);
+    
     Optional<DetalleGruposUsuario> findByUsuarioIdAndAgrupacionId(Long idSede, Long idAgrupacion);
 }

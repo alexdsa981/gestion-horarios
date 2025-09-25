@@ -1,15 +1,17 @@
 package com.ipor.horariostua.core.bloquehorario.agrupacion;
 
-import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface AgrupacionRepository extends JpaRepository<Agrupacion, Long> {
-    List<Agrupacion> findByIsActiveTrue();
 
-    List<Agrupacion> findByDepartamentoId(Long idDepartamento);
+    List<Agrupacion> findAllByOrderByNombre();
 
-    List<Agrupacion> findByDepartamentoIdAndIsActiveTrue(Long idDepartamento);
+    List<Agrupacion> findByIsActiveTrueOrderByNombre();
+
+    List<Agrupacion> findByDepartamentoIdOrderByNombre(Long idDepartamento);
+
+    List<Agrupacion> findByDepartamentoIdAndIsActiveTrueOrderByNombre(Long idDepartamento);
 
 }
