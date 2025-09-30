@@ -27,6 +27,10 @@ public class Export_BH_DTO {
 
     private String nombreAgrupacion;
 
+    private String tipo_documento;
+    private String num_documento;
+
+
     public Export_BH_DTO(BloqueHorario entity) {
         this.id = entity.getId();
         this.horaInicio = entity.getHoraInicio();
@@ -36,8 +40,22 @@ public class Export_BH_DTO {
         Colaborador colab = entity.getColaborador();
         if (colab != null) {
             this.nombreColaborador = colab.getNombreCompleto();
+            this.num_documento = colab.getNumeroDocumento();
 
+            String doc = colab.getNumeroDocumento().trim();
+            if (doc != null) {
+                if (doc.matches("\\d{8}")) {
+                    this.tipo_documento = "DNI";
+                } else if (doc.matches("\\d{9,12}")) {
+                    this.tipo_documento = "Carné de Extranjería";
+                } else {
+                    this.tipo_documento = "Pasaporte";
+                }
+            } else {
+                this.tipo_documento = "Desconocido";
+            }
         }
+
 
         Sede sede = entity.getSede();
         if (sede != null) {

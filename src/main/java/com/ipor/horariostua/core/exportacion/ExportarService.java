@@ -205,7 +205,10 @@ public class ExportarService {
         int rowIdx = 3;
         for (Map.Entry<String, Map<Integer, Export_BH_DTO>> entry : map.entrySet()) {
             Row row = sheet.createRow(rowIdx++);
-            String[] datosClave = entry.getKey().split("\\|");
+            Map<Integer, Export_BH_DTO> horariosPorDia = entry.getValue();
+            // Toma cualquier DTO, por ejemplo el primero, para los datos generales del colaborador
+            Export_BH_DTO dto = horariosPorDia.values().stream().findFirst().orElse(null);
+
             int colIdx = 0;
 
             // Código Único
@@ -217,22 +220,22 @@ public class ExportarService {
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Nombre Colaborador
-            row.createCell(colIdx).setCellValue(datosClave[0]);
+            row.createCell(colIdx).setCellValue(dto != null ? dto.getNombreColaborador() : "");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Nombre Agrupación
-            row.createCell(colIdx).setCellValue(datosClave.length > 1 ? datosClave[1] : "");
+            row.createCell(colIdx).setCellValue(dto != null ? dto.getNombreAgrupacion() : "");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Tipo Documento
-            row.createCell(colIdx).setCellValue("DNI");
+            row.createCell(colIdx).setCellValue(dto != null ? dto.getTipo_documento() : "");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Número Documento
-            row.createCell(colIdx).setCellValue("12345678");
+            row.createCell(colIdx).setCellValue(dto != null ? dto.getNum_documento() : "");
             row.getCell(colIdx++).setCellStyle(styleCell);
 
-            Map<Integer, Export_BH_DTO> horariosPorDia = entry.getValue();
+            // Horarios por día
             for (int d = 1; d <= diasMes; d++) {
                 int c1 = inicioDiasCol + (d - 1) * 2;
                 int c2 = c1 + 1;
@@ -256,7 +259,6 @@ public class ExportarService {
                 row.getCell(c2).setCellStyle(turnoLargo ? styleCellRed : styleCell);
             }
         }
-
         // ---- Filtros solo en subheaders ----
         int lastCol = inicioDiasCol + diasMes * 2 - 1;
         sheet.setAutoFilter(new CellRangeAddress(2, rowIdx - 1, 0, lastCol));
