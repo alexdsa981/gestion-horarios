@@ -1,14 +1,6 @@
 
-// --- Configuración de columnas para los mini-calendarios (sedes activas) ---
-//const columnas = listaSedesActivasPorAgrupacion.map(sede => ({
-//    name: sede.nombre,
-//    id: sede.id
-//}));
-
-
 
 function getFechaRango(ano, mes) {
-    // mes: 0-indexed
     const desde = `${ano}-${(mes+1).toString().padStart(2, '0')}-01`;
     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
     const hasta = `${ano}-${(mes+1).toString().padStart(2, '0')}-${ultimoDia.toString().padStart(2, '0')}`;
@@ -32,7 +24,6 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
     for (let i = 0; i < espaciosVaciosInicio; i++) {
         fragment.appendChild(crearCeldaVacia("Mes anterior"));
     }
-
     // Días del mes
     diasMes.forEach(fechaISO => {
         fragment.appendChild(crearCeldaDia(fechaISO, bloques));
@@ -47,7 +38,6 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
 
     grid.innerHTML = "";
     grid.appendChild(fragment);
-
     // Inicializa mini-calendarios editables en días válidos
     diasMes.forEach(fechaISO => {
         const calId = "mini-calendar-" + fechaISO;
@@ -107,7 +97,6 @@ function crearCeldaDia(fechaISO, bloques) {
 
     const calDiv = document.createElement('div');
     calDiv.id = "mini-calendar-" + fechaISO;
-    calDiv.style.height = "240px";
     calDiv.style.width = "110px";
     calDiv.style.visibility = "hidden";
     celda.appendChild(calDiv);
@@ -117,6 +106,7 @@ function crearCeldaDia(fechaISO, bloques) {
 
 // --- Inicialización global ---
 function inicializarCalendario() {
+    fetchRangoHorario(agrupacionGlobalId);
     generarOpcionesAno();
     generarOpcionesMes();
 

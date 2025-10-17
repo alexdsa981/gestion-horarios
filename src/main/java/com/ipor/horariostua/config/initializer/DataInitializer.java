@@ -5,6 +5,8 @@ import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.DepartamentoRepository;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.rangohoras.RangoHorario;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.rangohoras.RangoHorarioRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionRepository;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorRepository;
@@ -37,23 +39,25 @@ public class DataInitializer implements CommandLineRunner {
      //
 
     @Autowired
-    RolUsuarioRepository rolUsuarioRepository;
+    private RolUsuarioRepository rolUsuarioRepository;
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
-    ColaboradorRepository colaboradorRepository;
+    private ColaboradorRepository colaboradorRepository;
     @Autowired
-    SedeRepository sedeRepository;
+    private SedeRepository sedeRepository;
     @Autowired
-    DepartamentoRepository departamentoRepository;
+    private DepartamentoRepository departamentoRepository;
     @Autowired
-    AgrupacionRepository agrupacionRepository;
+    private AgrupacionRepository agrupacionRepository;
     @Autowired
-    HorarioLaboralRepository horarioLaboralRepository;
+    private HorarioLaboralRepository horarioLaboralRepository;
     @Autowired
-    DetalleGruposUsuarioRepository detalleGruposUsuarioRepository;
+    private DetalleGruposUsuarioRepository detalleGruposUsuarioRepository;
     @Autowired
-    DetalleSedeAgrupacionRepository detalleSedeAgrupacionRepository;
+    private DetalleSedeAgrupacionRepository detalleSedeAgrupacionRepository;
+    @Autowired
+    private RangoHorarioRepository rangoHorarioRepository;
 
 
     @Override
@@ -168,6 +172,14 @@ public class DataInitializer implements CommandLineRunner {
             horarioLaboral.setUsuarioCreador(usuarioRepository.findById(1L).get());
 
             horarioLaboralRepository.save(horarioLaboral);
+        }
+
+        if(rangoHorarioRepository.count() == 0){
+            List<Agrupacion> agrupaciones = agrupacionRepository.findAll();
+            for (Agrupacion agrupacion : agrupaciones){
+                RangoHorario rangoHorario = new RangoHorario(agrupacion, 7, 20);
+                rangoHorarioRepository.save(rangoHorario);
+            }
         }
 
 

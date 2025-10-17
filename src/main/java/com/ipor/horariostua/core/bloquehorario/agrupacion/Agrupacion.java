@@ -1,6 +1,7 @@
 package com.ipor.horariostua.core.bloquehorario.agrupacion;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.rangohoras.RangoHorario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,8 @@ public class Agrupacion {
     @JoinColumn(name = "id_departamento", nullable = false)
     private Departamento departamento;
 
+    @OneToOne(mappedBy = "agrupacion")
+    private RangoHorario rangoHorario;
 
     private Boolean isActive;
 

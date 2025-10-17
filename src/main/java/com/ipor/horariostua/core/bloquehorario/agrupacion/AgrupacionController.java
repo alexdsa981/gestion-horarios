@@ -3,6 +3,7 @@ package com.ipor.horariostua.core.bloquehorario.agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.DepartamentoService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.dto.ListarAgrupacionDTO;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.rangohoras.RangoHorarioService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.sedes.DetalleSedeAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuario;
@@ -30,6 +31,8 @@ public class AgrupacionController {
     private SedeService sedeService;
     @Autowired
     private DepartamentoService departamentoService;
+    @Autowired
+    private RangoHorarioService rangoHorarioService;
 
     @GetMapping("/listar")
     @ResponseBody
@@ -57,14 +60,13 @@ public class AgrupacionController {
         if (nuevaAgrupacion.getDepartamento() == null || nuevaAgrupacion.getDepartamento().getId() == null)
             return ResponseEntity.badRequest().body("Departamento requerido");
 
-        // Busca el departamento real en la BD
         Departamento dep = departamentoService.getDepartamentoPorId(nuevaAgrupacion.getDepartamento().getId());
         if (dep == null)
             return ResponseEntity.badRequest().body("Departamento no encontrado");
 
         Agrupacion agrupacion = agrupacionService.crearAgrupacion(nuevaAgrupacion.getNombre(), dep);
+        rangoHorarioService.creaRangoHorario(agrupacion, 7, 20);
 
-        // Si necesitas relacionar con sede
         detalleSedeAgrupacionService.agrupar(sedeService.getSedePorId(1L), agrupacion.getId());
 
         return ResponseEntity.ok(agrupacion);

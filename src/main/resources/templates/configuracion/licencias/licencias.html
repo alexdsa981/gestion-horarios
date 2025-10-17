@@ -8,16 +8,15 @@
     <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
             <h3 class="fw-bold mb-0">
-                <i class="bi bi-gear text-primary"></i> Configuración
+                <i class="bi bi-calendar-x text-primary"></i> Configuración
             </h3>
-            <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm">Usuarios</a>
+            <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm ">Usuarios</a>
             <a href="/configuracion/agrupaciones" class="btn btn-outline-dark btn-sm">Agrupaciones</a>
-            <a href="/configuracion/sedes" class="btn btn-outline-dark btn-sm boton-presionado">Sedes</a>
-            <a href="/configuracion/licencias" class="btn btn-outline-dark btn-sm">Licencias</a>
-
+            <a href="/configuracion/sedes" class="btn btn-outline-dark btn-sm">Sedes</a>
+            <a href="/configuracion/licencias" class="btn btn-outline-dark btn-sm boton-presionado">Licencias</a>
         </div>
-        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarSede">
-            <i class="bi bi-person-plus-fill"></i> Agregar Sede
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarTipoLicencia">
+            <i class="bi bi-calendar-plus"></i> Agregar Licencia/Vacacion
         </button>
     </div>
     <div class="table-responsive shadow-sm rounded overflow-hidden mb-4">
@@ -25,27 +24,27 @@
             <thead class="table-primary text-center">
             <tr>
                 <th>#</th>
-                <th>Sede</th>
+                <th>Tipo de Licencia</th>
                 <th>Editar</th>
                 <th>Estado</th>
             </tr>
             </thead>
-            <tbody id="tablaSedesBody"></tbody>
+            <tbody id="tablaTiposLicenciasBody"></tbody>
         </table>
     </div>
 </main>
 
-<div class="modal fade" id="modalAgregarSede" tabindex="-1" aria-labelledby="modalAgregarSedeLabel" aria-hidden="true">
+<div class="modal fade" id="modalAgregarTipoLicencia" tabindex="-1" aria-labelledby="modalAgregarTipoLicenciaLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form id="formAgregarSede" class="modal-content">
+        <form id="formAgregarTipoLicencia" class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalAgregarSedeLabel">Agregar Sede</h5>
+                <h5 class="modal-title" id="modalAgregarTipoLicenciaLabel">Agregar Tipo de Licencia</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="inputNombreSede" class="form-label">Nombre de la sede</label>
-                    <input type="text" class="form-control" id="inputNombreSede" required>
+                    <label for="inputNombreTipoLicencia" class="form-label">Nombre del tipo</label>
+                    <input type="text" class="form-control" id="inputNombreTipoLicencia" required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -56,18 +55,18 @@
     </div>
 </div>
 
-<!-- Modal: Editar Sede -->
-<div class="modal fade" id="modalEditarSede" tabindex="-1" aria-labelledby="modalEditarSedeLabel" aria-hidden="true">
+<!-- Modal: Editar Tipo de Licencia -->
+<div class="modal fade" id="modalEditarTipoLicencia" tabindex="-1" aria-labelledby="modalEditarTipoLicenciaLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form id="formEditarSede" class="modal-content">
+        <form id="formEditarTipoLicencia" class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalEditarSedeLabel">Editar Sede</h5>
+                <h5 class="modal-title" id="modalEditarTipoLicenciaLabel">Editar Tipo de Licencia</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="inputEditarNombreSede" class="form-label">Nombre de la sede</label>
-                    <input type="text" class="form-control" id="inputEditarNombreSede" required>
+                    <label for="inputEditarNombreTipoLicencia" class="form-label">Nombre del tipo</label>
+                    <input type="text" class="form-control" id="inputEditarNombreTipoLicencia" required>
                 </div>
             </div>
             <div class="modal-footer">
@@ -80,7 +79,7 @@
 
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
-<script src="/js/configuracion/sedes/datos.js"></script>
+<script src="/js/configuracion/tipos-licencias/datos.js"></script>
 
 </body>
 </html>

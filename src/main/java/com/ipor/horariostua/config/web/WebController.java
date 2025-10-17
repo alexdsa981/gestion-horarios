@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.web;
+package com.ipor.horariostua.config.web;
 
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
@@ -124,6 +124,13 @@ public class WebController {
         model.addAttribute("paginaActual", "config");
         model.addAttribute("Titulo", "IPOR - Horarios | Admin - Sedes");
         return "configuracion/sedes/sedes";
+    }
+
+    @GetMapping("/configuracion/licencias")
+    public String redirigePaginaLicenciasGlobal(Model model) {
+        model.addAttribute("paginaActual", "config");
+        model.addAttribute("Titulo", "IPOR - Horarios | Admin - Licencias");
+        return "configuracion/licencias/licencias";
     }
 
 

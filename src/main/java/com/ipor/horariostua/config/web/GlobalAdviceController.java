@@ -1,4 +1,4 @@
-package com.ipor.horariostua.core.web;
+package com.ipor.horariostua.config.web;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.departamento.Departamento;
@@ -47,7 +47,7 @@ public class GlobalAdviceController {
 
             Set<Departamento> departamentosSet = listaGruposUsuario.stream()
                     .map(Agrupacion::getDepartamento)
-                    .collect(Collectors.toCollection(LinkedHashSet::new)); // preserva el orden
+                    .collect(Collectors.toCollection(LinkedHashSet::new));
 
             List<Departamento> listaDepartamentosUsuario = new ArrayList<>(departamentosSet);
 

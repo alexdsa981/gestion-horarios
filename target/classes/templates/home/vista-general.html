@@ -5,21 +5,33 @@
 <header th:replace="~{common/header :: header}"></header>
 
 <main class="flex-fill" style="position:relative;">
-    <!-- Sticky bar OUTSIDE of container for full width -->
     <div class="mb-2">
         <div class="sticky-controls">
             <h3 id="tituloMes" class="fw-bold text-primary">
                 <i class="bi bi-calendar-fill"></i>
                 Horarios del Mes
             </h3>
-            <div class="controls-right">
+            <div class="controls-right d-flex align-items-center gap-2">
+                <span class="fw-bold">Horas:</span>
+                <input type="number" id="horaInicio" class="form-control text-muted bg-light border-0 shadow-sm no-select"
+                       style="width:70px; user-select:none; pointer-events:auto;" min="4" max="20" value="0"
+                       onchange="actualizarRangoHorario()"
+                       onkeydown="return false;"
+                       onpaste="return false;" oncut="return false;" oncopy="return false;" onselectstart="return false;">
+                <span class="fw-bold">a</span>
+                <input type="number" id="horaFin" class="form-control text-muted bg-light border-0 shadow-sm no-select"
+                       style="width:70px; user-select:none; pointer-events:auto;" min="4" max="21" value="0"
+                       onchange="actualizarRangoHorario()"
+                       onkeydown="return false;"
+                       onpaste="return false;" oncut="return false;" oncopy="return false;" onselectstart="return false;">
+
+                <!-- Selectores de año y mes -->
                 <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
                 <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
                 <div th:replace="~{home/panels/selector-sedes :: selector-sedes}"></div>
                 <div th:replace="~{home/panels/selector-colaboradores :: selector-colaboradores}"></div>
             </div>
         </div>
-        <!-- Aquí va el resto de tu contenido -->
         <!-- Spinner de carga -->
         <div id="loadingSpinner"
              style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
@@ -31,21 +43,40 @@
         <!-- Grid de horarios -->
         <div class="mes-grid" id="mesGrid"></div>
     </div>
-    <!-- Botón flotante Agregar -->
-    <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
-            style="position:fixed; bottom:30px; right:30px; width:60px; height:60px; z-index:10; display:flex; align-items:center; justify-content:center; font-size:2rem;">
-        <i class="bi bi-plus-lg"></i>
-    </button>
+
+    <div style="position:fixed; bottom:30px; right:30px; z-index:10; display:flex; gap:16px;">
+        <button id="fab-horas-colaboradores" class="btn btn-warning rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-clock-history"></i>
+        </button>
+        <button id="fab-modal-licencias" class="btn btn-success rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-suitcase"></i>
+        </button>
+        <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-calendar-plus"></i>
+        </button>
+    </div>
+
+
     <div th:replace="~{home/panels/modal-empleado :: modalEmpleado}"></div>
-    <div th:replace="~{home/panels/right-panel :: right-panel-edit}"></div>
-    <div th:replace="~{home/panels/modal-repetir :: modal-repetir}"></div>
-    <div th:replace="~{home/panels/modal-add :: modal-add}"></div>
+    <div th:replace="~{home/bloque-horario/modal-click :: right-panel-edit}"></div>
+    <div th:replace="~{home/bloque-horario/modal-repetir :: modal-repetir}"></div>
+    <div th:replace="~{home/bloque-horario/modal-add :: modal-add}"></div>
+    <div th:replace="~{home/licencias/modal-licencias :: modal-licencias}"></div>
+    <div th:replace="~{home/licencias/add-registro :: add-registro-licencia}"></div>
+    <div th:replace="~{home/horas-totales/horas-colaborador :: modal-horas-colaborador}"></div>
+
+
+
 </main>
 <div th:insert="~{common/footer :: footer}"></div>
 <th:block th:replace="~{common/imports :: bodyImports}"/>
 <script src="/imports/daypilot/daypilot-all.min.js"></script>
 <script src="/imports/flatpickr/flatpickr.js"></script>
 <script src="/imports/flatpickr/es.js"></script>
+<script src="/js/home/rangohorarios/rango-horarios.js"></script>
 <script src="/js/home/personalsedes/sede/datos.js"></script>
 <script src="/js/home/personalsedes/init.js"></script>
 <script src="/js/home/personalsedes/personal/datos.js"></script>
@@ -59,6 +90,10 @@
 <script src="/js/home/calendar/edit-modal.js"></script>
 <script src="/js/home/calendar/edit-modal-submit.js"></script>
 <script src="/js/home/calendar/modal-repetir.js"></script>
+<script src="/js/home/licencias/modal-licencias.js"></script>
+<script src="/js/home/horas-colaborador/horas-colaborador.js"></script>
 <script src="/js/home/vista-general.js"></script>
+
+
 </body>
 </html>

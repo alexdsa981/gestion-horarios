@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="modal-horas-colaborador">
+
+
+    <div class="modal fade" id="modalHorasColaboradores" tabindex="-1" aria-labelledby="modalHorasColaboradoresLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title" id="modalHorasColaboradoresLabel">
+                        Horas Totales de Colaboradores - Octubre
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table align-middle table-bordered">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Colaborador</th>
+                            <th class="text-center">Horas Totales</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Ejemplo dinámico con estilos -->
+                        <tr>
+                            <td>Juan Pérez</td>
+                            <td class="text-center horas-menos">120</td>
+                        </tr>
+                        <tr>
+                            <td>María García</td>
+                            <td class="text-center horas-verde">150</td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Díaz</td>
+                            <td class="text-center horas-mas">172</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <small class="text-muted">Horas: < 150 (rojo),  = 150 (verde), > 150 (amarillo)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

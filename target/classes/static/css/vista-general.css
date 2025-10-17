@@ -36,8 +36,6 @@
 
 
 
-
-
 .calendar_default_main div {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -105,8 +103,6 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background: #f7f8fa;
-    min-height: 110px;
-    min-width: 110px;
     position: relative;
     overflow: hidden;
 }
@@ -205,7 +201,6 @@
 
 .mini-celda.celda-vacia {
     border: 1px solid #ccc;
-    min-height: 238px;
 
 }
 
@@ -350,6 +345,11 @@
 
 
 
+.no-select {
+    user-select: none;
+    caret-color: transparent;
+}
+
 .table-sedes thead th {
   vertical-align: middle;
 }
@@ -363,6 +363,21 @@
 .shadow {
   box-shadow: 0 2px 16px rgba(80,120,180,.10) !important;
 }
+
+
+/*MODAL HORAS COLABORADOR*/
+.horas-menos {
+    background-color: #ffd6d6 !important;
+}
+.horas-verde {
+    background-color: #d6ffd6 !important;
+}
+.horas-mas {
+    background-color: #fff9d6 !important;
+}
+
+
+
 
 
 @media (max-width: 900px) {
