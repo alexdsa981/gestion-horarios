@@ -29,4 +29,6 @@ public class DetalleColaboradorAgrupacion {
 
     private String eventoColor;
 
+    private Integer horasPorLaborar;
+
 }

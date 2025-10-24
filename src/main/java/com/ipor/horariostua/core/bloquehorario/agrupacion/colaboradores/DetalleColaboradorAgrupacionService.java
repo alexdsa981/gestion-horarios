@@ -40,7 +40,6 @@ public class DetalleColaboradorAgrupacionService {
     }
 
     public DetalleColaboradorAgrupacion getDetallePorColaboradorYAgrupacion(Long idColaborador, Long idAgrupacion) {
-        System.out.println("idcolaborador: " + idColaborador + " idagrupacion: " + idAgrupacion);
         Optional<DetalleColaboradorAgrupacion> detalle = detalleColaboradorRepository.findByColaboradorIdAndAgrupacionId(idColaborador, idAgrupacion);
         return detalle.orElse(null);
     }

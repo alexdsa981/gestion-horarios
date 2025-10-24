@@ -99,7 +99,6 @@ public class BloqueHorarioController {
 
     @PostMapping("/repetir")
     public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
-        System.out.println("DTO recibido: " + dto);
         BloqueHorario bloqueRepetir = bloqueHorarioService.getPorId(dto.getId());
         DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(bloqueRepetir.getColaborador().getId(), bloqueRepetir.getAgrupacion().getId());
 
@@ -113,7 +112,6 @@ public class BloqueHorarioController {
             for (BloqueHorario repetido : listaRepeticion){
                 Mostrar_BH_DTO mostrarDTO = new Mostrar_BH_DTO(repetido, detalle);
                 listaMostrar.add(mostrarDTO);
-                System.out.println("Bloque creado: " + mostrarDTO);
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(listaMostrar);
         } catch (Exception e) {

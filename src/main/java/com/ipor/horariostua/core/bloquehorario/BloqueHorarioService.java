@@ -27,8 +27,7 @@ public class BloqueHorarioService {
     HorarioLaboralService horarioLaboralService;
     @Autowired
     SedeService sedeService;
-    @Autowired
-    DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+
 
     public BloqueHorario getPorId(Long id){
         return bloqueHorarioRepository.findById(id).get();
@@ -173,6 +172,21 @@ public class BloqueHorarioService {
             listaFechasRepeticion.add(bloqueRepeticion.getFecha());
         }
         return listaFechasRepeticion;
+    }
+
+    public double  sumarHorasBloques(List<BloqueHorario> bloques) {
+        double total = 0;
+        for (BloqueHorario bloque : bloques) {
+            if (bloque.getHoraInicio() != null && bloque.getHoraFin() != null) {
+                int minutos = (int) java.time.Duration.between(bloque.getHoraInicio(), bloque.getHoraFin()).toMinutes();
+                total += minutos;
+            }
+        }
+        return total / 60;
+    }
+
+    public List<BloqueHorario> bloquesDeColaboradorPorMes(Long colaboradorId, Long agrupacionId, LocalDate inicioMes, LocalDate finMes){
+        return bloqueHorarioRepository.findByColaboradorIdAndAgrupacionIdAndFechaBetween(colaboradorId, agrupacionId, inicioMes, finMes);
     }
 
 }

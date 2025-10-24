@@ -14,6 +14,8 @@ import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboral;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralRepository;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuario;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioRepository;
+import com.ipor.horariostua.core.licencias.tipo.TipoLicencia;
+import com.ipor.horariostua.core.licencias.tipo.TipoLicenciaRepository;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuario;
 import com.ipor.horariostua.core.bloquehorario.sede.Sede;
 import com.ipor.horariostua.core.usuario.Usuario;
@@ -58,7 +60,8 @@ public class DataInitializer implements CommandLineRunner {
     private DetalleSedeAgrupacionRepository detalleSedeAgrupacionRepository;
     @Autowired
     private RangoHorarioRepository rangoHorarioRepository;
-
+    @Autowired
+    private TipoLicenciaRepository tipoLicenciaRepository;
 
     @Override
     public void run(String... args) {
@@ -182,7 +185,11 @@ public class DataInitializer implements CommandLineRunner {
             }
         }
 
-
+        if (tipoLicenciaRepository.count() == 0){
+            tipoLicenciaRepository.save(new TipoLicencia("Vacaciones"));
+            tipoLicenciaRepository.save(new TipoLicencia("Radiación"));
+            tipoLicenciaRepository.save(new TipoLicencia("Otros"));
+        }
 
 
     }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="edit-dias">
+
+
+    <div class="modal fade" id="modalEditarFechasLicencia" tabindex="-1" aria-labelledby="modalEditarFechasLicenciaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formEditarFechasLicencia">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditarFechasLicenciaLabel">Editar Fechas de Licencia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 text-center">
+                            <label class="form-label">Fechas seleccionadas</label>
+                            <div id="flatpickrEditarFechasLicencia" class="d-flex justify-content-center"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

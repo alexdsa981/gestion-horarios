@@ -49,10 +49,6 @@
                 style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
             <i class="bi bi-clock-history"></i>
         </button>
-        <button id="fab-modal-licencias" class="btn btn-success rounded-circle shadow-lg"
-                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
-            <i class="bi bi-suitcase"></i>
-        </button>
         <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
                 style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
             <i class="bi bi-calendar-plus"></i>
@@ -64,8 +60,6 @@
     <div th:replace="~{home/bloque-horario/modal-click :: right-panel-edit}"></div>
     <div th:replace="~{home/bloque-horario/modal-repetir :: modal-repetir}"></div>
     <div th:replace="~{home/bloque-horario/modal-add :: modal-add}"></div>
-    <div th:replace="~{home/licencias/modal-licencias :: modal-licencias}"></div>
-    <div th:replace="~{home/licencias/add-registro :: add-registro-licencia}"></div>
     <div th:replace="~{home/horas-totales/horas-colaborador :: modal-horas-colaborador}"></div>
 
 
@@ -90,7 +84,6 @@
 <script src="/js/home/calendar/edit-modal.js"></script>
 <script src="/js/home/calendar/edit-modal-submit.js"></script>
 <script src="/js/home/calendar/modal-repetir.js"></script>
-<script src="/js/home/licencias/modal-licencias.js"></script>
 <script src="/js/home/horas-colaborador/horas-colaborador.js"></script>
 <script src="/js/home/vista-general.js"></script>
 

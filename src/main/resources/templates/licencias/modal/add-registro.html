@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="add-registro-licencia">
+
+    <div class="modal fade" id="modalAgregarLicencia" tabindex="-1" aria-labelledby="modalAgregarLicenciaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formAgregarLicencia">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgregarLicenciaLabel">Agregar Vacación/Licencia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="colaborador" class="form-label">Colaborador</label>
+                            <select class="form-select" id="colaborador" required>
+                                <option value="">Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="motivo" class="form-label">Motivo</label>
+                            <select class="form-select" id="motivo" required>
+                                <option value="">Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Seleccionar fechas</label>
+                            <input type="text" id="fechasLicenciaPicker" class="form-control d-none">
+                            <div id="fechasLicenciaCalendar" class="d-flex justify-content-center"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</div>
+</body>
+</html>

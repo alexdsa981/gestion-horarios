@@ -1,5 +1,6 @@
 package com.ipor.horariostua.core.bloquehorario.colaborador;
 
+import com.ipor.horariostua.core.bloquehorario.BloqueHorarioService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaboradorDTO;
@@ -15,9 +16,10 @@ import java.util.Optional;
 @Service
 public class ColaboradorService {
     @Autowired
-    ColaboradorRepository colaboradorRepository;
+    private ColaboradorRepository colaboradorRepository;
     @Autowired
-    DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+    private DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+
 
     public Colaborador agregar(AgregarColaboradorDTO agregarColaboradorDTO){
         Colaborador colaborador;
@@ -75,6 +77,8 @@ public class ColaboradorService {
         }
         return false;
     }
+
+
 
     public Colaborador getColaboradorPorId(Long id){
         return colaboradorRepository.findById(id).get();

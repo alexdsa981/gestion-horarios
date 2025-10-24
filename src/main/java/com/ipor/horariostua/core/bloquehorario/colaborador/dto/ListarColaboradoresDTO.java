@@ -15,9 +15,11 @@ public class ListarColaboradoresDTO {
         this.nombreCompleto = colaborador.getNombreCompleto();
         this.color = detalleColaboradorAgrupacion.getEventoColor();
         this.isActive = detalleColaboradorAgrupacion.getIsActive();
+        this.horasPorLaborar = detalleColaboradorAgrupacion.getHorasPorLaborar();
     }
     private Long id;
     private String nombreCompleto;
     private String color;
+    private Integer horasPorLaborar;
     private Boolean isActive;
 }

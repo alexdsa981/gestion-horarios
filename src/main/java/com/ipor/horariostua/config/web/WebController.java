@@ -69,7 +69,6 @@ public class WebController {
         Agrupacion agrupacion = agrupacionService.getAgrupacionPorId(agrupacionId);
         usuario.setAgrupacionSeleccionada(agrupacion);
         usuarioService.save(usuario);
-        System.out.println("[POST] Actualizando agrupacionSeleccionadaId en BD a: " + agrupacionId);
     }
     @PostMapping("/actualizar-departamento")
     @ResponseBody
@@ -77,7 +76,6 @@ public class WebController {
         Usuario usuario = usuarioService.getUsuarioLogeado();
         usuario.setAgrupacionSeleccionada(agrupacionService.getListaAgrupacionPorDepartamentoAndTrue(departamentoId).getFirst());
         usuarioService.save(usuario);
-        System.out.println("[POST] Actualizando departamentoSeleccionadoId en BD a: " + departamentoId);
     }
 
 
@@ -93,6 +91,19 @@ public class WebController {
         model.addAttribute("paginaActual", "home");
         return "home/vista-general";
     }
+
+    @GetMapping("/licencias")
+    public String redirigePaginaLicencias(Model model) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+        Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+        colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+
+        model.addAttribute("Titulo", "IPOR - Horarios | Licencias");
+        model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+        model.addAttribute("paginaActual", "licencias");
+        return "licencias/vista-licencias";
+    }
+
 
 
     @GetMapping("/personal")

@@ -22,4 +22,7 @@ public interface BloqueHorarioRepository extends JpaRepository<BloqueHorario, Lo
 
     List<BloqueHorario> findByColaboradorIdAndFecha(Long idColaborador, LocalDate fecha);
 
+    List<BloqueHorario> findByColaboradorIdAndAgrupacionIdAndFechaBetween(Long colaboradorId, Long agrupacionId, LocalDate inicioMes, LocalDate finMes);
+
+
 }

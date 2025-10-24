@@ -25,6 +25,12 @@
                 </a>
 
                 <a class="nav-item nav-link"
+                   th:classappend="${paginaActual} == 'licencias' ? 'active' : ''"
+                   href="/licencias">
+                    <i class="bi bi-suitcase me-1"></i>Vacaciones y Licencias
+                </a>
+
+                <a class="nav-item nav-link"
                    th:classappend="${paginaActual} == 'config' ? 'active' : ''"
                    href="/configuracion/usuarios" sec:authorize="hasAnyAuthority('Admin')">
                     <i class="bi bi-gear me-1"></i>Configuración

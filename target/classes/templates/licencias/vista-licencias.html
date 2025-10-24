@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/imports :: headImports('/css/vista-licencias.css')}"></head>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+<main class="flex-fill" style="position:relative;">
+    <div class="mb-2">
+        <div class="sticky-controls">
+            <h3 id="tituloMes" class="fw-bold text-primary">
+                <i class="bi bi-calendar-check"></i>
+                Vacaciones y Licencias del Mes
+            </h3>
+            <div class="controls-right d-flex align-items-center gap-2">
+                <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
+                <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
+                <div th:replace="~{home/panels/selector-colaboradores :: selector-colaboradores}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div id="dp"></div>
+    </div>
+
+    <div style="position:fixed; bottom:30px; right:30px; z-index:10; display:flex; gap:16px;">
+        <button id="fab-modal-licencias" class="btn btn-success rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-suitcase"></i>
+        </button>
+    </div>
+
+    <div th:replace="~{home/panels/modal-empleado :: modalEmpleado}"></div>
+    <div th:replace="~{licencias/modal/modal-licencias :: modal-licencias}"></div>
+    <div th:replace="~{licencias/modal/add-registro :: add-registro-licencia}"></div>
+    <div th:replace="~{licencias/modal/edit-dias :: edit-dias}"></div>
+
+</main>
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
+
+<script src="/js/vista-licencias/init.js"></script>
+<script src="/js/vista-licencias/datos.js"></script>
+<script src="/js/vista-licencias/colaboradores/datos.js"></script>
+<script src="/js/vista-licencias/colaboradores/spring.js"></script>
+<script src="/js/vista-licencias/licencias/modal-licencias.js"></script>
+<script src="/js/vista-licencias/licencias/add-registro.js"></script>
+<script src="/js/vista-licencias/licencias/edit-registro.js"></script>
+
+
+
+
+
+</body>
+</html>

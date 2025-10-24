@@ -1,17 +1,18 @@
 package com.ipor.horariostua.core.bloquehorario.colaborador;
 
+import com.ipor.horariostua.core.bloquehorario.BloqueHorario;
+import com.ipor.horariostua.core.bloquehorario.BloqueHorarioService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
-import com.ipor.horariostua.core.bloquehorario.colaborador.dto.AgregarColaboradorDTO;
-import com.ipor.horariostua.core.bloquehorario.colaborador.dto.EditarColorColaboradorDTO;
-import com.ipor.horariostua.core.bloquehorario.colaborador.dto.ListarColaboradoresDTO;
+import com.ipor.horariostua.core.bloquehorario.colaborador.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class ColaboradorController {
     DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
     @Autowired
     AgrupacionService agrupacionService;
+    @Autowired
+    BloqueHorarioService bloqueHorarioService;
 
     @GetMapping("/agrupacion/{idAgrupacion}")
     @ResponseBody
@@ -57,10 +60,50 @@ public class ColaboradorController {
 
     @PostMapping("/color")
     public ResponseEntity<?> actualizarColor(@RequestBody EditarColorColaboradorDTO dto) {
-        // colaboradorService.actualizarColor(dto.getColaboradorId(), dto.getColor());
         DetalleColaboradorAgrupacion detalleColaboradorAgrupacion = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getColaboradorId(), dto.getAgrupacionId());
         detalleColaboradorAgrupacion.setEventoColor(dto.getColor());
         detalleColaboradorAgrupacionService.save(detalleColaboradorAgrupacion);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/horas-mes")
+    public ResponseEntity<?> actualizarHoras(@RequestBody EditarHorasColaboradorDTO dto) {
+        DetalleColaboradorAgrupacion detalleColaboradorAgrupacion = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getColaboradorId(), dto.getAgrupacionId());
+        detalleColaboradorAgrupacion.setHorasPorLaborar(dto.getHoras());
+        detalleColaboradorAgrupacionService.save(detalleColaboradorAgrupacion);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/reporte-horas/{idAgrupacion}/{anio}/{mes}")
+    public ResponseEntity<List<HorasMensualesColaboradorDTO>> getReporteHoras(
+            @PathVariable Long idAgrupacion,
+            @PathVariable int anio,
+            @PathVariable int mes) {
+        LocalDate inicioMes = LocalDate.of(anio, mes, 1);
+        LocalDate finMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
+
+        List<DetalleColaboradorAgrupacion> detalles = detalleColaboradorAgrupacionService
+                .listarDetallePorIdAgrupacion(idAgrupacion);
+
+        List<HorasMensualesColaboradorDTO> resultado = new ArrayList<>();
+        for (DetalleColaboradorAgrupacion detalle : detalles) {
+            Colaborador colaborador = detalle.getColaborador();
+
+            List<BloqueHorario> bloques = bloqueHorarioService.bloquesDeColaboradorPorMes(colaborador.getId(), idAgrupacion, inicioMes, finMes);
+
+            Double horasTrabajadas = bloqueHorarioService.sumarHorasBloques(bloques);
+            Integer horasMensuales = detalle.getHorasPorLaborar() != null ? detalle.getHorasPorLaborar() : 0;
+
+            HorasMensualesColaboradorDTO dto = new HorasMensualesColaboradorDTO();
+            dto.setColaboradorId(colaborador.getId());
+            dto.setNombreCompleto(colaborador.getNombreCompleto());
+            dto.setHorasTotales(horasTrabajadas);
+            dto.setHorasMensuales(horasMensuales);
+            resultado.add(dto);
+        }
+
+        return ResponseEntity.ok(resultado);
+    }
+
 }
