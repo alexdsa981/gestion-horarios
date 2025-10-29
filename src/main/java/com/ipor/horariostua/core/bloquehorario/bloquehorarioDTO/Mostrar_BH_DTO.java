@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -34,6 +35,11 @@ public class Mostrar_BH_DTO {
 
     private String color;
 
+    private String horaInicioAlmuerzo;
+    private String horaFinAlmuerzo;
+
+    private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     public Mostrar_BH_DTO(BloqueHorario entity, DetalleColaboradorAgrupacion detalle) {
         this.id = entity.getId();
         this.horaInicio = entity.getHoraInicio();
@@ -41,10 +47,19 @@ public class Mostrar_BH_DTO {
         this.fecha = entity.getFecha();
         this.grupoAnidado = entity.getGrupoAnidado();
 
+        if (entity.getAlmuerzo() != null){
+            this.horaInicioAlmuerzo = entity.getAlmuerzo().getHoraInicio() != null
+                    ? entity.getAlmuerzo().getHoraInicio().format(HORA_FORMATTER)
+                    : null;
+            this.horaFinAlmuerzo = entity.getAlmuerzo().getHoraFin() != null
+                    ? entity.getAlmuerzo().getHoraFin().format(HORA_FORMATTER)
+                    : null;
+        }
+
         Colaborador colab = entity.getColaborador();
         if (colab != null) {
             this.idColaborador = colab.getId();
-            this.nombreColaborador = colab.getNombreCompleto();
+            this.nombreColaborador = formatearNombre(colab.getNombreCompleto());
 
             this.color = detalle.getEventoColor();
         }
@@ -60,4 +75,16 @@ public class Mostrar_BH_DTO {
             this.idAgrupacion = agrupacion.getId();
         }
     }
+
+    private String formatearNombre(String nombreCompleto) {
+        if (nombreCompleto == null) return "";
+        String[] partes = nombreCompleto.split(",");
+        if (partes.length < 2) return nombreCompleto.trim();
+
+        String apellidoPaterno = partes[0].trim().split(" ")[0];
+        String nombre1 = partes[1].trim().split(" ")[0];
+        return apellidoPaterno + " " + nombre1;
+    }
+
+
 }

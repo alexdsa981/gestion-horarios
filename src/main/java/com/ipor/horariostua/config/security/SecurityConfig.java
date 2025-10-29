@@ -73,7 +73,7 @@ public class SecurityConfig {
                         //permiso para todos
                         .requestMatchers("/app/usuarios/").permitAll()
                         .requestMatchers("/common/**").permitAll()
-
+                        .requestMatchers("/configuracion/**").hasAuthority("Admin")
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 

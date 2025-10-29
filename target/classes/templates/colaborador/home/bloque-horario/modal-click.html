@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="right-panel-edit">
+
+
+
+
+    <div id="right-panel" class="custom-modal-panel" style="display: none;">
+        <div id="right-panel-drag" class="custom-modal-header">
+            <span class="custom-modal-title">Mover</span>
+            <button type="button" id="edit-cancel" class="custom-modal-close" aria-label="Cerrar" onclick="cerrarModalEdicionBloque()">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Colaborador</span>
+                <span class="custom-modal-value" id="info-colaborador"></span>
+            </div>
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Fecha</span>
+                <span class="custom-modal-value" id="info-fecha"></span>
+            </div>
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Hora inicio</span>
+                <span class="custom-modal-value" id="info-hora-inicio"></span>
+            </div>
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Hora fin</span>
+                <span class="custom-modal-value" id="info-hora-fin"></span>
+            </div>
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Horario de Almuerzo:</span>
+                <span class="custom-modal-value" id="info-almuerzo-switch"></span>
+            </div>
+            <div class="custom-modal-row" id="info-almuerzo-horas" style="display: none;">
+                <span class="custom-modal-label">Inicio almuerzo</span>
+                <span class="custom-modal-value" id="info-almuerzo-inicio"></span>
+                <span class="custom-modal-label">Fin almuerzo</span>
+                <span class="custom-modal-value" id="info-almuerzo-fin"></span>
+            </div>
+            <div class="custom-modal-row">
+                <span class="custom-modal-label">Sede</span>
+                <span class="custom-modal-value" id="info-sede"></span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

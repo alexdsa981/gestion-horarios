@@ -79,7 +79,7 @@ public class AgrupacionController {
         if (agrupacion == null) return ResponseEntity.notFound().build();
         agrupacion.setNombre(datosAgrupacion.getNombre());
         agrupacionService.actualizarAgrupacion(agrupacion);
-        return ResponseEntity.ok(agrupacion);
+        return ResponseEntity.ok(true);
     }
 
     @PostMapping("/estado/{idAgrupacion}")

@@ -3,12 +3,14 @@ package com.ipor.horariostua.core.bloquehorario;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.FiltroColaboradorMesDTO;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Recibido_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Mostrar_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Repetir_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
+import com.ipor.horariostua.core.bloquehorario.sede.dto.ListarSedesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/app/bloque-horarios")
@@ -132,10 +135,8 @@ public class BloqueHorarioController {
                     guardado.getAgrupacion().getId()
             );
             Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
-            System.out.println("EDIT OK, devuelve DTO: " + mostrarDto); // log para depuración
             return ResponseEntity.ok(mostrarDto);
         } catch (IllegalArgumentException ex) {
-            System.out.println("EDIT ERROR: " + ex.getMessage()); // log para depuración
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(Collections.singletonMap("error", ex.getMessage()));
         }
@@ -150,6 +151,31 @@ public class BloqueHorarioController {
     public ResponseEntity<List<LocalDate>> listarBloquesHorarios(@PathVariable Long id) {
         List<LocalDate> listaFechas = bloqueHorarioService.listarFechasRepeticion(id);
         return ResponseEntity.ok(listaFechas);
+    }
+
+    @PostMapping("/bloques-colaborador")
+    @ResponseBody
+    public Map<String, Object> getBloquesYsedesColaborador(
+            @RequestBody FiltroColaboradorMesDTO filtro) {
+
+        List<BloqueHorario> bloques = bloqueHorarioService.bloquesDeColaboradorPorMes(
+                filtro.getColaboradorId(), filtro.getAgrupacionId(), filtro.getInicioMes(), filtro.getFinMes()
+        );
+        List<Mostrar_BH_DTO> bloquesDTO = bloques.stream()
+                .map(bh -> new Mostrar_BH_DTO(bh, detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(filtro.getColaboradorId(), filtro.getAgrupacionId())))
+                .collect(Collectors.toList());
+
+        // Obtener sedes únicas de los bloques
+        List<ListarSedesDTO> sedes = bloques.stream()
+                .map(BloqueHorario::getSede)
+                .distinct()
+                .map(ListarSedesDTO::new)
+                .collect(Collectors.toList());
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("bloques", bloquesDTO);
+        resp.put("sedes", sedes);
+        return resp;
     }
 
 }

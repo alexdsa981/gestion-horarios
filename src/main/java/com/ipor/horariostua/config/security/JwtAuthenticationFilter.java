@@ -19,7 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-//esta clase validará la informacion del token y si esto es exitoso, establecerá la autenticacion de un usuario en la solicitud o en el contexto de seguridad de nuestra aplicacion
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUsersDetailsService customUsersDetailsService;
@@ -55,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 List<String> userRoles = userDetails.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).toList();
 
-                if (userRoles.contains("General")|| userRoles.contains("Admin")) {
+                if (userRoles.contains("Colaborador") || userRoles.contains("Gestor") || userRoles.contains("Admin")) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

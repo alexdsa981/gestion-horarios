@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="selector-colaboradores">
+
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2"
+                type="button" id="dropdownColaboradoresBtn" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-gear"></i>
+            <span>Filtrar Colaborador</span>
+        </button>
+        <div class="dropdown-menu p-2" aria-labelledby="dropdownColaboradoresBtn" style="min-width:500px; max-height:450px; overflow-y:auto;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-secondary"><i class="bi bi-people"></i> Colaboradores</span>
+            </div>
+            <button id="btnQuitarFiltroColaborador" class="btn btn-sm btn-dark mb-2 w-100 d-flex align-items-center gap-2" type="button" style="display:none;">
+                <i class="bi bi-x-circle"></i>
+                Ver todos
+            </button>
+            <div class="table-responsive shadow rounded-3 overflow-hidden mb-0 bg-white">
+                <table class="table table-sm table-bordered table-hover align-middle mb-0">
+                    <thead class="table-primary text-center">
+                    <tr>
+                        <th>Colaborador</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaColaboradoresBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

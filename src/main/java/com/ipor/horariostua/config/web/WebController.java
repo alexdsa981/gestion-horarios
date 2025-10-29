@@ -82,26 +82,59 @@ public class WebController {
     @GetMapping("/home")
     public String redirigePaginaHome(Model model) {
         Usuario usuario = usuarioService.getUsuarioLogeado();
+        if (usuario.getRolUsuario().getId()==3){
+            return "redirect:/colaborador/home";
+        }else{
+            Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+            colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+            sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
+
+            model.addAttribute("Titulo", "IPOR - Horarios | Home");
+            model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+            model.addAttribute("paginaActual", "home");
+            return "gestor/home/home-gestor";
+        }
+    }
+    @GetMapping("/colaborador/home")
+    public String redirigePaginaHomeColaborador(Model model) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
         Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
         colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
         sedeService.getModelSedesActivasPorAgrupacion(model, agrupacionSeleccionadaId);
 
-        model.addAttribute("Titulo", "IPOR - Horarios | Home");
+        model.addAttribute("Titulo", "IPOR - Horarios | Horarios");
         model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
         model.addAttribute("paginaActual", "home");
-        return "home/vista-general";
+        return "colaborador/home/home-colaborador";
     }
 
     @GetMapping("/licencias")
     public String redirigePaginaLicencias(Model model) {
         Usuario usuario = usuarioService.getUsuarioLogeado();
-        Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
-        colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+        if (usuario.getRolUsuario().getId()==3){
+            return "redirect:/colaborador/licencias";
+        }else{
+            Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+            colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
 
-        model.addAttribute("Titulo", "IPOR - Horarios | Licencias");
-        model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
-        model.addAttribute("paginaActual", "licencias");
-        return "licencias/vista-licencias";
+            model.addAttribute("Titulo", "IPOR - Horarios | Licencias");
+            model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+            model.addAttribute("paginaActual", "licencias");
+            return "gestor/licencias/vista-licencias";
+        }
+    }
+
+
+    @GetMapping("/colaborador/licencias")
+    public String redirigePaginaLicenciasColaborador(Model model) {
+        Usuario usuario = usuarioService.getUsuarioLogeado();
+            Long agrupacionSeleccionadaId = usuario.getAgrupacionSeleccionada().getId();
+            colaboradorService.getModelSelectColaboradoresActivosPorAgrupacion(model, agrupacionSeleccionadaId);
+            model.addAttribute("Titulo", "IPOR - Horarios | Licencias");
+            model.addAttribute("agrupacionSeleccionadaId", agrupacionSeleccionadaId);
+            model.addAttribute("paginaActual", "licencias");
+            return "colaborador/licencias/vista-licencias";
+
     }
 
 
@@ -110,7 +143,7 @@ public class WebController {
     public String redirigePaginaPersonal(Model model) {
         model.addAttribute("paginaActual", "personal");
         model.addAttribute("Titulo", "IPOR - Horarios | Mi Personal");
-        return "personalsedes/personal/personal";
+        return "gestor/personalsedes/personal/personal";
     }
 
 
@@ -120,28 +153,28 @@ public class WebController {
         List<RolUsuario> listaRoles = usuarioService.getListaRoles();
         model.addAttribute("Lista_Roles", listaRoles);
         model.addAttribute("Titulo", "IPOR - Horarios | Admin - Usuarios");
-        return "configuracion/usuarios/usuarios";
+        return "gestor/configuracion/usuarios/usuarios";
     }
 
     @GetMapping("/configuracion/agrupaciones")
     public String redirigePaginaAgrupacionesGlobal(Model model) {
         model.addAttribute("paginaActual", "config");
         model.addAttribute("Titulo", "IPOR - Horarios | Admin - Agrupaciones");
-        return "configuracion/agrupaciones/agrupaciones";
+        return "gestor/configuracion/agrupaciones/agrupaciones";
     }
 
     @GetMapping("/configuracion/sedes")
     public String redirigePaginaSedesGlobal(Model model) {
         model.addAttribute("paginaActual", "config");
         model.addAttribute("Titulo", "IPOR - Horarios | Admin - Sedes");
-        return "configuracion/sedes/sedes";
+        return "gestor/configuracion/sedes/sedes";
     }
 
     @GetMapping("/configuracion/licencias")
     public String redirigePaginaLicenciasGlobal(Model model) {
         model.addAttribute("paginaActual", "config");
         model.addAttribute("Titulo", "IPOR - Horarios | Admin - Licencias");
-        return "configuracion/licencias/licencias";
+        return "gestor/configuracion/licencias/licencias";
     }
 
 

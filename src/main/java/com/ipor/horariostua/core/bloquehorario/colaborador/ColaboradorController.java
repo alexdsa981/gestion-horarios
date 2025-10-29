@@ -93,12 +93,13 @@ public class ColaboradorController {
             List<BloqueHorario> bloques = bloqueHorarioService.bloquesDeColaboradorPorMes(colaborador.getId(), idAgrupacion, inicioMes, finMes);
 
             Double horasTrabajadas = bloqueHorarioService.sumarHorasBloques(bloques);
+            Double horasAlmuerzo = bloqueHorarioService.sumarHorasAlmuerzo(bloques);
             Integer horasMensuales = detalle.getHorasPorLaborar() != null ? detalle.getHorasPorLaborar() : 0;
 
             HorasMensualesColaboradorDTO dto = new HorasMensualesColaboradorDTO();
             dto.setColaboradorId(colaborador.getId());
             dto.setNombreCompleto(colaborador.getNombreCompleto());
-            dto.setHorasTotales(horasTrabajadas);
+            dto.setHorasTotales(horasTrabajadas-horasAlmuerzo);
             dto.setHorasMensuales(horasMensuales);
             resultado.add(dto);
         }

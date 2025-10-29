@@ -44,6 +44,11 @@ public class DetalleColaboradorAgrupacionService {
         return detalle.orElse(null);
     }
 
+    public List<DetalleColaboradorAgrupacion> listarDetallePorIdColaborador(Long idColaborador){
+        return detalleColaboradorRepository.findByColaboradorIdAndIsActiveTrue(idColaborador);
+    }
+
+
 
     public String getRandomPastelColorHex() {
         Random rand = new Random();

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{common/imports :: headImports(${ {'/css/vista-general.css', '/css/colaborador-home.css'} })}"></head>
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+
+<main class="flex-fill" style="position:relative;">
+    <div class="mb-2">
+        <div class="sticky-controls d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <h3 id="tituloMes" class="fw-bold text-primary mb-0">
+                    <i class="bi bi-calendar-fill"></i>
+                    Horarios del Mes
+                </h3>
+                <div sec:authorize="hasAnyAuthority('Admin','Gestor')">
+                    <div class="form-check form-switch ms-3 d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" id="modoSwitch"
+                               style="width: 2.5em; height: 1.2em; cursor:pointer;">
+                        <label class="form-check-label fw-bold text-primary ms-2 d-flex align-items-center gap-1" for="modoSwitch" style="cursor:pointer;">
+                            <i class="bi bi-eye"></i> Modo Vista
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="controls-right d-flex align-items-center gap-2">
+                <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
+                <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
+                <div th:replace="~{colaborador/home/panels/selector-colaboradores :: selector-colaboradores}"></div>
+            </div>
+        </div>
+        <!-- Spinner de carga -->
+        <div id="loadingSpinner"
+             style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div style="margin-top:10px;">Cargando horarios...</div>
+        </div>
+        <div class="mes-grid" id="mesGrid"></div>
+    </div>
+
+
+
+    <div th:replace="~{colaborador/home/bloque-horario/modal-click :: right-panel-edit}"></div>
+
+
+
+</main>
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
+
+<script src="/js/modo.js"></script>
+
+<script src="/js/colaborador/home/panel/edit-modal.js"></script>
+
+<script src="/js/colaborador/home/personal-sedes/personal/datos.js"></script>
+<script src="/js/colaborador/home/personal-sedes/sedes/datos.js"></script>
+<script src="/js/colaborador/home/personal-sedes/init.js"></script>
+
+<script src="/js/colaborador/home/calendar/spinner.js"></script>
+<script src="/js/colaborador/home/calendar/rango-horarios.js"></script>
+<script src="/js/colaborador/home/calendar/mini-calendar.js"></script>
+<script src="/js/colaborador/home/calendar/calendar-shared.js"></script>
+<script src="/js/colaborador/home/calendar/calendario-utils.js"></script>
+<script src="/js/colaborador/home/calendar/vista-general.js"></script>
+
+
+
+</body>
+</html>

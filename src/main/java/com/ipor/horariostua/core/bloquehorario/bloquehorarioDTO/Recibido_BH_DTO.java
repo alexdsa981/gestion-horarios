@@ -19,4 +19,7 @@ public class Recibido_BH_DTO {
     private Long idAgrupacion;
     private Long idSede;
 
+    //almuerzo
+    private LocalTime horaInicioAlmuerzo;
+    private LocalTime horaFinAlmuerzo;
 }

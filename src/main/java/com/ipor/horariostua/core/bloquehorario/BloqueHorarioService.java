@@ -2,6 +2,8 @@ package com.ipor.horariostua.core.bloquehorario;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.AgrupacionService;
 import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.almuerzo.Almuerzo;
+import com.ipor.horariostua.core.bloquehorario.almuerzo.AlmuerzoService;
 import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Recibido_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Repetir_BH_DTO;
@@ -27,6 +29,8 @@ public class BloqueHorarioService {
     HorarioLaboralService horarioLaboralService;
     @Autowired
     SedeService sedeService;
+    @Autowired
+    AlmuerzoService almuerzoService;
 
 
     public BloqueHorario getPorId(Long id){
@@ -96,7 +100,19 @@ public class BloqueHorarioService {
         bloqueHorario.setSede(sedeService.getSedePorId(dto.getIdSede()));
         bloqueHorario.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
 
+        //ALMUERZO
+        if (dto.getHoraInicio() != null && dto.getHoraInicioAlmuerzo() != null){
+            Almuerzo almuerzo = new Almuerzo();
+            almuerzo.setHoraInicio(dto.getHoraInicioAlmuerzo());
+            almuerzo.setHoraFin(dto.getHoraFinAlmuerzo());
+            almuerzo = almuerzoService.save(almuerzo);
+
+            bloqueHorario.setAlmuerzo(almuerzo);
+        }
+
         bloqueHorarioRepository.save(bloqueHorario);
+
+
         return bloqueHorario;
     }
 
@@ -115,7 +131,20 @@ public class BloqueHorarioService {
         bloque.setHoraInicio(dto.getHoraInicio());
         bloque.setHoraFin(dto.getHoraFin());
         bloque.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
+
+        //almuerzo
+        Almuerzo almuerzo;
+        if (bloque.getAlmuerzo() == null){
+           almuerzo = new Almuerzo();
+        } else{
+            almuerzo = bloque.getAlmuerzo();
+        }
+        almuerzo.setHoraFin(dto.getHoraFinAlmuerzo());
+        almuerzo.setHoraInicio(dto.getHoraInicioAlmuerzo());
+        almuerzo = almuerzoService.save(almuerzo);
+        bloque.setAlmuerzo(almuerzo);
         bloqueHorarioRepository.save(bloque);
+
         return bloque;
     }
 
@@ -144,6 +173,15 @@ public class BloqueHorarioService {
                 repetido.setAgrupacion(bloqueRepetir.getAgrupacion());
                 repetido.setHorarioLaboral(bloqueRepetir.getHorarioLaboral());
                 repetido.setGrupoAnidado(grupoAnidado);
+                if (bloqueRepetir.getAlmuerzo() != null){
+                    if(bloqueRepetir.getAlmuerzo().getHoraInicio() != null && bloqueRepetir.getAlmuerzo().getHoraFin() != null){
+                        Almuerzo almuerzo = new Almuerzo();
+                        almuerzo.setHoraInicio(bloqueRepetir.getAlmuerzo().getHoraInicio());
+                        almuerzo.setHoraFin(bloqueRepetir.getAlmuerzo().getHoraFin());
+                        almuerzo = almuerzoService.save(almuerzo);
+                        repetido.setAlmuerzo(almuerzo);
+                    }
+                }
                 bloquesResultantes.add(bloqueHorarioRepository.save(repetido));
             }
         }
@@ -174,6 +212,8 @@ public class BloqueHorarioService {
         return listaFechasRepeticion;
     }
 
+
+    /*HORAS COLABORADOR*/
     public double  sumarHorasBloques(List<BloqueHorario> bloques) {
         double total = 0;
         for (BloqueHorario bloque : bloques) {
@@ -185,8 +225,25 @@ public class BloqueHorarioService {
         return total / 60;
     }
 
+    public double  sumarHorasAlmuerzo(List<BloqueHorario> bloques) {
+        double total = 0;
+        for (BloqueHorario bloque : bloques) {
+            if (bloque.getAlmuerzo() != null){
+                if (bloque.getAlmuerzo().getHoraInicio() != null && bloque.getAlmuerzo().getHoraFin() != null) {
+                    int minutos = (int) java.time.Duration.between(bloque.getAlmuerzo().getHoraInicio(), bloque.getAlmuerzo().getHoraFin()).toMinutes();
+                    total += minutos;
+                }
+            }
+        }
+        return total / 60;
+    }
+
     public List<BloqueHorario> bloquesDeColaboradorPorMes(Long colaboradorId, Long agrupacionId, LocalDate inicioMes, LocalDate finMes){
         return bloqueHorarioRepository.findByColaboradorIdAndAgrupacionIdAndFechaBetween(colaboradorId, agrupacionId, inicioMes, finMes);
     }
+
+
+    /*FILTRO A COLABORADOR*/
+
 
 }

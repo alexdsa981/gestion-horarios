@@ -46,6 +46,12 @@
                     <div th:if="${error == 'unknown'}" style="color: red;">
                         Ocurrió un error inesperado. Intenta de nuevo más tarde.
                     </div>
+                    <div th:if="${error == 'unknown-group'}" style="color: red;">
+                        No se te ha asignado a ningun grupo. Contacta con un Administrador.
+                    </div>
+                    <div th:if="${error == 'unknown-id'}" style="color: red;">
+                        No se pudo encontrar un colaborador enlazado a tu cuenta. Contacta con un Administrador.
+                    </div>
                     <div th:if="${error == 'unregistered'}" style="color: red;">
                         Usuario no registrado en el sistema.
                     </div>

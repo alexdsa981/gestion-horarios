@@ -69,3 +69,36 @@
 .month_default_event_inner{
     font-size:12px;
 }
+
+
+.badge-mes {
+  background: #e6f0fa !important;
+  color: #1976D2 !important;
+  font-weight: bold;
+  font-size: 1em;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+.badge-dia {
+  background: #e0f7fa !important;
+  color: #1565c0 !important;
+  font-size: .97em;
+  border-radius: 14px;
+  padding: 3px 10px;
+  margin-bottom: 3px;
+}
+.flex-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 1em;
+}
+#vacacionesColaboradorNombre {
+    color: #1976D2;
+    font-weight: 600;
+    font-size: 1.05em;
+    letter-spacing: 0.5px;
+}
+.vr {
+    border-left: 2px solid #e5e5e5;
+}

@@ -140,8 +140,10 @@ public class DataInitializer implements CommandLineRunner {
 
 
         if (rolUsuarioRepository.count() == 0) {
-            rolUsuarioRepository.save(new RolUsuario("General"));
+            rolUsuarioRepository.save(new RolUsuario("Gestor"));
             rolUsuarioRepository.save(new RolUsuario("Admin"));
+            rolUsuarioRepository.save(new RolUsuario("Colaborador"));
+
         }
 
 

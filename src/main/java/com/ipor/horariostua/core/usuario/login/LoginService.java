@@ -3,6 +3,12 @@ package com.ipor.horariostua.core.usuario.login;
 
 import com.ipor.horariostua.config.security.ConstantesSeguridad;
 import com.ipor.horariostua.config.security.JwtTokenProvider;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacion;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.colaboradores.DetalleColaboradorAgrupacionService;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuario;
+import com.ipor.horariostua.core.bloquehorario.agrupacion.usuarios.DetalleGruposUsuarioService;
+import com.ipor.horariostua.core.bloquehorario.colaborador.Colaborador;
+import com.ipor.horariostua.core.bloquehorario.colaborador.ColaboradorService;
 import com.ipor.horariostua.core.usuario.Usuario;
 import com.ipor.horariostua.core.usuario.UsuarioService;
 import com.ipor.horariostua.core.usuario.caracteristicas.rol.RolUsuarioRepository;
@@ -27,6 +33,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +42,12 @@ public class LoginService {
     SpringUserService springUserService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    ColaboradorService colaboradorService;
+    @Autowired
+    DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+    @Autowired
+    DetalleGruposUsuarioService detalleGruposUsuarioService;
     @Autowired
     RolUsuarioRepository rolUsuarioRepository;
     @Autowired
@@ -47,113 +60,104 @@ public class LoginService {
 
     public ResponseEntity<Void> logearUsuarioAlSistema(String username, String password, HttpServletResponse response) throws IOException {
         try {
-            username = username.toUpperCase();
-            System.out.println("Iniciando login para usuario: " + username);
-
-            // 1. Verificar si el usuario existe localmente
-            Optional<Usuario> optionalUsuario = usuarioService.getUsuarioPorUsername(username.toUpperCase());
-
-            if (optionalUsuario.isEmpty()) {
-                System.out.println("Usuario no encontrado localmente: " + username);
-                response.sendRedirect("/login?error=unregistered&username=" + URLEncoder.encode(username, StandardCharsets.UTF_8));
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-            Usuario usuarioLocal = optionalUsuario.get();
-            System.out.println("Usuario encontrado localmente: " + usuarioLocal.getUsername());
-
-            // 2. Verificar si está activo
-            if (!usuarioLocal.getIsActive()) {
-                System.out.println("Usuario inactivo: " + username);
-                response.sendRedirect("/login?error=inactive&username=" + URLEncoder.encode(username, StandardCharsets.UTF_8));
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-            boolean credencialesValidas;
-
-            if (usuarioLocal.getIsSpringUser()) {
-                // 3.1 Validar credenciales con Spring si es usuario de Spring
-                System.out.println("Validando credenciales contra sistema Spring externo...");
-                credencialesValidas = Boolean.TRUE.equals(springUserService.obtenerValidacionLoginSpring(username, password));
-
-                if (!credencialesValidas) {
-                    System.out.println("Credenciales inválidas para usuario Spring: " + username);
-                    response.sendRedirect("/login?error=badCredentials&username=" + URLEncoder.encode(username, StandardCharsets.UTF_8));
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            Boolean existeEnSpring = springUserService.obtenerValidacionLoginSpring(username, password);
+            Usuario usuarioLocal;
+            if (existeEnSpring == null) {
+                if (usuarioService.getUsuarioPorUsername(username).isPresent()) {
+                    usuarioLocal = usuarioService.getUsuarioPorUsername(username).get();
+                } else {
+                    username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+                    response.sendRedirect("/login?error=unknown&username=" + username);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
-
-                // 3.2 Actualizar datos locales con info de Spring
-                UsuarioSpringDTO usuarioSpringDTO = springUserService.obtenerUsuarioSpring(username);
-                usuarioLocal.setChangedPass(true);
-                usuarioLocal.setNombre(usuarioSpringDTO.getNombre().toUpperCase());
-                usuarioLocal.asignarYEncriptarPassword(password); // actualizar contraseña local
-                usuarioService.save(usuarioLocal);
-                System.out.println("Datos del usuario actualizados desde Spring");
-
             } else {
-                // 4. Validar solo localmente (intenta autenticar con la contraseña local)
-                try {
-                    Authentication authentication = authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(username, password)
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    credencialesValidas = true;
-                } catch (BadCredentialsException e) {
-                    System.out.println("Credenciales inválidas localmente para usuario no-Spring: " + username);
-                    response.sendRedirect("/login?error=badCredentials&username=" + URLEncoder.encode(username, StandardCharsets.UTF_8));
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+                Boolean existeLocalmente = usuarioService.existeUsuarioPorUsername(username);
+                UsuarioSpringDTO usuarioSpringDTO = springUserService.obtenerUsuarioSpring(username);
+
+                if (existeEnSpring && existeLocalmente) {
+                    usuarioLocal = usuarioService.getUsuarioPorUsername(username).get();
+                    usuarioLocal.setChangedPass(true);
+                    usuarioLocal.setIsSpringUser(Boolean.TRUE);
+                    usuarioLocal.setNombre(usuarioSpringDTO.getNombre().toUpperCase());
+                    usuarioLocal.asignarYEncriptarPassword(password);
+                    usuarioService.save(usuarioLocal);
+                } else if (existeEnSpring && !existeLocalmente) {
+                    if (springUserService.obtenerIDColaboradorConUsernameSpring(username) == null){
+                        //MENSAJE DE USUARIO NO SE PUDO ENLAZAR
+                        username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+                        response.sendRedirect("/login?error=unknownID");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
+                    }else{
+                        Colaborador colaboradorEncontrado = colaboradorService.getColaboradorPorId(springUserService.obtenerIDColaboradorConUsernameSpring(username));
+                        List<DetalleColaboradorAgrupacion> listaAgrupaciones = detalleColaboradorAgrupacionService.listarDetallePorIdColaborador(colaboradorEncontrado.getId());
+
+                        if (!listaAgrupaciones.isEmpty()){
+                            usuarioLocal = new Usuario();
+                            usuarioLocal.setIsActive(true);
+                            usuarioLocal.setRolUsuario(rolUsuarioRepository.findById(3l).get());
+                            usuarioLocal.setIsSpringUser(true);
+                            usuarioLocal.setChangedPass(true);
+                            usuarioLocal.setNombre(usuarioSpringDTO.getNombre().toUpperCase());
+                            usuarioLocal.setUsername(usuarioSpringDTO.getUsuario().toUpperCase());
+                            usuarioLocal.asignarYEncriptarPassword(password);
+                            usuarioLocal.setAgrupacionSeleccionada(listaAgrupaciones.get(0).getAgrupacion());
+                            usuarioLocal = usuarioService.save(usuarioLocal);
+                            for (DetalleColaboradorAgrupacion detalleCA : listaAgrupaciones){
+                                detalleGruposUsuarioService.agrupar(usuarioLocal, detalleCA.getAgrupacion().getId());
+                            }
+                        }else{
+                            //MENSAJE DE NO ASIGNADO A NINGUNA AGRUPACION
+                            username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+                            response.sendRedirect("/login?error=unknown-group");
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                        }
+                    }
+                } else {
+                    if (usuarioService.getUsuarioPorUsername(username).isPresent()) {
+                        usuarioLocal = usuarioService.getUsuarioPorUsername(username).get();
+                    } else {
+                        username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+                        response.sendRedirect("/login?error=badCredentials&username=" + username);
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                    }
                 }
             }
-
-            // 5. Autenticación local final (para ambos tipos de usuario, ya con datos validados)
-            System.out.println("Autenticando contra sistema local (post-validación)...");
+            if (!usuarioLocal.getIsActive()) {
+                username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+                response.sendRedirect("/login?error=inactive&username=" + username);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                    new UsernamePasswordAuthenticationToken(username, password));
 
-            // 6. Generar JWT
-            System.out.println("Generando JWT...");
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtTokenProvider.generarToken(authentication);
             Cookie jwtCookie = new Cookie("JWT", token);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN / 1000));
+            jwtCookie.setMaxAge((int) (ConstantesSeguridad.JWT_EXPIRATION_TOKEN) / 1000);
             jwtCookie.setPath("/");
             response.addCookie(jwtCookie);
 
-            // 7. Redirección final
             if (!usuarioLocal.getChangedPass()) {
-                System.out.println("Redirigiendo a /home");
-                response.sendRedirect("/home");
-            } else {
-                System.out.println("Redirigiendo a /home");
-                response.sendRedirect("/home");
+                response.sendRedirect("/home?changePassword");
+                return ResponseEntity.ok().build();
             }
-
-
-            String descripcion = String.format("El usuario %s inició sesión el %s.",
-                    usuarioLocal.getNombre(),
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'a las' HH:mm"))
-            );
-
-            logService.saveDeGlobal(usuarioLocal, AccionLogGlobal.INICIO_SESION, descripcion);
-
-
+            //LOGIN EXITOSO
+            response.sendRedirect("/home");
             return ResponseEntity.ok().build();
-
         } catch (BadCredentialsException e) {
-            System.out.println("Excepción: BadCredentialsException");
-            response.sendRedirect("/login?error=badCredentials&username=" + URLEncoder.encode(username, StandardCharsets.UTF_8));
+            //System.out.println(e.getMessage());
+            username = URLEncoder.encode(username, StandardCharsets.UTF_8);
+            response.sendRedirect("/login?error=badCredentials&username=" + username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
         } catch (Exception e) {
-            System.out.println("Excepción general:");
+            System.out.println("Error 2");
             e.printStackTrace();
-            response.sendRedirect("/login?error=unknown");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
 
 

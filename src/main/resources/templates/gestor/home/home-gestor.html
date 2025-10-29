@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{common/imports :: headImports(${ {'/css/vista-general.css', '/css/gestor-home.css'} })}"></head>
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+
+<main class="flex-fill" style="position:relative;">
+    <div class="mb-2">
+        <div class="sticky-controls d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <h3 id="tituloMes" class="fw-bold text-primary mb-0">
+                    <i class="bi bi-calendar-fill"></i>
+                    Horarios del Mes
+                </h3>
+                <div sec:authorize="hasAnyAuthority('Admin','Gestor')">
+                    <div class="form-check form-switch ms-3 d-flex align-items-center">
+                        <input class="form-check-input" type="checkbox" id="modoSwitch" checked
+                               style="width: 2.5em; height: 1.2em; cursor:pointer;">
+                        <label class="form-check-label fw-bold text-primary ms-2 d-flex align-items-center gap-1" for="modoSwitch" style="cursor:pointer;">
+                            <i class="bi bi-pencil-square"></i> Modo Edición
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="controls-right d-flex align-items-center gap-2">
+                <span class="fw-bold">Horas:</span>
+                <input type="number" id="horaInicio" class="form-control text-muted bg-light border-0 shadow-sm no-select"
+                       style="width:70px; user-select:none; pointer-events:auto;" min="4" max="20" value="0"
+                       onchange="actualizarRangoHorario()"
+                       onkeydown="return false;"
+                       onpaste="return false;" oncut="return false;" oncopy="return false;" onselectstart="return false;">
+                <span class="fw-bold">a</span>
+                <input type="number" id="horaFin" class="form-control text-muted bg-light border-0 shadow-sm no-select"
+                       style="width:70px; user-select:none; pointer-events:auto;" min="4" max="21" value="0"
+                       onchange="actualizarRangoHorario()"
+                       onkeydown="return false;"
+                       onpaste="return false;" oncut="return false;" oncopy="return false;" onselectstart="return false;">
+                <!-- Selectores de año y mes -->
+                <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
+                <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
+                <div th:replace="~{gestor/home/panels/selector-sedes :: selector-sedes}"></div>
+                <div th:replace="~{gestor/home/panels/selector-colaboradores :: selector-colaboradores}"></div>
+            </div>
+        </div>
+        <!-- Spinner de carga -->
+        <div id="loadingSpinner"
+             style="display:none; position:absolute; left:0; top:0; right:0; bottom:0; z-index:2; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div style="margin-top:10px;">Cargando horarios...</div>
+        </div>
+        <!-- Grid de horarios -->
+        <div class="mes-grid" id="mesGrid"></div>
+        <div id="bloqueoMesAnterior" class="overlay-bloqueo-sutil" style="display:none;">
+            <div class="mensaje-bloqueo-sutil">
+                <i class="bi bi-lock-fill"></i> Edición bloqueada para meses anteriores
+            </div>
+        </div>
+    </div>
+
+    <div style="position:fixed; bottom:30px; right:30px; z-index:10; display:flex; gap:16px;">
+        <button id="fab-horas-colaboradores" class="btn btn-warning rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-clock-history"></i>
+        </button>
+        <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
+            <i class="bi bi-calendar-plus"></i>
+        </button>
+    </div>
+
+
+    <div th:replace="~{gestor/home/panels/modal-empleado :: modalEmpleado}"></div>
+    <div th:replace="~{gestor/home/bloque-horario/modal-click :: right-panel-edit}"></div>
+    <div th:replace="~{gestor/home/bloque-horario/modal-repetir :: modal-repetir}"></div>
+    <div th:replace="~{gestor/home/bloque-horario/modal-add :: modal-add}"></div>
+    <div th:replace="~{gestor/home/horas-totales/horas-colaborador :: modal-horas-colaborador}"></div>
+
+
+
+</main>
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
+<script src="/js/modo.js"></script>
+<script src="/js/gestor/home/rangohorarios/rango-horarios.js"></script>
+<script src="/js/gestor/home/personalsedes/sede/datos.js"></script>
+<script src="/js/gestor/home/personalsedes/init.js"></script>
+<script src="/js/gestor/home/personalsedes/personal/datos.js"></script>
+<script src="/js/gestor/home/personalsedes/personal/spring.js"></script>
+<script src="/js/gestor/home/otros/bloqueo.js"></script>
+<script src="/js/gestor/home/otros/spinner.js"></script>
+<script src="/js/gestor/home/otros/litepicker-init.js"></script>
+<script src="/js/gestor/home/otros/calendario-utils.js"></script>
+<script src="/js/gestor/home/calendar/calendar-shared.js"></script>
+<script src="/js/gestor/home/calendar/mini-calendar.js"></script>
+<script src="/js/gestor/home/calendar/agregar-bloque-modal.js"></script>
+<script src="/js/gestor/home/calendar/edit-modal.js"></script>
+<script src="/js/gestor/home/calendar/edit-modal-submit.js"></script>
+<script src="/js/gestor/home/calendar/modal-repetir.js"></script>
+<script src="/js/gestor/home/horas-colaborador/horas-colaborador.js"></script>
+<script src="/js/gestor/home/vista-general.js"></script>
+
+
+</body>
+</html>

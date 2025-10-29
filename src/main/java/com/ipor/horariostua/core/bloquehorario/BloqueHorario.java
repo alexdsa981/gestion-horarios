@@ -1,6 +1,7 @@
 package com.ipor.horariostua.core.bloquehorario;
 
 import com.ipor.horariostua.core.bloquehorario.agrupacion.Agrupacion;
+import com.ipor.horariostua.core.bloquehorario.almuerzo.Almuerzo;
 import com.ipor.horariostua.core.bloquehorario.colaborador.Colaborador;
 import com.ipor.horariostua.core.bloquehorario.sede.Sede;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboral;
@@ -44,4 +45,7 @@ public class BloqueHorario {
     @JoinColumn(name = "id_agrupacion")
     private Agrupacion agrupacion;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_almuerzo", unique = true)
+    private Almuerzo almuerzo;
 }

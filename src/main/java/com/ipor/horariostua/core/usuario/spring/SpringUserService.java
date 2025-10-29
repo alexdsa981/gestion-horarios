@@ -3,6 +3,7 @@ package com.ipor.horariostua.core.usuario.spring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -51,6 +52,13 @@ public class SpringUserService {
             return Collections.emptyList();
         }
     }
-
+    public Long obtenerIDColaboradorConUsernameSpring(String nombreUsuario) {
+        String url = "http://localhost:9000/api/gh/colaborador/usuario/" + nombreUsuario;
+        try {
+            return restTemplate.getForObject(url, Long.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        }
+    }
 
 }

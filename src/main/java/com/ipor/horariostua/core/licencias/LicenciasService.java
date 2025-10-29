@@ -174,4 +174,8 @@ public class LicenciasService {
         licenciaFechaRepository.save(licenciaFecha);
     }
 
+    public List<Licencias> LicenciasColaboradorAgrupacion(Long colaboradorId, Long agrupacionId){
+        return licenciasRepository.findByColaboradorIdAndAgrupacionIdAndIsActiveTrue(colaboradorId, agrupacionId);
+    }
+
 }

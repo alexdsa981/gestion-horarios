@@ -10,4 +10,6 @@ public interface DetalleColaboradorAgrupacionRepository extends JpaRepository<De
     Optional<DetalleColaboradorAgrupacion> findByColaboradorIdAndAgrupacionId(Long idColaborador, Long idAgrupacion);
 
     List<DetalleColaboradorAgrupacion> findByAgrupacionIdAndIsActiveTrue(Long idAgrupacion);
+
+    List<DetalleColaboradorAgrupacion> findByColaboradorIdAndIsActiveTrue(Long idColaborador);
 }

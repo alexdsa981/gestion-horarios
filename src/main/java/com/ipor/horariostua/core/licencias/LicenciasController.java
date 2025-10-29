@@ -1,16 +1,13 @@
 package com.ipor.horariostua.core.licencias;
 
-import com.ipor.horariostua.core.licencias.dto.ActualizarFechaDTO;
-import com.ipor.horariostua.core.licencias.dto.CrearLicenciaDTO;
-import com.ipor.horariostua.core.licencias.dto.LicenciaTablaDTO;
-import com.ipor.horariostua.core.licencias.dto.FechaLicenciaVistaDTO;
+import com.ipor.horariostua.core.licencias.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -104,4 +101,35 @@ public class LicenciasController {
         return ResponseEntity.ok().build();
     }
 
+
+
+    @ResponseBody
+    @GetMapping("/colaborador/fechas-vacaciones")
+    public FechasLicenciaColaboradorDTO obtenerFechasVacacionesColaborador(
+            @RequestParam("colaboradorId") Long colaboradorId,
+            @RequestParam("agrupacionId") Long agrupacionId,
+            @RequestParam("anio") int anio
+    ) {
+        List<Licencias> licencias = licenciasService.LicenciasColaboradorAgrupacion(colaboradorId, agrupacionId);
+
+        List<FechaMotivoLicenciaDTO> fechas = new ArrayList<>();
+        String nombreColaborador = "";
+
+        for (Licencias licencia : licencias) {
+            nombreColaborador = licencia.getColaborador().getNombreCompleto();
+            String motivo = licencia.getTipoLicencia().getNombre(); // Aquí obtienes el motivo
+
+            for (LicenciaFecha licenciaFecha : licencia.getFechas()) {
+                LocalDate fecha = licenciaFecha.getFecha();
+                if (fecha.getYear() == anio) {
+                    fechas.add(new FechaMotivoLicenciaDTO(fecha, motivo));
+                }
+            }
+        }
+
+        // Opcional: ordenar por fecha
+        fechas.sort(Comparator.comparing(FechaMotivoLicenciaDTO::getFecha));
+
+        return new FechasLicenciaColaboradorDTO(colaboradorId, nombreColaborador, fechas);
+    }
 }

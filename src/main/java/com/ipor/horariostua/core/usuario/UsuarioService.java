@@ -117,5 +117,15 @@ public class UsuarioService {
         return usuarioRepository.findByUsername(username);
     }
 
+    public Boolean existeUsuarioPorUsername(String username) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
 
 }

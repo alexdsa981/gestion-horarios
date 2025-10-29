@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="selector-sedes">
+
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center gap-2" type="button" id="dropdownSedesBtn" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-building"></i>
+            <span>Sedes</span>
+        </button>
+        <div class="dropdown-menu p-2" aria-labelledby="dropdownSedesBtn" style="min-width:340px; max-height:370px; overflow-y:auto;">
+            <div class="table-responsive shadow rounded-3 overflow-hidden mb-0 bg-white">
+                <table class="table-sedes table-sm table-bordered table-hover align-middle mb-0">
+                    <thead class="table-primary text-center">
+                    <tr>
+                        <th>Sede</th>
+                        <th style="width:8em;">Estado</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaSedesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

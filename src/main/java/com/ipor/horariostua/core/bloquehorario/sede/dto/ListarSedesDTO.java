@@ -20,6 +20,10 @@ public class ListarSedesDTO {
             this.isActive = detalle.getIsActive();
         }
     }
+    public ListarSedesDTO(Sede sede){
+        this.id = sede.getId();
+        this.nombre = sede.getNombre();
+    }
 
     private Long id;
     private String nombre;

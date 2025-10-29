@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{common/imports :: headImports('/css/vista-licencias.css')}"></head>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+<main class="flex-fill" style="position:relative;">
+    <div class="mb-2">
+        <div class="sticky-controls d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <h3 id="tituloMes" class="fw-bold text-primary mb-0">
+                    <i class="bi bi-calendar-check"></i>
+                    Vacaciones y Licencias del Mes
+                </h3>
+
+                <div class="form-check form-switch ms-3 d-flex align-items-center"sec:authorize="hasAnyAuthority('Admin','Gestor')">
+                    <input class="form-check-input" type="checkbox" id="modoSwitchLicencia" style="width:2.5em; height:1.2em; cursor:pointer;">
+                    <label class="form-check-label fw-bold text-primary ms-2 d-flex align-items-center gap-1" for="modoSwitchLicencia" style="cursor:pointer;">
+                        <i class="bi bi-eye"></i> Modo Vista
+                    </label>
+                </div>
+            </div>
+            <div class="controls-right d-flex align-items-center gap-2">
+                <select id="selectorAno" class="form-select shadow-sm" style="width:150px"></select>
+                <select id="selectorMes" class="form-select shadow-sm" style="width:150px"></select>
+                <div th:replace="~{colaborador/licencias/panels/selector-colaboradores :: selector-colaboradores}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div id="dp"></div>
+    </div>
+
+    <div class="modal fade" id="modalVacacionesColaborador" tabindex="-1" aria-labelledby="modalVacacionesLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVacacionesLabel">Vacaciones de Colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-3 pb-2 border-bottom">
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="selectorAnioVacaciones" class="form-label mb-0 fw-bold">Año:</label>
+                            <select id="selectorAnioVacaciones" class="form-select form-select-sm" style="width:100px"></select>
+                        </div>
+                        <div class="vr mx-1" style="height:24px;"></div>
+                        <div>
+                            <span class="fw-bold text-secondary">Colaborador:</span>
+                            <span id="vacacionesColaboradorNombre" class="fw-semibold"></span>
+                        </div>
+                    </div>
+                    <div id="vacacionesColaboradorContenido"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+<script src="/imports/daypilot/daypilot-all.min.js"></script>
+<script src="/imports/flatpickr/flatpickr.js"></script>
+<script src="/imports/flatpickr/es.js"></script>
+<script src="/js/modo.js"></script>
+
+<script src="/js/colaborador/vista-licencias/init.js"></script>
+<script src="/js/colaborador/vista-licencias/datos.js"></script>
+<script src="/js/colaborador/vista-licencias/colaboradores/datos.js"></script>
+<script src="/js/colaborador/vista-licencias/colaboradores/licencias.js"></script>
+
+
+
+</body>
+</html>

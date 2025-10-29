@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{common/imports :: headImports(null)}"></header>
+<body class="bg-light d-flex flex-column min-vh-100">
+<header th:replace="~{common/header :: header}"></header>
+
+<main class="container py-4 flex-fill">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
+            <h3 class="fw-bold mb-0">
+                <i class="bi bi-gear text-primary"></i> Configuración
+            </h3>
+            <a href="/configuracion/usuarios" class="btn btn-outline-dark btn-sm">Usuarios</a>
+            <a href="/configuracion/agrupaciones" class="btn btn-outline-dark btn-sm boton-presionado">Agrupaciones</a>
+            <a href="/configuracion/sedes" class="btn btn-outline-dark btn-sm ">Sedes</a>
+            <a href="/configuracion/licencias" class="btn btn-outline-dark btn-sm">Licencias</a>
+
+        </div>
+        <div>
+            <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalAgregarArea">
+                <i class="bi bi-plus-square"></i> Agregar Área
+            </button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarAgrupacion">
+                <i class="bi bi-person-plus-fill"></i> Agregar Agrupación
+            </button>
+        </div>
+
+    </div>
+
+    <div class="accordion" id="departamentosAccordion"></div>
+</main>
+
+<!-- Modal: Agregar Agrupación -->
+<div class="modal fade" id="modalAgregarAgrupacion" tabindex="-1" aria-labelledby="modalAgregarAgrupacionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formAgregarAgrupacion" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarAgrupacionLabel">Agregar Agrupación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputNombreAgrupacion" class="form-label">Nombre de la agrupación</label>
+                    <input type="text" class="form-control" id="inputNombreAgrupacion" required>
+                </div>
+                <div class="mb-3">
+                    <label for="inputDepartamentoAgrupacion" class="form-label">Departamento</label>
+                    <select id="inputDepartamentoAgrupacion" class="form-select" required>
+                        <!-- Opciones por JS -->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Editar Agrupación -->
+<div class="modal fade" id="modalEditarAgrupacion" tabindex="-1" aria-labelledby="modalEditarAgrupacionLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formEditarAgrupacion" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarAgrupacionLabel">Editar Agrupación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputEditarNombreAgrupacion" class="form-label">Nombre de la agrupación</label>
+                    <input type="text" class="form-control" id="inputEditarNombreAgrupacion" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Modal: Agregar Área -->
+<div class="modal fade" id="modalAgregarArea" tabindex="-1" aria-labelledby="modalAgregarAreaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formAgregarArea" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarAreaLabel">Agregar Área</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputNombreArea" class="form-label">Nombre del área</label>
+                    <input type="text" class="form-control" id="inputNombreArea" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Editar Área -->
+<div class="modal fade" id="modalEditarArea" tabindex="-1" aria-labelledby="modalEditarAreaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formEditarArea" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarAreaLabel">Editar Área</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="inputEditarNombreArea" class="form-label">Nombre del área</label>
+                    <input type="text" class="form-control" id="inputEditarNombreArea" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div th:insert="~{common/footer :: footer}"></div>
+<th:block th:replace="~{common/imports :: bodyImports}"/>
+<script src="/js/gestor/configuracion/agrupaciones/datos.js"></script>
+<script src="/js/gestor/configuracion/agrupaciones/accordion.js"></script>
+<script src="/js/gestor/configuracion/agrupaciones/main.js"></script>
+
+</body>
+</html>
