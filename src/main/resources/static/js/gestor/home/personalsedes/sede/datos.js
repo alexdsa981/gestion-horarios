@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function inicializarCalendario() {
     generarOpcionesAno();
     generarOpcionesMes();
-    chequearBloqueoMes();
+
 
     const selectorAno = document.getElementById("selectorAno");
     const selectorMes = document.getElementById("selectorMes");

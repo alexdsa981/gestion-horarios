@@ -217,6 +217,9 @@ function estadoEvento(e) {
         backColor: e.data.backColor,
         idColaborador: e.data.idColaborador,
         grupoAnidado: e.data.grupoAnidado,
+        horaInicioAlmuerzo: e.data.horaInicioAlmuerzo || null,
+        horaFinAlmuerzo: e.data.horaFinAlmuerzo || null,
+        turnoNoche: e.data.turnoNoche || false,
     };
 }
 
@@ -228,6 +231,9 @@ function actualizarEventoEnCalendario(e, data, calendar) {
     e.data.backColor = data.color;
     e.data.idColaborador = data.idColaborador;
     e.data.grupoAnidado = data.grupoAnidado;
+    e.data.horaInicioAlmuerzo = data.horaInicioAlmuerzo || null;
+    e.data.horaFinAlmuerzo = data.horaFinAlmuerzo || null;
+    e.data.turnoNoche = data.isTurnoNoche || false;
     calendar.events.update(e);
 }
 
@@ -241,5 +247,8 @@ function revertirEventoEnCalendario(e, lastState, calendar) {
         backColor: lastState.backColor,
         idColaborador: lastState.idColaborador,
         grupoAnidado: lastState.grupoAnidado,
+        horaInicioAlmuerzo: lastState.horaInicioAlmuerzo || null,
+        horaFinAlmuerzo: lastState.horaFinAlmuerzo || null,
+        turnoNoche: lastState.turnoNoche || false,
     });
 }

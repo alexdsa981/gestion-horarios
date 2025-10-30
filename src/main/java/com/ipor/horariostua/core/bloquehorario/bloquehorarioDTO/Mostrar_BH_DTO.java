@@ -38,6 +38,8 @@ public class Mostrar_BH_DTO {
     private String horaInicioAlmuerzo;
     private String horaFinAlmuerzo;
 
+    private Boolean isTurnoNoche;
+
     private static final DateTimeFormatter HORA_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public Mostrar_BH_DTO(BloqueHorario entity, DetalleColaboradorAgrupacion detalle) {
@@ -73,6 +75,11 @@ public class Mostrar_BH_DTO {
         Agrupacion agrupacion = entity.getAgrupacion();
         if (agrupacion != null) {
             this.idAgrupacion = agrupacion.getId();
+        }
+        if (entity.getIsTurnoNoche() == null){
+            this.isTurnoNoche = false;
+        }else{
+            this.isTurnoNoche = entity.getIsTurnoNoche();
         }
     }
 

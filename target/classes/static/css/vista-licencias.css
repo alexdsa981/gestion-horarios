@@ -102,3 +102,33 @@
 .vr {
     border-left: 2px solid #e5e5e5;
 }
+
+
+
+.overlay-bloqueo-sutil {
+    position: absolute;
+    top: 60px; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.08);
+    z-index: 10;
+    pointer-events: all;
+}
+
+.mensaje-bloqueo-sutil {
+    position: sticky;
+    top: 60px;
+    right: 24px;
+    background: #1976d2ee;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 16px;
+    font-size: 1em;
+    box-shadow: 0 2px 8px #0002;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    opacity: 0.96;
+    float: right;
+    margin-left: auto;
+    width: fit-content;
+}

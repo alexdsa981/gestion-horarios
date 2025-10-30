@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="modal-turno-noche">
+
+    <!-- Modal Turno Noche Bootstrap -->
+    <div class="modal fade" id="modal-turno-noche" tabindex="-1" aria-labelledby="modalTurnoNocheLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="form-turno-noche" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTurnoNocheLabel">Asignar Turno Noche</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="tn-colaborador" class="form-label">Colaborador</label>
+                        <select id="tn-colaborador" class="form-select">
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tn-dia" class="form-label">Día</label>
+                        <input type="text" id="tn-dia" class="form-control" lang="es" autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tn-sede" class="form-label">Sede</label>
+                        <select id="tn-sede" class="form-select">
+                            <option th:each="sede : ${listaSedesActivasPorAgrupacion}" th:value="${sede.id}"
+                                    th:text="${sede.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-dark">Asignar TN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
+
+</body>
+</html>

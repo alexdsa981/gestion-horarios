@@ -37,7 +37,8 @@ async function recargarEventosMiniCalendario(fechaISO, columnas) {
                 idColaborador: b.idColaborador,
                 grupoAnidado: b.grupoAnidado,
                 horaInicioAlmuerzo: b.horaInicioAlmuerzo ? b.horaInicioAlmuerzo : null,
-                horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null
+                horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null,
+                turnoNoche: b.isTurnoNoche,
             }));
             const calId = "mini-calendar-" + fechaISO;
             inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventos);

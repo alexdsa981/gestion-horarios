@@ -36,12 +36,11 @@ function getColaboradorIdByText(text) {
     return "";
 }
 
+
 // --- Mostrar panel de edición y rellenar selects/campos ---
 function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = null }) {
-    // Referencias a selects
-    const start = new DayPilot.Date(evento.start);
-    const fechaStr = start.toString("yyyy-MM-dd");
-    document.getElementById("edit-fecha").value = fechaStr;
+    // Referencias a selects y campos
+    const fechaInput = document.getElementById("edit-fecha");
     const horaInicioHora = document.getElementById("edit-horaInicioHora");
     const horaInicioMin = document.getElementById("edit-horaInicioMinuto");
     const horaFinHora = document.getElementById("edit-horaFinHora");
@@ -55,34 +54,56 @@ function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = 
     const almuerzoInicio = document.getElementById("edit-almuerzo-inicio");
     const almuerzoFin = document.getElementById("edit-almuerzo-fin");
 
+    // Agrupadores para mostrar/ocultar según turnoNoche
+    const camposHorario = document.getElementById("campos-horario");
+    const camposAlmuerzo = document.getElementById("campos-almuerzo");
+
     if (modo === "editar" && evento) {
         // Rellenar datos del evento
         const start = new DayPilot.Date(evento.start);
         const end = new DayPilot.Date(evento.end);
-        const [startHour, startMinute] = start.toString("HH:mm").split(":");
-        const [endHour, endMinute] = end.toString("HH:mm").split(":");
+        const fechaStr = start.toString("yyyy-MM-dd");
+        fechaInput.value = fechaStr;
+
+        // Lógica de mostrar/ocultar campos para turno noche
+        if (evento.turnoNoche) {
+            if (camposHorario) camposHorario.style.display = 'none';
+            if (camposAlmuerzo) camposAlmuerzo.style.display = 'none';
+        } else {
+            if (camposHorario) camposHorario.style.display = '';
+            if (camposAlmuerzo) camposAlmuerzo.style.display = '';
+        }
+
+        if (!evento.turnoNoche) {
+            const [startHour, startMinute] = start.toString("HH:mm").split(":");
+            const [endHour, endMinute] = end.toString("HH:mm").split(":");
+            horaInicioHora.value = startHour;
+            horaInicioMin.value = startMinute;
+            horaFinHora.value = endHour;
+            horaFinMin.value = endMinute;
+        }
+
         document.getElementById("edit-colaborador").value = evento.idColaborador || getColaboradorIdByText(evento.text);
         document.getElementById("edit-sede").value = evento.resource || evento.idSede;
-        horaInicioHora.value = startHour;
-        horaInicioMin.value = startMinute;
-        horaFinHora.value = endHour;
-        horaFinMin.value = endMinute;
         document.getElementById("edit-form").dataset.eventId = evento.id;
 
-        // --- ALMUERZO ---
-        if (evento.horaInicioAlmuerzo && evento.horaFinAlmuerzo) {
-            almuerzoSwitch.checked = true;
-            almuerzoDiv.style.display = '';
-            almuerzoInicio.value = evento.horaInicioAlmuerzo;
-            almuerzoFin.value = evento.horaFinAlmuerzo;
-        } else {
-            almuerzoSwitch.checked = false;
-            almuerzoDiv.style.display = 'none';
-            almuerzoInicio.value = "";
-            almuerzoFin.value = "";
+        // ALMUERZO solo si no es turno noche
+        if (!evento.turnoNoche) {
+            if (evento.horaInicioAlmuerzo && evento.horaFinAlmuerzo) {
+                almuerzoSwitch.checked = true;
+                almuerzoDiv.style.display = '';
+                almuerzoInicio.value = evento.horaInicioAlmuerzo;
+                almuerzoFin.value = evento.horaFinAlmuerzo;
+            } else {
+                almuerzoSwitch.checked = false;
+                almuerzoDiv.style.display = 'none';
+                almuerzoInicio.value = "";
+                almuerzoFin.value = "";
+            }
         }
     } else {
-        // Limpiar para agregar
+        // Para agregar nuevo: limpiar campos
+        fechaInput.value = fechaISO || "";
         document.getElementById("edit-colaborador").value = "";
         document.getElementById("edit-sede").value = "";
         horaInicioHora.value = "07";
@@ -90,12 +111,13 @@ function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = 
         horaFinHora.value = "08";
         horaFinMin.value = "00";
         delete document.getElementById("edit-form").dataset.eventId;
-
-        // --- ALMUERZO ---
         almuerzoSwitch.checked = false;
         almuerzoDiv.style.display = 'none';
         almuerzoInicio.value = "";
         almuerzoFin.value = "";
+        // Por defecto, muestra ambos bloques
+        if (camposHorario) camposHorario.style.display = '';
+        if (camposAlmuerzo) camposAlmuerzo.style.display = '';
     }
 
     // Mostrar panel y llevarlo al frente
@@ -105,13 +127,18 @@ function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = 
     setTimeout(() => { panel.focus(); }, 200);
 }
 
+// Mostrar/ocultar campos de almuerzo según el switch
+document.addEventListener('DOMContentLoaded', function() {
+    const almuerzoSwitch = document.getElementById("edit-tiene-almuerzo");
+    if (almuerzoSwitch) {
+        almuerzoSwitch.addEventListener('change', function() {
+            const almuerzoDiv = document.getElementById("edit-almuerzo-horas");
+            almuerzoDiv.style.display = almuerzoSwitch.checked ? '' : 'none';
+        });
+    }
+});
 
-
-
-
-
-
-
+// Inputs de almuerzo: showPicker en click o enter/space
 ["edit-almuerzo-inicio", "edit-almuerzo-fin"].forEach(id => {
     const input = document.getElementById(id);
     if (!input) return;
@@ -126,8 +153,8 @@ function mostrarModalEdicionBloque({ modo = "editar", evento = null, fechaISO = 
 });
 
 function cerrarModalEdicionBloque() {
-        document.getElementById("right-panel").style.display = "none";
-    if (lastCalendarUsedDiv) {
+    document.getElementById("right-panel").style.display = "none";
+    if (typeof lastCalendarUsedDiv !== "undefined" && lastCalendarUsedDiv) {
         lastCalendarUsedDiv.classList.remove("calendar-activo");
         lastCalendarUsedDiv = null;
     }
@@ -161,7 +188,6 @@ function cerrarModalEdicionBloque() {
 
     document.addEventListener('mousemove', function(e) {
         if (!isDown) return;
-        // Limita a dentro de la ventana (opcional)
         let x = e.clientX - offset.x;
         let y = e.clientY - offset.y;
         x = Math.max(0, Math.min(x, window.innerWidth - panel.offsetWidth));

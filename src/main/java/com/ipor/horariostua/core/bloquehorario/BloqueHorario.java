@@ -48,4 +48,5 @@ public class BloqueHorario {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_almuerzo", unique = true)
     private Almuerzo almuerzo;
-}
+
+    private Boolean isTurnoNoche = false;}

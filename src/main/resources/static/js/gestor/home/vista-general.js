@@ -56,7 +56,8 @@ async function renderizarMesGrid(desde, hasta, ano, mesIdx) {
                     idColaborador: b.idColaborador,
                     grupoAnidado: b.grupoAnidado,
                     horaInicioAlmuerzo: b.horaInicioAlmuerzo ? b.horaInicioAlmuerzo : null,
-                    horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null
+                    horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null,
+                    turnoNoche: b.isTurnoNoche,
                 }));
             inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia);
         });
@@ -119,6 +120,7 @@ function inicializarCalendario() {
     fetchRangoHorario(agrupacionGlobalId);
     generarOpcionesAno();
     generarOpcionesMes();
+    chequearBloqueoMes();
 
     const selectorAno = document.getElementById("selectorAno");
     const selectorMes = document.getElementById("selectorMes");
@@ -163,7 +165,9 @@ window.refrescarMiniCalendario = async function(fechaISO) {
         idColaborador: b.idColaborador,
         grupoAnidado: b.grupoAnidado,
         horaInicioAlmuerzo: b.horaInicioAlmuerzo ? b.horaInicioAlmuerzo : null,
-        horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null
+        horaFinAlmuerzo: b.horaFinAlmuerzo ? b.horaFinAlmuerzo : null,
+        turnoNoche: b.isTurnoNoche,
+
     }));
     inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia);
 

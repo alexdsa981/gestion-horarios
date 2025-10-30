@@ -3,7 +3,7 @@
 <head th:replace="~{common/imports :: headImports(${ {'/css/vista-general.css', '/css/gestor-home.css'} })}"></head>
 <body class="bg-light d-flex flex-column min-vh-100">
 <header th:replace="~{common/header :: header}"></header>
-
+<input type="hidden" id="rolUsuario" th:value="${rolUsuario}" />
 <main class="flex-fill" style="position:relative;">
     <div class="mb-2">
         <div class="sticky-controls d-flex align-items-center justify-content-between">
@@ -64,6 +64,10 @@
                 style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
             <i class="bi bi-clock-history"></i>
         </button>
+        <button id="fab-turno-noche" class="btn rounded-circle shadow-lg"
+                style="width:60px; height:60px; display:none; align-items:center; justify-content:center; font-size:2rem; background:#8e24aa; color:white;">
+            <i class="bi bi-moon-stars"></i>
+        </button>
         <button id="fab-agregar-bloque" class="btn btn-primary rounded-circle shadow-lg"
                 style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; font-size:2rem;">
             <i class="bi bi-calendar-plus"></i>
@@ -75,6 +79,7 @@
     <div th:replace="~{gestor/home/bloque-horario/modal-click :: right-panel-edit}"></div>
     <div th:replace="~{gestor/home/bloque-horario/modal-repetir :: modal-repetir}"></div>
     <div th:replace="~{gestor/home/bloque-horario/modal-add :: modal-add}"></div>
+    <div th:replace="~{gestor/home/bloque-horario/modal-turno-noche :: modal-turno-noche}"></div>
     <div th:replace="~{gestor/home/horas-totales/horas-colaborador :: modal-horas-colaborador}"></div>
 
 
@@ -87,6 +92,7 @@
 <script src="/imports/flatpickr/es.js"></script>
 <script src="/js/modo.js"></script>
 <script src="/js/gestor/home/rangohorarios/rango-horarios.js"></script>
+<script src="/js/gestor/home/turno-noche/turno-noche.js"></script>
 <script src="/js/gestor/home/personalsedes/sede/datos.js"></script>
 <script src="/js/gestor/home/personalsedes/init.js"></script>
 <script src="/js/gestor/home/personalsedes/personal/datos.js"></script>

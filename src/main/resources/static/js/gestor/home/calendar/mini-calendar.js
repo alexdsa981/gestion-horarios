@@ -25,79 +25,99 @@ function inicializarMiniCalendarioEditable(calId, fechaISO, columnas, eventosDia
         eventHeight: 11,
 
 
-        onBeforeEventRender: function (args) {
-            args.data.toolTip = args.data.text;
-            args.data.fontColor = "#222";
-            args.data.fontSize = "10px";
-            args.data.borderColor = "#222";
+onBeforeEventRender: function (args) {
+    // Si es Turno Noche
+    if (args.data.turnoNoche) {
+        args.data.moveDisabled = true;
+        args.data.resizeDisabled = true;
+        args.data.backColor = "#18171c";
+        args.data.fontColor = "#fff";
+        args.data.borderColor = "#222";
 
-            const startDate = new DayPilot.Date(args.data.start);
-            const endDate = new DayPilot.Date(args.data.end);
-            const start = startDate.toString("HH:mm");
-            const end = endDate.toString("HH:mm");
+        let nombre = args.data.text;
+        if (!nombre.startsWith("[TN]")) {
+            nombre = "[TN] " + nombre;
+        }
+        args.data.html = `
+            <div style="display:flex; align-items:center; height:100%; justify-content:center;">
+                <span style="font-weight:bold; color:#fff; width:100%; text-align:center; font-size:7px;">${nombre}</span>
+            </div>
+        `;
+        args.data.toolTip = nombre;
+        return; // No renderices nada más
+    }
 
-            // Calcular duración en horas
-            const durationMs = endDate.getTime() - startDate.getTime();
-            const durationHrs = durationMs / (1000 * 60 * 60);
+    // --- BLOQUES NORMALES (tu código actual) ---
+    args.data.toolTip = args.data.text;
+    args.data.fontColor = "#222";
+    args.data.fontSize = "10px";
+    args.data.borderColor = "#222";
 
-            let html = "";
+    const startDate = new DayPilot.Date(args.data.start);
+    const endDate = new DayPilot.Date(args.data.end);
+    const start = startDate.toString("HH:mm");
+    const end = endDate.toString("HH:mm");
 
-            if (durationHrs < 5) {
-                // dura menos de 5h
-                html = `
-                  <div style="display:flex; flex-direction:column; height:100%; justify-content:center;">
-                    <div>
-                      <div style="font-size:9px; color:#666;">
-                        <b>[${start} - ${end}]</b>
-                      </div>
-                      <div style="font-size:11px; font-weight:bold; color:#222; margin-top:2px;">
-                        ${args.data.text}
-                      </div>
-                      ${
-                        (args.data.horaInicioAlmuerzo && args.data.horaInicioAlmuerzo !== "null" &&
-                         args.data.horaFinAlmuerzo && args.data.horaFinAlmuerzo !== "null") ?
-                        `<div style="font-size:8px; font-weight:500; color:#222; line-height:1.1; background:rgba(255,255,255,0.4);">
-                            <div>🍽️:</div>
-                            <div>${args.data.horaInicioAlmuerzo}</div>
-                            <div>${args.data.horaFinAlmuerzo}</div>
-                         </div>`
-                        : ""
-                      }
-                    </div>
-                  </div>
-                `;
-            } else {
-                html = `
-                  <div style="display:flex; flex-direction:column; height:100%; justify-content:space-between;">
-                    <div>
-                      <div style="font-size:9px; color:#666;">
-                        <b>[${start}]</b>
-                      </div>
-                      <div style="font-size:11px; font-weight:bold; color:#222; margin-top:2px;">
-                        ${args.data.text}
-                      </div>
-                      ${
-                        (args.data.horaInicioAlmuerzo && args.data.horaInicioAlmuerzo !== "null" &&
-                         args.data.horaFinAlmuerzo && args.data.horaFinAlmuerzo !== "null") ?
-                        `<div style="font-size:8px; font-weight:500; color:#222; line-height:1.1; background:rgba(255,255,255,0.4);">
-                            <div>🍽️:</div>
-                            <div>${args.data.horaInicioAlmuerzo}</div>
-                            <div>${args.data.horaFinAlmuerzo}</div>
-                         </div>`
-                        : ""
-                      }
-                    </div>
-                    <div style="font-size:9px; color:#666; margin-top:auto;">
-                      <b>[${end}]</b>
-                    </div>
-                  </div>
-                `;
-            }
+    // Calcular duración en horas
+    const durationMs = endDate.getTime() - startDate.getTime();
+    const durationHrs = durationMs / (1000 * 60 * 60);
 
-            args.data.html = html;
-        },
+    let html = "";
 
+    if (durationHrs < 5) {
+        // dura menos de 5h
+        html = `
+          <div style="display:flex; flex-direction:column; height:100%; justify-content:center;">
+            <div>
+              <div style="font-size:9px; color:#666;">
+                <b>[${start} - ${end}]</b>
+              </div>
+              <div style="font-size:11px; font-weight:bold; color:#222; margin-top:2px;">
+                ${args.data.text}
+              </div>
+              ${
+                (args.data.horaInicioAlmuerzo && args.data.horaInicioAlmuerzo !== "null" &&
+                 args.data.horaFinAlmuerzo && args.data.horaFinAlmuerzo !== "null") ?
+                `<div style="font-size:8px; font-weight:500; color:#222; line-height:1.1; background:rgba(255,255,255,0.4);">
+                    <div>🍽️:</div>
+                    <div>${args.data.horaInicioAlmuerzo}</div>
+                    <div>${args.data.horaFinAlmuerzo}</div>
+                 </div>`
+                : ""
+              }
+            </div>
+          </div>
+        `;
+    } else {
+        html = `
+          <div style="display:flex; flex-direction:column; height:100%; justify-content:space-between;">
+            <div>
+              <div style="font-size:9px; color:#666;">
+                <b>[${start}]</b>
+              </div>
+              <div style="font-size:11px; font-weight:bold; color:#222; margin-top:2px;">
+                ${args.data.text}
+              </div>
+              ${
+                (args.data.horaInicioAlmuerzo && args.data.horaInicioAlmuerzo !== "null" &&
+                 args.data.horaFinAlmuerzo && args.data.horaFinAlmuerzo !== "null") ?
+                `<div style="font-size:8px; font-weight:500; color:#222; line-height:1.1; background:rgba(255,255,255,0.4);">
+                    <div>🍽️:</div>
+                    <div>${args.data.horaInicioAlmuerzo}</div>
+                    <div>${args.data.horaFinAlmuerzo}</div>
+                 </div>`
+                : ""
+              }
+            </div>
+            <div style="font-size:9px; color:#666; margin-top:auto;">
+              <b>[${end}]</b>
+            </div>
+          </div>
+        `;
+    }
 
+    args.data.html = html;
+},
 
         onBeforeCellRender: function (args) {
             marcarHorasLaborales(args, this.businessBeginsHour, this.businessEndsHour);

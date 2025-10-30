@@ -55,6 +55,7 @@ public class GlobalAdviceController {
             model.addAttribute("listaDepartamentosUsuario", listaDepartamentosUsuario);
             model.addAttribute("agrupacionSeleccionadaId", usuario.getAgrupacionSeleccionada().getId());
             model.addAttribute("departamentoSeleccionadoId", usuario.getAgrupacionSeleccionada().getDepartamento().getId());
+            model.addAttribute("rolUsuario", usuario.getRolUsuario().getId());
 
 
         }

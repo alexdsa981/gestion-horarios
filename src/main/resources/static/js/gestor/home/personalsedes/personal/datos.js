@@ -169,6 +169,9 @@ async function cargarColaboradoresSelector() {
     }
     cargarSelectColaboradoresActivos("edit-colaborador");
     cargarSelectColaboradoresActivos("modal-colaborador-select");
+        cargarSelectColaboradoresActivos("edit-tn-colaborador");
+    cargarSelectColaboradoresActivos("tn-colaborador");
+
 }
 
 // Cargar lista cuando abres el dropdown

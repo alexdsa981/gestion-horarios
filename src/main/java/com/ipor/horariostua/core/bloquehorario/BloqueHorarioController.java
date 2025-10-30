@@ -100,6 +100,19 @@ public class BloqueHorarioController {
         }
     }
 
+    @PostMapping("/agregar/turno-noche")
+    public ResponseEntity<?> registraBloqueHorarioTN(@RequestBody Recibido_BH_DTO dto) {
+        try {
+            BloqueHorario guardado = bloqueHorarioService.agregarTN(dto);
+            DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
+            Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
+        } catch (IllegalArgumentException ex) {
+            // Devuelve el mensaje de error y un 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("error", ex.getMessage()));
+        }
+    }
+
     @PostMapping("/repetir")
     public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
         BloqueHorario bloqueRepetir = bloqueHorarioService.getPorId(dto.getId());
@@ -127,7 +140,7 @@ public class BloqueHorarioController {
 
     @PutMapping("/editar/{id}")
     public ResponseEntity<?> editarBloqueHorario(@RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
-        System.out.println("LLAMADA A EDITAR BLOQUE con id=" + id + ", dto=" + dto); // log para depuración
+        System.out.println("LLAMADA A EDITAR BLOQUE con id=" + id + ", dto=" + dto);
         try {
             BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(

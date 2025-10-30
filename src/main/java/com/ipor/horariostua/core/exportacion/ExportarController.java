@@ -43,7 +43,9 @@ public class ExportarController {
 
             List<Export_BH_DTO> listaExport = new ArrayList<>();
             for (BloqueHorario bloqueHorario : listaBloques) {
-                listaExport.add(new Export_BH_DTO(bloqueHorario));
+                if (bloqueHorario.getIsTurnoNoche() == null || !bloqueHorario.getIsTurnoNoche()){
+                    listaExport.add(new Export_BH_DTO(bloqueHorario));
+                }
             }
 
             byte[] excelBytes = exportarService.generarExcel(listaExport, ano, mes, nombreSede);

@@ -113,14 +113,10 @@ public class ExportarService {
         headerRow.setHeightInPoints(24);
         int col = 0;
 
-        // IPRESS
-        headerRow.createCell(col).setCellValue("IPRESS");
-        headerRow.getCell(col).setCellStyle(styleHeaderIpress);
-        sheet.addMergedRegion(new CellRangeAddress(0, 1, col, col + 1));
-        col += 2;
+
 
         // Colaborador
-        headerRow.createCell(col).setCellValue("Colaborador");
+        headerRow.createCell(col).setCellValue("Datos Horario");
         headerRow.getCell(col).setCellStyle(styleHeaderIpress);
         sheet.addMergedRegion(new CellRangeAddress(0, 1, col, col + 3));
         col+=4;
@@ -162,14 +158,7 @@ public class ExportarService {
 
         col = 0;
         Cell cell = subHeaderRow.createCell(col++);
-        cell.setCellValue("Código Único");
-        cell.setCellStyle(styleSubHeaderGeneral);
 
-        cell = subHeaderRow.createCell(col++);
-        cell.setCellValue("Nombre");
-        cell.setCellStyle(styleSubHeaderGeneral);
-
-        cell = subHeaderRow.createCell(col++);
         cell.setCellValue("Nombre Colaborador");
         cell.setCellStyle(styleSubHeaderGeneral);
 
@@ -210,14 +199,6 @@ public class ExportarService {
             Export_BH_DTO dto = horariosPorDia.values().stream().findFirst().orElse(null);
 
             int colIdx = 0;
-
-            // Código Único
-            row.createCell(colIdx).setCellValue("00008389");
-            row.getCell(colIdx++).setCellStyle(styleCell);
-
-            // Nombre IPRESS
-            row.createCell(colIdx).setCellValue("IPOR: INSTITUTO PERUANO DE ONCOLOGIA & RADIOTERAPIA");
-            row.getCell(colIdx++).setCellStyle(styleCell);
 
             // Nombre Colaborador
             row.createCell(colIdx).setCellValue(dto != null ? dto.getNombreColaborador() : "");

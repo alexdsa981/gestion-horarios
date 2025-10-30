@@ -23,7 +23,8 @@
                 <label for="edit-fecha" class="form-label">Fecha</label>
                 <input type="text" id="edit-fecha" class="form-control">
             </div>
-            <div class="mb-2 row">
+            <!-- Agrupa los campos de horario para ocultar en turno noche -->
+            <div id="campos-horario" class="mb-2 row">
                 <div class="col-12 mb-2">
                     <label class="form-label">Hora inicio (editar)</label>
                     <div class="d-flex">
@@ -39,26 +40,25 @@
                     </div>
                 </div>
             </div>
-
-            <!-- horario de almuerzo -->
-            <div class="mb-2">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="edit-tiene-almuerzo">
-                    <label class="form-check-label" for="edit-tiene-almuerzo">Agregar horario de almuerzo</label>
+            <!-- Agrupa los campos de almuerzo para ocultar en turno noche -->
+            <div id="campos-almuerzo">
+                <div class="mb-2">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="edit-tiene-almuerzo">
+                        <label class="form-check-label" for="edit-tiene-almuerzo">Agregar horario de almuerzo</label>
+                    </div>
+                </div>
+                <div class="mb-2 row" id="edit-almuerzo-horas" style="display: none;">
+                    <div class="col-6">
+                        <label class="form-label">Inicio almuerzo</label>
+                        <input type="time" class="form-control" id="edit-almuerzo-inicio">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Fin almuerzo</label>
+                        <input type="time" class="form-control" id="edit-almuerzo-fin">
+                    </div>
                 </div>
             </div>
-            <div class="mb-2 row" id="edit-almuerzo-horas" style="display: none;">
-                <div class="col-6">
-                    <label class="form-label">Inicio almuerzo</label>
-                    <input type="time" class="form-control" id="edit-almuerzo-inicio">
-                </div>
-                <div class="col-6">
-                    <label class="form-label">Fin almuerzo</label>
-                    <input type="time" class="form-control" id="edit-almuerzo-fin">
-                </div>
-            </div>
-            <!-- ------------------- -->
-
             <div class="mb-3">
                 <label for="edit-sede" class="form-label">Sede</label>
                 <select id="edit-sede" class="form-select">

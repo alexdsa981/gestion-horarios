@@ -84,5 +84,6 @@ dp.init();
 document.addEventListener('DOMContentLoaded', function() {
 generarOpcionesAno();
 generarOpcionesMes();
+chequearBloqueoMesLicencias();
 cargarEventosVacaciones();
 });

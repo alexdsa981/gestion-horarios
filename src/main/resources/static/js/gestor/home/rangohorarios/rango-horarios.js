@@ -7,10 +7,10 @@ async function fetchRangoHorario(idAgrupacion) {
             const data = await response.json();
             businessBeginsHour = data.rangoInicio;
             businessEndsHour = data.rangoFin;
-
             // Asigna el valor real a los inputs
             document.getElementById('horaInicio').value = data.rangoInicio;
             document.getElementById('horaFin').value = data.rangoFin;
+            validarTurnoNoche();
         } else {
             console.warn("No se encontró rango horario para la agrupación", idAgrupacion);
         }
@@ -32,7 +32,9 @@ async function actualizarRangoHorario() {
         // Actualiza variables globales
         businessBeginsHour = data.rangoInicio;
         businessEndsHour = data.rangoFin;
+        validarTurnoNoche();
         renderizarCalendarioActual();
+
     } else {
         alert("No se pudo actualizar el rango horario.");
     }

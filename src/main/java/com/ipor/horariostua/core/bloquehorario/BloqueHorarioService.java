@@ -62,7 +62,6 @@ public class BloqueHorarioService {
             LocalTime existenteInicio = existente.getHoraInicio();
             LocalTime existenteFin = existente.getHoraFin();
 
-            // Verifica traslape: (nuevoInicio < existenteFin) && (nuevoFin > existenteInicio)
             if (nuevoInicio.isBefore(existenteFin) && nuevoFin.isAfter(existenteInicio)) {
                 return true; // Hay cruce
             }
@@ -88,6 +87,7 @@ public class BloqueHorarioService {
         if (hayCruceCrearHorario(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin())) {
             throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
         }
+
         BloqueHorario bloqueHorario = new BloqueHorario();
         bloqueHorario.setHorarioLaboral(horarioLaboralService.getUltimoHorarioLaboral());
         bloqueHorario.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
@@ -99,6 +99,7 @@ public class BloqueHorarioService {
 
         bloqueHorario.setSede(sedeService.getSedePorId(dto.getIdSede()));
         bloqueHorario.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
+        bloqueHorario.setIsTurnoNoche(Boolean.FALSE);
 
         //ALMUERZO
         if (dto.getHoraInicio() != null && dto.getHoraInicioAlmuerzo() != null){
@@ -109,10 +110,29 @@ public class BloqueHorarioService {
 
             bloqueHorario.setAlmuerzo(almuerzo);
         }
-
         bloqueHorarioRepository.save(bloqueHorario);
+        return bloqueHorario;
+    }
 
 
+    public BloqueHorario agregarTN(Recibido_BH_DTO dto){
+        if (hayCruceCrearHorario(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin())) {
+            throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
+        }
+
+        BloqueHorario bloqueHorario = new BloqueHorario();
+        bloqueHorario.setHorarioLaboral(horarioLaboralService.getUltimoHorarioLaboral());
+        bloqueHorario.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
+        bloqueHorario.setFecha(dto.getFecha());
+        bloqueHorario.setHoraInicio(LocalTime.of(20,0));
+        bloqueHorario.setHoraFin(LocalTime.of(21,0));
+
+        bloqueHorario.setAgrupacion(agrupacionService.getAgrupacionPorId(dto.getIdAgrupacion()));
+
+        bloqueHorario.setSede(sedeService.getSedePorId(dto.getIdSede()));
+        bloqueHorario.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
+        bloqueHorario.setIsTurnoNoche(Boolean.TRUE);
+        bloqueHorarioRepository.save(bloqueHorario);
         return bloqueHorario;
     }
 
@@ -121,28 +141,45 @@ public class BloqueHorarioService {
     }
 
     public BloqueHorario editar(Recibido_BH_DTO dto, Long id){
-        if (hayCruceHorarioEditar(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin(), id)) {
-            throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
-        }
+
         BloqueHorario bloque = bloqueHorarioRepository.findById(id).get();
+
+
+        if (bloque.getIsTurnoNoche() == null || !bloque.getIsTurnoNoche()){
+            if (hayCruceHorarioEditar(dto.getIdColaborador(), dto.getFecha(), dto.getHoraInicio(), dto.getHoraFin(), id)) {
+                throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
+            }
+            bloque.setHoraInicio(dto.getHoraInicio());
+            bloque.setHoraFin(dto.getHoraFin());
+        }else{
+            if (hayCruceHorarioEditar(dto.getIdColaborador(), dto.getFecha(), bloque.getHoraInicio(), bloque.getHoraFin(), id)) {
+                throw new IllegalArgumentException("El colaborador ya tiene un bloque horario que se cruza en esa fecha.");
+            }
+        }
+        //almuerzo
+        if(dto.getHoraInicioAlmuerzo() != null && dto.getHoraFinAlmuerzo() !=null){
+            Almuerzo almuerzo;
+            if (bloque.getAlmuerzo() == null){
+                almuerzo = new Almuerzo();
+            } else{
+                almuerzo = bloque.getAlmuerzo();
+            }
+            almuerzo.setHoraFin(dto.getHoraFinAlmuerzo());
+            almuerzo.setHoraInicio(dto.getHoraInicioAlmuerzo());
+            almuerzo = almuerzoService.save(almuerzo);
+            bloque.setAlmuerzo(almuerzo);
+        }
+
+
         bloque.setFecha(dto.getFecha());
         bloque.setColaborador(colaboradorService.getColaboradorPorId(dto.getIdColaborador()));
         bloque.setSede(sedeService.getSedePorId(dto.getIdSede()));
-        bloque.setHoraInicio(dto.getHoraInicio());
-        bloque.setHoraFin(dto.getHoraFin());
-        bloque.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
 
-        //almuerzo
-        Almuerzo almuerzo;
-        if (bloque.getAlmuerzo() == null){
-           almuerzo = new Almuerzo();
-        } else{
-            almuerzo = bloque.getAlmuerzo();
-        }
-        almuerzo.setHoraFin(dto.getHoraFinAlmuerzo());
-        almuerzo.setHoraInicio(dto.getHoraInicioAlmuerzo());
-        almuerzo = almuerzoService.save(almuerzo);
-        bloque.setAlmuerzo(almuerzo);
+        bloque.setGrupoAnidado(bloqueHorarioRepository.findMaxGrupoAnidado() + 1);
+        bloque.setIsTurnoNoche(bloque.getIsTurnoNoche());
+
+
+
         bloqueHorarioRepository.save(bloque);
 
         return bloque;
@@ -173,6 +210,8 @@ public class BloqueHorarioService {
                 repetido.setAgrupacion(bloqueRepetir.getAgrupacion());
                 repetido.setHorarioLaboral(bloqueRepetir.getHorarioLaboral());
                 repetido.setGrupoAnidado(grupoAnidado);
+                repetido.setIsTurnoNoche(bloqueRepetir.getIsTurnoNoche());
+
                 if (bloqueRepetir.getAlmuerzo() != null){
                     if(bloqueRepetir.getAlmuerzo().getHoraInicio() != null && bloqueRepetir.getAlmuerzo().getHoraFin() != null){
                         Almuerzo almuerzo = new Almuerzo();
@@ -190,9 +229,8 @@ public class BloqueHorarioService {
         for (BloqueHorario bloque : listaRepeticionActual) {
             if (!fechasRecibidas.contains(bloque.getFecha())) {
                 bloqueHorarioRepository.delete(bloque);
-                // No lo agregues a bloquesResultantes porque ya no estará
             } else {
-                bloquesResultantes.add(bloque); // sigue presente
+                bloquesResultantes.add(bloque);
             }
         }
         return bloquesResultantes;
@@ -217,7 +255,7 @@ public class BloqueHorarioService {
     public double  sumarHorasBloques(List<BloqueHorario> bloques) {
         double total = 0;
         for (BloqueHorario bloque : bloques) {
-            if (bloque.getHoraInicio() != null && bloque.getHoraFin() != null) {
+            if (bloque.getHoraInicio() != null && bloque.getHoraFin() != null && (bloque.getIsTurnoNoche() == null || !bloque.getIsTurnoNoche())) {
                 int minutos = (int) java.time.Duration.between(bloque.getHoraInicio(), bloque.getHoraFin()).toMinutes();
                 total += minutos;
             }

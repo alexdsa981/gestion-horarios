@@ -110,3 +110,12 @@
     cursor: not-allowed !important;
     box-shadow: none !important;
 }
+
+
+#fab-turno-noche {
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+#fab-turno-noche[style*="display: flex"] {
+    opacity: 1;
+}

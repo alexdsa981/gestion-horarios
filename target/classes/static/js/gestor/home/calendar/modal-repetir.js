@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("edit-form");
     const idBloque = form.dataset.eventId;
     const fechaOriginal = form.dataset.eventFecha;
-    const grupoAnidado = form.dataset.eventGrupoAnidado; // <- Asegúrate de setear esto en el form
+    const grupoAnidado = form.dataset.eventGrupoAnidado;
 
     if (!idBloque) {
       Swal.fire({
@@ -133,7 +133,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 idColaborador: bloque.idColaborador,
                 grupoAnidado: bloque.grupoAnidado,
                 horaInicioAlmuerzo: bloque.horaInicioAlmuerzo ? bloque.horaInicioAlmuerzo : null,
-                horaFinAlmuerzo: bloque.horaFinAlmuerzo ? bloque.horaFinAlmuerzo : null
+                horaFinAlmuerzo: bloque.horaFinAlmuerzo ? bloque.horaFinAlmuerzo : null,
+                turnoNoche: bloque.isTurnoNoche,
               });
             }
           }
