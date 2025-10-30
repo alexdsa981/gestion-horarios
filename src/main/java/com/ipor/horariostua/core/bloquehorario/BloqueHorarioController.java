@@ -11,6 +11,8 @@ import com.ipor.horariostua.core.bloquehorario.bloquehorarioDTO.Repetir_BH_DTO;
 import com.ipor.horariostua.core.bloquehorario.horariolaboral.HorarioLaboralService;
 import com.ipor.horariostua.core.bloquehorario.sede.SedeService;
 import com.ipor.horariostua.core.bloquehorario.sede.dto.ListarSedesDTO;
+import com.ipor.horariostua.core.usuario.Usuario;
+import com.ipor.horariostua.core.usuario.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,8 @@ public class BloqueHorarioController {
     private AgrupacionService agrupacionService;
     @Autowired
     private DetalleColaboradorAgrupacionService detalleColaboradorAgrupacionService;
+    @Autowired
+    private UsuarioService usuarioService;
 
 
     @GetMapping("/listar-fecha/{idAgrupacion}")
@@ -90,6 +95,19 @@ public class BloqueHorarioController {
     @PostMapping("/agregar")
     public ResponseEntity<?> registraBloqueHorario(@RequestBody Recibido_BH_DTO dto) {
         try {
+            Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+
+            // Validación de mes anterior solo para NO admin
+            if (idRolUsuario != 2) {
+                LocalDate hoy = LocalDate.now();
+                YearMonth mesActual = YearMonth.from(hoy);
+                YearMonth mesBloque = YearMonth.from(dto.getFecha());
+                if (mesBloque.isBefore(mesActual)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("error", "No puedes agregar horarios en meses anteriores."));
+                }
+            }
+
             BloqueHorario guardado = bloqueHorarioService.agregar(dto);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
             Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
@@ -103,29 +121,55 @@ public class BloqueHorarioController {
     @PostMapping("/agregar/turno-noche")
     public ResponseEntity<?> registraBloqueHorarioTN(@RequestBody Recibido_BH_DTO dto) {
         try {
+            Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+
+            if (idRolUsuario != 2) {
+                LocalDate hoy = LocalDate.now();
+                YearMonth mesActual = YearMonth.from(hoy);
+                YearMonth mesBloque = YearMonth.from(dto.getFecha());
+                if (mesBloque.isBefore(mesActual)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("error", "No puedes agregar turnos noche en meses anteriores."));
+                }
+            }
+
             BloqueHorario guardado = bloqueHorarioService.agregarTN(dto);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
             Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
             return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
         } catch (IllegalArgumentException ex) {
-            // Devuelve el mensaje de error y un 409 Conflict
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("error", ex.getMessage()));
         }
     }
 
-    @PostMapping("/repetir")
-    public ResponseEntity<List<Mostrar_BH_DTO>> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
-        BloqueHorario bloqueRepetir = bloqueHorarioService.getPorId(dto.getId());
-        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(bloqueRepetir.getColaborador().getId(), bloqueRepetir.getAgrupacion().getId());
 
+    @PostMapping("/repetir")
+    public ResponseEntity<?> registrarRepeticionBloque(@RequestBody Repetir_BH_DTO dto) {
+        BloqueHorario bloqueRepetir = bloqueHorarioService.getPorId(dto.getId());
+        DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
+                bloqueRepetir.getColaborador().getId(), bloqueRepetir.getAgrupacion().getId());
 
         if (dto.getFechas() != null) {
             dto.getFechas().forEach(fecha -> System.out.println("Fecha: " + fecha));
         }
+
         try {
+            // Validación de meses anteriores
+            Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+            if (idRolUsuario != 2 && dto.getFechas() != null && !dto.getFechas().isEmpty()) {
+                YearMonth mesActual = YearMonth.from(LocalDate.now());
+                for (LocalDate fecha : dto.getFechas()) {
+                    if (YearMonth.from(fecha).isBefore(mesActual)) {
+                        return ResponseEntity.status(HttpStatus.CONFLICT)
+                                .body(Collections.singletonMap("error",
+                                        "No puedes repetir bloques en meses anteriores. Quita las fechas inválidas para continuar."));
+                    }
+                }
+            }
+
             List<BloqueHorario> listaRepeticion = bloqueHorarioService.repetir(dto);
             List<Mostrar_BH_DTO> listaMostrar = new ArrayList<>();
-            for (BloqueHorario repetido : listaRepeticion){
+            for (BloqueHorario repetido : listaRepeticion) {
                 Mostrar_BH_DTO mostrarDTO = new Mostrar_BH_DTO(repetido, detalle);
                 listaMostrar.add(mostrarDTO);
             }
@@ -137,11 +181,22 @@ public class BloqueHorarioController {
         }
     }
 
-
     @PutMapping("/editar/{id}")
     public ResponseEntity<?> editarBloqueHorario(@RequestBody Recibido_BH_DTO dto, @PathVariable Long id) {
         System.out.println("LLAMADA A EDITAR BLOQUE con id=" + id + ", dto=" + dto);
         try {
+            Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+
+            if (idRolUsuario != 2) {
+                LocalDate hoy = LocalDate.now();
+                YearMonth mesActual = YearMonth.from(hoy);
+                YearMonth mesBloque = YearMonth.from(dto.getFecha());
+                if (mesBloque.isBefore(mesActual)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("error", "No puedes editar bloques en meses anteriores."));
+                }
+            }
+
             BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
                     guardado.getColaborador().getId(),
@@ -154,6 +209,7 @@ public class BloqueHorarioController {
                     .body(Collections.singletonMap("error", ex.getMessage()));
         }
     }
+
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarBloqueHorario(@PathVariable Long id) {
         bloqueHorarioService.eliminar(id);

@@ -80,10 +80,19 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(dto)
     })
-    .then(response => {
-      if (!response.ok) throw new Error("Error al registrar los bloques");
-      return response.json();
-    })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              try {
+                const errorObj = JSON.parse(text);
+                throw new Error(errorObj.error || text || "Error al registrar los bloques");
+              } catch {
+                throw new Error(text || "Error al registrar los bloques");
+              }
+            });
+          }
+          return response.json();
+        })
     .then(data => {
       Swal.fire({
         icon: "success",
@@ -145,9 +154,17 @@ document.addEventListener("DOMContentLoaded", function () {
         forzarAnchoRowHeader();
       }
     })
-    .catch(error => {
-      console.error("Error en fetch /app/bloque-horarios/repetir:", error);
-      Swal.fire({ icon: "error", title: "Error", text: error.message });
-    });
+        .catch(error => {
+          let msg = error.message;
+          try {
+            const parsed = JSON.parse(msg);
+            if (parsed && parsed.error) {
+              msg = parsed.error;
+            }
+          } catch (e) {
+          }
+          console.error("Error en fetch /app/bloque-horarios/repetir:", error);
+          Swal.fire({ icon: "error", title: "Error", text: msg });
+        });
   });
 });
