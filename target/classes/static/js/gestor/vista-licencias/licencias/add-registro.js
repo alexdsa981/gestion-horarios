@@ -74,17 +74,32 @@ document.addEventListener("DOMContentLoaded", function () {
       body: JSON.stringify(body)
     })
     .then(res => {
-      if (!res.ok) throw new Error("No se pudo registrar la licencia");
+      if (!res.ok) {
+        return res.text().then(text => {
+          try {
+            const errorObj = JSON.parse(text);
+            throw new Error(errorObj.error || text || "No se pudo registrar la licencia");
+          } catch {
+            throw new Error(text || "No se pudo registrar la licencia");
+          }
+        });
+      }
       Swal.fire({ icon: "success", title: "Licencia agregada", text: "Se guardó correctamente." });
       bootstrap.Modal.getInstance(modalLicencia).hide();
       this.reset();
       fpLicencia.clear();
       cargarLicenciasActivas();
       cargarEventosVacaciones();
-
     })
     .catch(error => {
-      Swal.fire({ icon: "error", title: "Error", text: error.message });
+      let msg = error.message;
+      try {
+        const parsed = JSON.parse(msg);
+        if (parsed && parsed.error) {
+          msg = parsed.error;
+        }
+      } catch (e) {}
+      Swal.fire({ icon: "error", title: "Error", text: msg });
     });
   });
 });

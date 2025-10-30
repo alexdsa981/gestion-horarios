@@ -48,13 +48,29 @@ document.getElementById('formEditarFechasLicencia').addEventListener('submit', f
         body: JSON.stringify(fechas)
     })
     .then(res => {
-        if (!res.ok) throw new Error("No se pudieron actualizar las fechas");
+        if (!res.ok) {
+            return res.text().then(text => {
+                try {
+                    const errorObj = JSON.parse(text);
+                    throw new Error(errorObj.error || text || "No se pudieron actualizar las fechas");
+                } catch {
+                    throw new Error(text || "No se pudieron actualizar las fechas");
+                }
+            });
+        }
         Swal.fire({ icon: "success", title: "Fechas actualizadas", text: "Se actualizaron correctamente." });
         bootstrap.Modal.getInstance(document.getElementById('modalEditarFechasLicencia')).hide();
         cargarLicenciasActivas();
         cargarEventosVacaciones();
     })
     .catch(error => {
-        Swal.fire({ icon: "error", title: "Error", text: error.message });
+        let msg = error.message;
+        try {
+            const parsed = JSON.parse(msg);
+            if (parsed && parsed.error) {
+                msg = parsed.error;
+            }
+        } catch (e) {}
+        Swal.fire({ icon: "error", title: "Error", text: msg });
     });
 });

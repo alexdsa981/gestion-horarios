@@ -1,12 +1,15 @@
 package com.ipor.horariostua.core.licencias;
 
 import com.ipor.horariostua.core.licencias.dto.*;
+import com.ipor.horariostua.core.usuario.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +19,8 @@ public class LicenciasController {
 
     @Autowired
     private LicenciasService licenciasService;
-
+    @Autowired
+    private UsuarioService usuarioService;
 
     @ResponseBody
     @GetMapping("/vista")
@@ -57,18 +61,45 @@ public class LicenciasController {
 
     @ResponseBody
     @PostMapping("/crear")
-    public ResponseEntity<Void> crearLicencia(@RequestBody CrearLicenciaDTO dto) {
+    public ResponseEntity<?> crearLicencia(@RequestBody CrearLicenciaDTO dto) {
         List<LocalDate> fechas = dto.getFechas().stream()
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());
+
+        // Validar rol (ajusta según tu modelo de usuario)
+        Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+
+        if (idRolUsuario != 2) {
+            YearMonth mesActual = YearMonth.from(LocalDate.now());
+            for (LocalDate fecha : fechas) {
+                if (YearMonth.from(fecha).isBefore(mesActual)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("error", "No puedes registrar licencias en meses anteriores."));
+                }
+            }
+        }
+
         licenciasService.crearLicencia(dto.getColaboradorId(), dto.getMotivoId(), fechas);
         return ResponseEntity.ok().build();
     }
 
     @ResponseBody
     @PutMapping("/fecha/editar/{idFecha}")
-    public void actualizarFechaLicencia(@PathVariable Long idFecha, @RequestBody ActualizarFechaDTO dto) {
+    public ResponseEntity<?> actualizarFechaLicencia(@PathVariable Long idFecha, @RequestBody ActualizarFechaDTO dto) {
+        Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+        LocalDate nuevaFecha = LocalDate.parse(dto.getNuevaFecha());
+
+        if (idRolUsuario != 2) {
+            YearMonth mesActual = YearMonth.from(LocalDate.now());
+            YearMonth mesNueva = YearMonth.from(nuevaFecha);
+            if (mesNueva.isBefore(mesActual)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(Collections.singletonMap("error", "No puedes mover la fecha a un mes anterior."));
+            }
+        }
+
         licenciasService.actualizarFecha(idFecha, dto.getNuevaFecha());
+        return ResponseEntity.ok().build();
     }
 
     @ResponseBody
@@ -88,7 +119,7 @@ public class LicenciasController {
 
     @ResponseBody
     @PutMapping("/{id}/fechas")
-    public ResponseEntity<Void> actualizarFechasLicencia(
+    public ResponseEntity<?> actualizarFechasLicencia(
             @PathVariable Long id,
             @RequestBody List<String> fechas,
             @RequestParam int anio,
@@ -97,10 +128,21 @@ public class LicenciasController {
         List<LocalDate> fechasLocalDate = fechas.stream()
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());
+
+        Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
+        if (idRolUsuario != 2) {
+            YearMonth mesActual = YearMonth.from(LocalDate.now());
+            for (LocalDate fecha : fechasLocalDate) {
+                if (YearMonth.from(fecha).isBefore(mesActual)) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body(Collections.singletonMap("error", "No puedes editar licencias en meses anteriores."));
+                }
+            }
+        }
+
         licenciasService.actualizarFechasLicencia(id, fechasLocalDate, anio, mes);
         return ResponseEntity.ok().build();
     }
-
 
 
     @ResponseBody

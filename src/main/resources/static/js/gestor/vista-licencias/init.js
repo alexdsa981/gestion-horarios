@@ -23,23 +23,33 @@ const dp = new DayPilot.Month("dp", {
 
 
 
-    onEventMove: async (args) => {
-        const idFecha = args.e.id();
-        const nuevaFecha = args.newStart.toString("yyyy-MM-dd");
+onEventMove: async (args) => {
+    const idFecha = args.e.id();
+    const nuevaFecha = args.newStart.toString("yyyy-MM-dd");
 
-        try {
-            const res = await fetch(`/app/licencias/fecha/editar/${idFecha}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ nuevaFecha })
-            });
-            if (!res.ok) throw new Error("No se pudo mover la fecha.");
-            Swal.fire("Actualizado", "La fecha fue movida.", "success");
-            cargarEventosVacaciones();
-        } catch (err) {
-            Swal.fire("Error", err.message, "error");
+    try {
+        const res = await fetch(`/app/licencias/fecha/editar/${idFecha}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nuevaFecha })
+        });
+        if (!res.ok) {
+            const text = await res.text();
+            let msg = "No se pudo mover la fecha.";
+            try {
+                const errorObj = JSON.parse(text);
+                msg = errorObj.error || msg;
+            } catch {}
+            throw new Error(msg);
         }
-    },
+        Swal.fire("Actualizado", "La fecha fue movida.", "success");
+        cargarEventosVacaciones();
+    } catch (err) {
+        Swal.fire("Error", err.message, "error");
+        cargarEventosVacaciones();
+
+    }
+},
 
 
 
