@@ -28,7 +28,7 @@ async function cargarColaboradoresSelector() {
         if (!response.ok) throw new Error('Error al obtener colaboradores');
 
         const colaboradores = await response.json();
-        console.log("Colaboradores recibidos:", colaboradores);
+        //console.log("Colaboradores recibidos:", colaboradores);
 
         window.listaColaboradoresPorAgrupacion = colaboradores;
 

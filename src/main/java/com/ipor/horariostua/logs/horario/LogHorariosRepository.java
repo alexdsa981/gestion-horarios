@@ -1,4 +1,4 @@
-package com.ipor.horariostua.logs;
+package com.ipor.horariostua.logs.horario;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

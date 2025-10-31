@@ -93,7 +93,7 @@ async function filtrarPorColaborador(colaboradorId) {
         return;
     }
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     window.columnas = data.sedes.map(sede => ({ name: sede.nombre, id: sede.id }));
     window.listaSedesActivasPorAgrupacion = data.sedes;
 

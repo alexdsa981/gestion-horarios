@@ -1,4 +1,4 @@
-package com.ipor.horariostua.logs;
+package com.ipor.horariostua.logs.horario;
 
 import com.ipor.horariostua.core.bloquehorario.BloqueHorario;
 import com.ipor.horariostua.core.usuario.Usuario;

@@ -97,23 +97,20 @@ public class BloqueHorarioController {
         try {
             Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
 
-            // Validación de mes anterior solo para NO admin
             if (idRolUsuario != 2) {
                 LocalDate hoy = LocalDate.now();
                 YearMonth mesActual = YearMonth.from(hoy);
                 YearMonth mesBloque = YearMonth.from(dto.getFecha());
-                if (mesBloque.isBefore(mesActual)) {
+                if (!mesBloque.isAfter(mesActual)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Collections.singletonMap("error", "No puedes agregar horarios en meses anteriores."));
+                            .body(Collections.singletonMap("error", "No puedes agregar horarios en el mes actual ni en meses anteriores."));
                 }
             }
-
             BloqueHorario guardado = bloqueHorarioService.agregar(dto);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(dto.getIdColaborador(), dto.getIdAgrupacion());
             Mostrar_BH_DTO mostrarDto = new Mostrar_BH_DTO(guardado, detalle);
             return ResponseEntity.status(HttpStatus.CREATED).body(mostrarDto);
         } catch (IllegalArgumentException ex) {
-            // Devuelve el mensaje de error y un 409 Conflict
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("error", ex.getMessage()));
         }
     }
@@ -127,9 +124,9 @@ public class BloqueHorarioController {
                 LocalDate hoy = LocalDate.now();
                 YearMonth mesActual = YearMonth.from(hoy);
                 YearMonth mesBloque = YearMonth.from(dto.getFecha());
-                if (mesBloque.isBefore(mesActual)) {
+                if (!mesBloque.isAfter(mesActual)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Collections.singletonMap("error", "No puedes agregar turnos noche en meses anteriores."));
+                            .body(Collections.singletonMap("error", "No puedes agregar turnos noche en el mes actual ni en meses anteriores."));
                 }
             }
 
@@ -154,19 +151,18 @@ public class BloqueHorarioController {
         }
 
         try {
-            // Validación de meses anteriores
             Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
             if (idRolUsuario != 2 && dto.getFechas() != null && !dto.getFechas().isEmpty()) {
                 YearMonth mesActual = YearMonth.from(LocalDate.now());
                 for (LocalDate fecha : dto.getFechas()) {
-                    if (YearMonth.from(fecha).isBefore(mesActual)) {
+                    YearMonth ym = YearMonth.from(fecha);
+                    if (!ym.isAfter(mesActual)) {
                         return ResponseEntity.status(HttpStatus.CONFLICT)
                                 .body(Collections.singletonMap("error",
-                                        "No puedes repetir bloques en meses anteriores. Quita las fechas inválidas para continuar."));
+                                        "No puedes repetir bloques en el mes actual ni en meses anteriores. Quita las fechas inválidas para continuar."));
                     }
                 }
             }
-
             List<BloqueHorario> listaRepeticion = bloqueHorarioService.repetir(dto);
             List<Mostrar_BH_DTO> listaMostrar = new ArrayList<>();
             for (BloqueHorario repetido : listaRepeticion) {
@@ -190,13 +186,17 @@ public class BloqueHorarioController {
             if (idRolUsuario != 2) {
                 LocalDate hoy = LocalDate.now();
                 YearMonth mesActual = YearMonth.from(hoy);
-                YearMonth mesBloque = YearMonth.from(dto.getFecha());
-                if (mesBloque.isBefore(mesActual)) {
+                LocalDate fechaDto = dto.getFecha();
+                if (fechaDto == null) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Collections.singletonMap("error", "Fecha inválida."));
+                }
+                YearMonth mesBloque = YearMonth.from(fechaDto);
+                if (!mesBloque.isAfter(mesActual)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Collections.singletonMap("error", "No puedes editar bloques en meses anteriores."));
+                            .body(Collections.singletonMap("error", "No puedes editar bloques en el mes actual ni en meses anteriores."));
                 }
             }
-
             BloqueHorario guardado = bloqueHorarioService.editar(dto, id);
             DetalleColaboradorAgrupacion detalle = detalleColaboradorAgrupacionService.getDetallePorColaboradorYAgrupacion(
                     guardado.getColaborador().getId(),

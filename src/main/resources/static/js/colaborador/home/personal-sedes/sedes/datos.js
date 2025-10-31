@@ -8,7 +8,7 @@ function actualizarColumnas() {
         name: sede.nombre,
         id: sede.id
     }));
-    console.log("[COLUMNAS] Actualizadas:", window.columnas);
+    //console.log("[COLUMNAS] Actualizadas:", window.columnas);
 }
 
 // --- Fetch para sedes activas y actualizar columnas ---
@@ -19,7 +19,7 @@ async function actualizarSedesActivasGlobal() {
         const sedes = await response.json();
         window.listaSedesActivasPorAgrupacion = sedes;
         actualizarColumnas();
-        console.log("[SEDES ACTIVAS] Variable global actualizada:", sedes);
+        //console.log("[SEDES ACTIVAS] Variable global actualizada:", sedes);
         cargarSelectSedesActivas("edit-sede");
         cargarSelectSedesActivas("modal-sedes-select");
     } catch (error) {

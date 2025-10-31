@@ -66,15 +66,16 @@ public class LicenciasController {
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());
 
-        // Validar rol (ajusta según tu modelo de usuario)
         Long idRolUsuario = usuarioService.getUsuarioLogeado().getRolUsuario().getId();
 
         if (idRolUsuario != 2) {
             YearMonth mesActual = YearMonth.from(LocalDate.now());
             for (LocalDate fecha : fechas) {
-                if (YearMonth.from(fecha).isBefore(mesActual)) {
+                YearMonth ym = YearMonth.from(fecha);
+                // Permitir solo meses FUTUROS: si ym no es posterior al mes actual, se bloquea
+                if (!ym.isAfter(mesActual)) {
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Collections.singletonMap("error", "No puedes registrar licencias en meses anteriores."));
+                            .body(Collections.singletonMap("error", "No puedes registrar licencias en el mes actual ni en meses anteriores."));
                 }
             }
         }
@@ -92,9 +93,9 @@ public class LicenciasController {
         if (idRolUsuario != 2) {
             YearMonth mesActual = YearMonth.from(LocalDate.now());
             YearMonth mesNueva = YearMonth.from(nuevaFecha);
-            if (mesNueva.isBefore(mesActual)) {
+            if (!mesNueva.isAfter(mesActual)) { // mesNueva <= mesActual
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body(Collections.singletonMap("error", "No puedes mover la fecha a un mes anterior."));
+                        .body(Collections.singletonMap("error", "No puedes mover la fecha al mes actual ni a meses anteriores."));
             }
         }
 
@@ -133,9 +134,10 @@ public class LicenciasController {
         if (idRolUsuario != 2) {
             YearMonth mesActual = YearMonth.from(LocalDate.now());
             for (LocalDate fecha : fechasLocalDate) {
-                if (YearMonth.from(fecha).isBefore(mesActual)) {
+                YearMonth ym = YearMonth.from(fecha);
+                if (!ym.isAfter(mesActual)) { // ym <= mesActual
                     return ResponseEntity.status(HttpStatus.CONFLICT)
-                            .body(Collections.singletonMap("error", "No puedes editar licencias en meses anteriores."));
+                            .body(Collections.singletonMap("error", "No puedes editar licencias en el mes actual ni en meses anteriores."));
                 }
             }
         }
@@ -159,7 +161,7 @@ public class LicenciasController {
 
         for (Licencias licencia : licencias) {
             nombreColaborador = licencia.getColaborador().getNombreCompleto();
-            String motivo = licencia.getTipoLicencia().getNombre(); // Aquí obtienes el motivo
+            String motivo = licencia.getTipoLicencia().getNombre();
 
             for (LicenciaFecha licenciaFecha : licencia.getFechas()) {
                 LocalDate fecha = licenciaFecha.getFecha();

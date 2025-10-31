@@ -1,4 +1,4 @@
-package com.ipor.horariostua.logs;
+package com.ipor.horariostua.logs.global;
 
 import com.ipor.horariostua.core.usuario.Usuario;
 import jakarta.persistence.*;

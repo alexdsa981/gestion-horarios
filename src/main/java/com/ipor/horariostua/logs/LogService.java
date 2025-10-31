@@ -3,6 +3,10 @@ package com.ipor.horariostua.logs;
 
 import com.ipor.horariostua.core.bloquehorario.BloqueHorario;
 import com.ipor.horariostua.core.usuario.Usuario;
+import com.ipor.horariostua.logs.global.LogGlobal;
+import com.ipor.horariostua.logs.global.LogGlobalRepository;
+import com.ipor.horariostua.logs.horario.LogHorarios;
+import com.ipor.horariostua.logs.horario.LogHorariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

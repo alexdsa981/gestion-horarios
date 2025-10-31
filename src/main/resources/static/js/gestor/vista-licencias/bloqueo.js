@@ -19,14 +19,14 @@ function chequearBloqueoMesLicencias() {
 
     const estaBloqueado = rolUsuario !== 2 && (
         anioSeleccionado < anioActual ||
-        (anioSeleccionado === anioActual && mesSeleccionado < mesActual)
+        (anioSeleccionado === anioActual && mesSeleccionado <= mesActual)
     );
 
     if (btnLicencia) {
         btnLicencia.disabled = estaBloqueado;
         btnLicencia.style.opacity = estaBloqueado ? "0.5" : "1";
         btnLicencia.style.pointerEvents = estaBloqueado ? "none" : "auto";
-        btnLicencia.title = estaBloqueado ? "No se puede agregar licencias en meses anteriores" : "Agregar licencia";
+        btnLicencia.title = estaBloqueado ? "No se puede agregar licencias en el mes actual ni en meses anteriores" : "Agregar licencia";
     }
 
     const overlay = document.getElementById("bloqueoMesAnterior");
